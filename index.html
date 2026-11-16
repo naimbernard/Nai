@@ -1,0 +1,1259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>JFM Property Platform V10.2</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Figtree:wght@500;700&family=Public+Sans:wght@400;600&display=swap">
+<style>
+/* Layout idea: navy rail lists the buildings; each building opens one workspace with tabs for every part of the job. */
+:root{
+  --bg:#f2f5f8;--surface:#ffffff;--ink:#16283c;--muted:#5d6f84;--line:#dce4ed;
+  --accent:#1f5fb8;--on-accent:#ffffff;--accent-soft:#e6eefa;
+  --side:#12233a;--side-ink:#d5e0ee;--side-on:#2b4567;
+  --good:#13663e;--good-bg:#def4e9;--warn:#7a4e00;--warn-bg:#fff0d4;--crit:#a12835;--crit-bg:#ffe6e8;
+  --display:'Figtree',system-ui,sans-serif;--body:'Public Sans',system-ui,Arial,sans-serif;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  color-scheme:dark;
+  --bg:#0e1622;--surface:#16212f;--ink:#e6edf5;--muted:#96a7bb;--line:#27384c;
+  --accent:#74aaf3;--on-accent:#0b1a2c;--accent-soft:#1c2f4a;
+  --side:#0a121d;--side-ink:#c5d2e2;--side-on:#1f344f;
+  --good:#7fdcab;--good-bg:#143524;--warn:#f3c66f;--warn-bg:#3a2c0d;--crit:#ff9aa4;--crit-bg:#421a20;
+}}
+:root[data-theme="dark"]{
+  color-scheme:dark;
+  --bg:#0e1622;--surface:#16212f;--ink:#e6edf5;--muted:#96a7bb;--line:#27384c;
+  --accent:#74aaf3;--on-accent:#0b1a2c;--accent-soft:#1c2f4a;
+  --side:#0a121d;--side-ink:#c5d2e2;--side-on:#1f344f;
+  --good:#7fdcab;--good-bg:#143524;--warn:#f3c66f;--warn-bg:#3a2c0d;--crit:#ff9aa4;--crit-bg:#421a20;
+}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--bg);color:var(--ink);font:14px/1.5 var(--body)}
+.app{display:flex;min-height:100vh}
+aside{width:250px;background:var(--side);color:var(--side-ink);padding:22px 14px 18px;flex-shrink:0;display:flex;flex-direction:column;position:sticky;top:0;height:100vh;overflow-y:auto}
+.brand{font:700 20px var(--display);color:#fff;margin:0 0 14px 6px}
+.brand span{color:#7fb2ff}
+nav{display:flex;flex-direction:column;gap:2px}
+nav button{display:flex;justify-content:space-between;align-items:center;gap:8px;text-align:left;background:transparent;color:var(--side-ink);border:0;border-radius:8px;padding:10px 12px;font:inherit;cursor:pointer}
+nav button.on{background:var(--side-on);color:#fff;font-weight:600}
+nav button:hover{background:var(--side-on)}
+.navhead{font-size:11px;letter-spacing:.08em;opacity:.65;margin:16px 0 4px 12px}
+.badge{background:#c9414f;color:#fff;border-radius:10px;font-size:11px;font-weight:700;padding:1px 7px}
+main{flex:1;padding:24px;min-width:0;max-width:1220px}
+.top{display:flex;justify-content:space-between;align-items:flex-end;gap:14px;flex-wrap:wrap}
+h1{font:700 26px var(--display);margin:0 0 2px;text-wrap:balance}
+h3{font:700 16px var(--display);margin:0 0 10px;text-wrap:balance}
+.muted{color:var(--muted)}.small{font-size:12px}
+.controls{display:flex;gap:10px;flex-wrap:wrap;align-items:flex-end}
+.controls label{display:flex;flex-direction:column;gap:3px}
+.controls select{margin:0;min-width:170px}
+.bell{position:fixed;top:14px;right:16px;z-index:60;width:46px;height:46px;border-radius:50%;border:1px solid var(--line);background:var(--surface);color:var(--ink);display:grid;place-items:center;cursor:pointer;box-shadow:0 4px 14px rgba(10,20,35,.16)}
+.bell[hidden]{display:none}.bell svg{width:22px;height:22px}.bell.has{color:var(--accent)}
+.bell:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
+.bcount{position:absolute;top:-3px;right:-3px;min-width:21px;height:21px;padding:0 6px;border-radius:11px;background:#c9414f;color:#fff;font:700 11px/21px var(--body);text-align:center;border:2px solid var(--surface)}
+.bcount:empty{display:none}
+.bpanel{position:fixed;top:68px;right:16px;z-index:61;width:370px;max-width:calc(100vw - 32px);max-height:72vh;overflow:auto;background:var(--surface);color:var(--ink);border:1px solid var(--line);border-radius:14px;box-shadow:0 18px 44px rgba(10,20,35,.24)}
+.bpanel[hidden]{display:none}
+.bhead{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:14px 16px;border-bottom:1px solid var(--line);position:sticky;top:0;background:var(--surface)}
+.bhead b{font:700 16px var(--display)}
+.ni{display:block;width:100%;text-align:left;border:0;border-top:1px solid var(--line);background:transparent;color:var(--ink);padding:12px 16px 12px 30px;font:inherit;cursor:pointer;position:relative}
+.ni:first-of-type{border-top:0}.ni:hover{background:var(--bg)}
+.ni.unread{background:var(--accent-soft)}
+.ni.unread::before{content:"";position:absolute;left:13px;top:19px;width:8px;height:8px;border-radius:50%;background:var(--accent)}
+.ni .muted{font-size:12px;display:block;margin-top:2px}
+.ni .go{display:inline-block;margin-top:6px;font-weight:700;font-size:13px;color:var(--accent)}
+.bempty{padding:22px 16px;color:var(--muted);text-align:center}
+.dlgback{position:fixed;inset:0;z-index:70;background:rgba(8,16,28,.55);display:grid;place-items:center;padding:16px}
+.dlgbox{background:var(--surface);color:var(--ink);border-radius:16px;width:100%;max-width:440px;padding:22px;box-shadow:0 24px 60px rgba(0,0,0,.35)}
+.dlgbox h3{font-size:20px;margin-bottom:4px}
+.dlgbox .amt{font:700 32px var(--display);font-variant-numeric:tabular-nums;margin:10px 0 2px}
+.choice{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:18px}
+.btn.yes{background:var(--good);color:var(--bg)}.btn.no{background:var(--crit);color:var(--bg)}
+.btn.big{padding:14px;font-size:15px}
+.dlgfoot{display:flex;justify-content:center;margin-top:12px}
+.pick{display:flex;flex-direction:column;gap:8px;margin-top:14px}
+.pick label{display:flex;align-items:center;gap:10px;border:1px solid var(--line);border-radius:10px;padding:12px;font-size:14px;cursor:pointer}
+.pick input{width:auto;margin:0}
+.pick label:has(input:checked){border-color:var(--accent);background:var(--accent-soft)}
+.top{padding-right:58px}
+@media (max-width:860px){aside{padding-right:72px}.bell{top:10px;right:12px}.bpanel{top:62px;right:12px}}
+.ver{font-size:11px;opacity:.55;margin:18px 0 0 12px}
+@media (max-width:860px){.ver{display:none}}
+.nt{background:var(--bg);border-radius:8px;padding:8px 10px;margin:6px 0;font-size:13px;line-height:1.45}
+.ntd{margin-top:4px}.ntd summary{font-size:12px}
+.ntform{margin-top:8px}.ntform input,.dlgbox input{margin-bottom:2px}
+.ntcount{margin:0 0 8px}
+.dlgnotes{margin-top:10px;max-height:150px;overflow:auto}
+.mailhead .addr{font:700 17px var(--display)}
+.ins{border-top:1px solid var(--line);padding:14px 0 14px 12px;border-left:3px solid transparent}
+.ins.ok{border-left-color:var(--good)}.ins.issue{border-left-color:var(--crit)}.ins.na{border-left-color:var(--line)}
+.ins .seg button.s_ok[aria-checked="true"]{background:var(--good);color:var(--bg)}
+.ins .seg button.s_issue[aria-checked="true"]{background:var(--crit);color:var(--bg)}
+.ins input[data-inote]{margin-top:4px}
+.upl{display:inline-flex;align-items:center;gap:8px;cursor:pointer;color:var(--accent);font-weight:600;font-size:13px;border:1px dashed var(--accent);border-radius:8px;padding:8px 12px;margin-top:4px}
+.upl input{position:absolute;width:1px;height:1px;opacity:0}
+.upl:focus-within{outline:2px solid var(--accent);outline-offset:2px}
+.media{display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:8px;margin:8px 0}
+.media figure{position:relative;margin:0;background:var(--bg);border-radius:8px;overflow:hidden}
+.media img,.media video{display:block;width:100%;height:96px;object-fit:cover;background:var(--line)}
+.media figcaption{font-size:11px;color:var(--muted);padding:4px 6px}
+.media figure.missing img,.media figure.missing video{visibility:hidden}
+.media figure.missing::after{content:"Saved on another device. Turn on the live database to share files.";position:absolute;inset:0 0 22px;display:grid;place-items:center;text-align:center;padding:6px;font-size:11px;color:var(--muted)}
+.mdel{position:absolute;top:4px;right:4px;width:26px;height:26px;border-radius:50%;border:0;background:rgba(0,0,0,.6);color:#fff;font-size:16px;line-height:26px;cursor:pointer}
+.olsel{width:auto;margin:0;padding:8px 10px;max-width:220px}
+.olbody{background:var(--bg);border-radius:8px;padding:10px 12px;max-height:340px;overflow:auto;font-size:13px}
+a.btn{text-decoration:none;display:inline-block}
+.stamp{color:var(--accent);font-weight:600;margin:2px 0}
+.live{display:inline-flex;align-items:center;gap:6px;font-weight:700;margin-right:6px}
+.live::before{content:"";width:9px;height:9px;border-radius:50%;background:currentColor}
+.live.on{color:var(--good)}.live.err{color:var(--crit)}.live.off{color:var(--warn)}
+.notice{background:var(--warn-bg);color:var(--warn);border-radius:9px;padding:9px 12px;margin:14px 0;font-size:13px}
+.tabs{display:flex;gap:4px;overflow-x:auto;border-bottom:1px solid var(--line);margin:4px 0 0}
+.tabs button{background:none;border:0;border-bottom:3px solid transparent;padding:10px 12px;font:600 13px var(--body);color:var(--muted);cursor:pointer;white-space:nowrap}
+.tabs button.on{color:var(--accent);border-bottom-color:var(--accent)}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:18px;margin:14px 0}
+.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;margin:14px 0}
+.grid .panel{margin:0}
+.four{grid-template-columns:repeat(4,minmax(0,1fr))}
+.metric{font:700 26px var(--display);font-variant-numeric:tabular-nums}
+.row{border-top:1px solid var(--line);padding:12px 0 12px 12px;border-left:3px solid transparent}
+.row.crit{border-left-color:var(--crit)}.row.late{border-left-color:var(--warn)}.row.sel{border-left-color:var(--accent);background:var(--accent-soft)}
+.flex{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}
+.acts{display:flex;gap:6px;flex-wrap:wrap;margin-top:6px}
+.tags{display:flex;gap:6px;flex-wrap:wrap}
+.tag{display:inline-block;border-radius:20px;background:var(--accent-soft);color:var(--accent);padding:3px 9px;font-size:11px;font-weight:600;white-space:nowrap}
+.tag.warn{background:var(--warn-bg);color:var(--warn)}.tag.crit{background:var(--crit-bg);color:var(--crit)}.tag.good{background:var(--good-bg);color:var(--good)}
+.bar{background:var(--line);height:8px;border-radius:8px;overflow:hidden;margin:6px 0;min-width:80px}
+.bar span{display:block;height:100%;background:var(--accent)}.bar span.over{background:var(--crit)}
+.btn{border:0;background:var(--accent);color:var(--on-accent);padding:9px 14px;border-radius:8px;font:600 13px var(--body);cursor:pointer}
+.btn.light{background:var(--accent-soft);color:var(--accent)}
+.btn.link{background:none;color:var(--accent);padding:0;text-align:left;font-size:14px}
+.btn:focus-visible,nav button:focus-visible,.tabs button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+input,select,textarea{font:inherit;color:var(--ink);background:var(--surface);width:100%;padding:9px 10px;border:1px solid var(--line);border-radius:8px;margin:5px 0 12px}
+input[type=checkbox]{width:auto;margin:0}
+textarea{min-height:110px}
+label{font-weight:600;font-size:12px}
+.check{display:flex;align-items:center;gap:8px;font-size:13px;font-weight:400;margin:6px 0}
+.note{padding:11px 12px;border-radius:9px;background:var(--accent-soft);margin:10px 0}
+.form2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0 14px}
+.tablewrap{overflow-x:auto}
+table{border-collapse:collapse;width:100%;min-width:560px}
+th,td{text-align:left;padding:9px 8px;border-top:1px solid var(--line);vertical-align:middle}
+th{font-size:12px;color:var(--muted);border-top:0}
+td.num,th.num{text-align:right;font-variant-numeric:tabular-nums}
+p{margin:6px 0}
+details summary{cursor:pointer;color:var(--accent);font-weight:600;font-size:13px;margin-top:6px}
+pre{white-space:pre-wrap;font:inherit;margin:6px 0}
+#toast{position:fixed;left:50%;bottom:22px;transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:10px 16px;border-radius:9px;font-weight:600;opacity:0;pointer-events:none;transition:opacity .2s;max-width:90vw}
+#toast.show{opacity:1}
+@media (prefers-reduced-motion:reduce){#toast{transition:none}}
+/* Confirmation tick: ~1s pop when an email is sent or a task is created / done */
+.jfm-confirm{position:fixed;left:50%;top:50%;z-index:9999;pointer-events:none;display:flex;flex-direction:column;align-items:center;gap:8px;padding:18px 22px 14px;border-radius:16px;background:var(--surface);color:var(--ink);border:1px solid var(--line);box-shadow:0 14px 40px rgba(10,20,35,.22);font:700 14px var(--display);animation:jfmPop 1s ease forwards}
+.jfm-confirm svg{width:46px;height:46px}
+.jfm-confirm circle{fill:var(--jfm-c);transform-origin:center;animation:jfmDot .35s cubic-bezier(.3,1.6,.6,1) both}
+.jfm-confirm path{fill:none;stroke:#fff;stroke-width:2.6;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:20;stroke-dashoffset:20;animation:jfmTick .3s .2s ease-out forwards}
+@keyframes jfmPop{0%{opacity:0;transform:translate(-50%,-50%) scale(.85)}15%{opacity:1;transform:translate(-50%,-50%) scale(1)}80%{opacity:1;transform:translate(-50%,-50%) scale(1)}100%{opacity:0;transform:translate(-50%,-50%) scale(.96)}}
+@keyframes jfmDot{from{transform:scale(0)}to{transform:scale(1)}}
+@keyframes jfmTick{to{stroke-dashoffset:0}}
+@media (prefers-reduced-motion:reduce){.jfm-confirm,.jfm-confirm circle,.jfm-confirm path{animation:none}.jfm-confirm path{stroke-dashoffset:0}}
+.settingsbtn{margin-top:auto;display:flex;align-items:center;gap:10px;width:100%;text-align:left;background:transparent;color:var(--side-ink);border:0;border-top:1px solid var(--side-on);border-radius:0;padding:14px 12px 4px;font:inherit;cursor:pointer}
+.settingsbtn[hidden]{display:none}.settingsbtn:hover{color:#fff}.settingsbtn.on{color:#fff;font-weight:600}
+.settingsbtn svg{width:18px;height:18px;flex:none}
+.settingsbtn:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.setrow{display:flex;align-items:center;justify-content:space-between;gap:16px;border-top:1px solid var(--line);padding:14px 0}
+.setrow b{display:block}.setrow .muted{font-size:13px}
+.setgroup{font-size:11px;letter-spacing:.08em;color:var(--muted);font-weight:700;margin:6px 0 2px}
+.switch{position:relative;flex:none;width:52px;height:30px;border-radius:999px;border:2px solid var(--line);background:transparent;padding:0;cursor:pointer;transition:background .25s,border-color .25s}
+.switch::after{content:"";position:absolute;top:3px;left:3px;width:20px;height:20px;border-radius:50%;background:var(--muted);box-shadow:0 1px 3px rgba(0,0,0,.25);transition:transform .25s cubic-bezier(.3,1.3,.5,1),background .25s}
+.switch[aria-checked="true"]{background:var(--accent);border-color:var(--accent)}
+.switch[aria-checked="true"]::after{transform:translateX(22px);background:#fff}
+.switch:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
+@media (prefers-reduced-motion:reduce){.switch,.switch::after{transition:none}}
+.setpanel{max-width:680px}
+.setlist{margin-top:14px;border:1px solid var(--line);border-radius:12px;overflow:hidden}
+.setitem{display:flex;align-items:center;gap:14px;width:100%;text-align:left;background:var(--surface);color:var(--ink);border:0;border-top:1px solid var(--line);padding:14px 16px;font:inherit;cursor:pointer}
+.setitem:first-child{border-top:0}.setitem:hover{background:var(--accent-soft)}
+.setitem:focus-visible,.seg button:focus-visible{outline:2px solid var(--accent);outline-offset:-2px}
+.seticon{display:grid;place-items:center;width:36px;height:36px;border-radius:10px;background:var(--ic,var(--accent));color:#fff;flex:none;box-shadow:0 2px 6px rgba(0,0,0,.15)}
+.seticon svg,.sethead svg{width:19px;height:19px}
+.setitxt{flex:1;display:flex;flex-direction:column}.setitxt .muted{font-size:12px}
+.chev{font-size:22px;color:var(--muted);line-height:1}
+.back{display:inline-flex;align-items:center;gap:8px;border:0;background:var(--accent-soft);color:var(--accent);font:700 15px var(--body);padding:11px 18px 11px 14px;border-radius:999px;cursor:pointer;margin-bottom:18px;transition:background .15s,transform .15s}
+.back span{font-size:24px;line-height:.8;margin-top:-2px}
+.back:hover{background:var(--accent);color:var(--on-accent)}.back:active{transform:scale(.97)}
+.back:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
+.sethead{display:flex;align-items:center;gap:12px;margin-bottom:16px;font-size:20px}
+.seg{display:flex;flex:none;background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:3px;gap:2px}
+.seg button{border:0;background:transparent;color:var(--muted);font:600 13px var(--body);padding:6px 12px;border-radius:7px;cursor:pointer}
+.seg button[aria-checked="true"]{background:var(--surface);color:var(--ink);box-shadow:0 1px 3px rgba(0,0,0,.15)}
+.reduce-motion *,.reduce-motion *::after{transition:none!important;animation:none!important}
+.reduce-motion .jfm-confirm{transform:translate(-50%,-50%)}.reduce-motion .jfm-confirm path{stroke-dashoffset:0}
+@media (max-width:560px){.setrow{flex-wrap:wrap}}
+/* Sign in screen */
+.app[hidden],.login[hidden]{display:none}
+.login{min-height:100vh;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.15fr);background:var(--bg)}
+.lside{background:var(--side);color:var(--side-ink);padding:44px 48px;display:flex;flex-direction:column;justify-content:space-between;gap:28px}
+.lside .brand{margin:0}
+.lside h2{font:700 36px/1.15 var(--display);color:#fff;margin:0 0 14px;text-wrap:balance;max-width:13ch}
+.lside p{max-width:38ch;margin:0}
+.lfeat{list-style:none;padding:0;margin:22px 0 0;display:flex;flex-direction:column;gap:10px}
+.lfeat li{display:flex;gap:10px;align-items:center}
+.lfeat li::before{content:"";width:8px;height:8px;border-radius:50%;background:#7fb2ff;flex:none}
+.lfoot{font-size:12px;opacity:.65}
+.lmain{display:grid;place-items:center;padding:32px 16px}
+.lcard{width:100%;max-width:400px}
+.lcard h1{margin-bottom:4px}
+.lcard form{margin-top:20px}
+.pw{position:relative}
+.pw input{padding-right:70px}
+.pwtoggle{position:absolute;right:6px;top:10px;border:0;background:transparent;color:var(--accent);font:600 13px var(--body);padding:6px 8px;border-radius:6px;cursor:pointer}
+.pwtoggle:focus-visible{outline:2px solid var(--accent)}
+.hp{position:absolute;left:-9999px;width:1px;height:1px;opacity:0}
+.slider{position:relative;height:50px;border-radius:12px;background:var(--surface);border:1px solid var(--line);margin:5px 0 12px;user-select:none;-webkit-user-select:none;touch-action:none;overflow:hidden}
+.slider:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.sfill{position:absolute;top:0;bottom:0;left:0;width:0;background:var(--accent-soft)}
+.stext{position:absolute;inset:0;display:grid;place-items:center;padding-left:40px;color:var(--muted);font-weight:600;font-size:13px;pointer-events:none}
+.knob{position:absolute;top:3px;left:3px;width:44px;height:42px;border-radius:9px;background:var(--accent);color:var(--on-accent);display:grid;place-items:center;font-size:22px;cursor:grab;box-shadow:0 2px 6px rgba(0,0,0,.2)}
+.slider.back .knob,.slider.back .sfill{transition:transform .25s ease,width .25s ease}
+.slider.ok{border-color:var(--good);background:var(--good-bg)}
+.slider.ok .sfill{background:transparent}
+.slider.ok .stext{color:var(--good)}
+.slider.ok .knob{background:var(--good);color:#fff;cursor:default}
+.lrow{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin:-2px 0 12px}
+.lerr{min-height:20px;color:var(--crit);font-size:13px;margin:0 0 10px}
+.lerr.info{color:var(--muted)}
+.btn.wide{width:100%;padding:13px;font-size:14px}
+.demo{margin-top:22px;border-top:1px solid var(--line);padding-top:12px}
+.demo table{min-width:0;font-size:13px}
+.welcome{position:fixed;inset:0;z-index:9998;display:grid;place-items:center;text-align:center;padding:20px;background:var(--side);color:#fff;animation:wOut 1.6s ease forwards}
+.welcome .wsmall{margin:0;color:var(--side-ink);font-size:15px}
+.welcome .wbig{margin:6px 0 0;font:700 34px/1.2 var(--display);text-wrap:balance}
+@keyframes wOut{0%{opacity:0}12%{opacity:1}75%{opacity:1}100%{opacity:0}}
+@media (prefers-reduced-motion:reduce){.welcome{animation:none}.slider.back .knob,.slider.back .sfill{transition:none}}
+@media (max-width:860px){.login{grid-template-columns:1fr}.lside{padding:22px 20px;gap:0}.lside h2{font-size:26px;margin-top:16px}.lfeat,.lfoot,.lside p{display:none}}
+@media (max-width:860px){
+  .app{display:block}
+  aside{width:auto;padding:10px 14px;position:static;height:auto;display:block}
+  .settingsbtn{border-top:0;padding:8px 12px;width:auto}
+  .brand{margin:0 0 6px}
+  nav{flex-direction:row;overflow-x:auto;padding-bottom:4px}
+  nav button{white-space:nowrap;flex-shrink:0}
+  nav .bld,.navhead{display:none}
+  main{padding:14px}
+  .grid,.form2{grid-template-columns:1fr}
+  .four{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .controls,.controls label{width:100%}
+}
+</style>
+</head>
+<body>
+<div class="login" id="login" hidden>
+  <div class="lside">
+    <div>
+      <p class="brand">JFM <span>Platform</span></p>
+      <h2>Every building, one place.</h2>
+      <p>Works, accounts, compliance, legal and resident updates, all under the building name.</p>
+      <ul class="lfeat"><li>Update once, and Asana, Outlook and residents all hear about it</li><li>Approvals and arrears in one view</li><li>Residents see what matters to them</li></ul>
+    </div>
+    <p class="lfoot">Version 10.2 · Demo only. Fictional data and simulated sign in.</p>
+  </div>
+  <div class="lmain">
+    <div class="lcard">
+      <h1>Sign in</h1>
+      <p class="muted">Use your JFM account to continue.</p>
+      <form id="lForm" novalidate>
+        <label for="lUser">Username</label>
+        <input id="lUser" name="username" autocomplete="username" autocapitalize="none" spellcheck="false" placeholder="e.g. morgan">
+        <label for="lPass">Password</label>
+        <div class="pw"><input id="lPass" name="password" type="password" autocomplete="current-password"><button type="button" class="pwtoggle" id="pwT" aria-controls="lPass" aria-pressed="false">Show</button></div>
+        <input id="lWeb" name="website" class="hp" tabindex="-1" autocomplete="off" aria-hidden="true">
+        <label id="hvLabel">Verify you are human</label>
+        <div class="slider" id="hv" role="slider" tabindex="0" aria-labelledby="hvLabel" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-valuetext="Not verified"><div class="sfill"></div><span class="stext">Slide to verify</span><div class="knob" aria-hidden="true">›</div></div>
+        <div class="lrow"><label class="check"><input type="checkbox" id="lKeep"> Keep me signed in on this device</label><button class="btn link small" id="forgot" type="button">Forgot password?</button></div>
+        <p class="lerr" id="lErr" role="alert"></p>
+        <button class="btn wide" id="lBtn" type="submit">Sign in</button>
+      </form>
+      <details class="demo"><summary>Demo accounts</summary>
+        <p class="small muted">Every demo account uses the password <b>jfm2026</b>.</p>
+        <table><thead><tr><th>Username</th><th>Who</th></tr></thead><tbody>
+          <tr><td>dana</td><td>CEO, all buildings</td></tr>
+          <tr><td>morgan</td><td>Property manager, 5 buildings</td></tr>
+          <tr><td>jamie</td><td>Property manager, 4 buildings</td></tr>
+          <tr><td>flat42.patel</td><td>Leaseholder, Saffron Square</td></tr>
+          <tr><td>flat18.reed</td><td>Tenant, Saffron Square</td></tr>
+        </tbody></table>
+      </details>
+    </div>
+  </div>
+</div>
+<div class="app">
+  <aside>
+    <p class="brand">JFM <span>Platform</span></p>
+    <nav id="nav" aria-label="Sections"></nav>
+    <p class="ver" id="ver">Version 10.2</p>
+    <button class="settingsbtn" id="setBtn" data-act="settings" hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg><span>User settings</span></button>
+  </aside>
+  <main>
+    <div class="top">
+      <div><h1 id="heading"></h1><span class="muted" id="identity"></span></div>
+      <div class="controls">
+        <label for="bSel" id="bWrap">Go to<select id="bSel"></select></label>
+        <button class="btn light" data-act="reset" id="resetBtn">Reset demo</button>
+        <button class="btn light" data-act="signOut">Sign out</button>
+      </div>
+    </div>
+    <div class="notice"><span id="liveDot"></span> Demo only. Fictional people, suppliers and figures. Asana, Outlook, Blockman and the resident portal are simulated, so nothing is really sent.</div>
+    <div id="content"><div class="panel" id="noRun"><h3>This page needs to open in a web browser</h3><p>It looks like this file was opened in a preview (email, WhatsApp, Google Drive or the Files app), which doesn't run the platform.</p><p><b>To open it:</b> save the file to your computer, then open it with Chrome, Edge or Safari. On a computer you can right-click the file and choose <i>Open with</i> → your browser.</p></div></div>
+  </main>
+</div>
+<button class="bell" id="bell" data-act="bell" aria-label="Notifications" aria-expanded="false" aria-controls="bPanel" hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.9 1.9 0 0 0 3.4 0"/></svg><span class="bcount" id="bCount"></span></button>
+<div class="bpanel" id="bPanel" hidden></div>
+<div id="dlg"></div>
+<div id="toast" role="status" aria-live="polite"></div>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
+<script src="config.js"></script>
+<script>
+/* Live database. config.js sets window.JFM_LIVE={url:'...',key:'...'}; without it the app runs on this device only. */
+const LIVE=window.JFM_LIVE||{url:'',key:''};
+const APP_VERSION='10.2';
+const KINDS=['buildings','tasks','docs','legal','invoices','emails','requests','sync','notes','mytasks','inspections'];
+const newId=p=>p+Date.now().toString(36).slice(-4).toUpperCase()+Math.random().toString(36).slice(2,4).toUpperCase();
+let sb=null,live=false,liveState='local',snap=new Map(),pendingRender=false;
+const KEY='jfm_v10',LIMIT=5000,DEMO_PW='jfm2026';
+/* Words that mean money. Tenants never see updates or emails containing them. */
+const MONEY=/£|\bquot(e|es|ed|ation|ations)\b|\bcosts?\b|\binvoices?\b|\bservice charges?\b|\barrears\b|\bestimates?\b|\bbudgets?\b|\bsection 20\b|\bprice\b|\bfees?\b/i;
+const VISL={'Staff only':'Staff only',Residents:'All residents',Leaseholders:'Leaseholders only'};
+const NAMES=['Saffron Square','Spline Place','Beta Road','Blue Lion Place','Horton Kirby','Garrick Hendon','Glen Eagle Heights','Hamilton Court','Park View Estate'];
+const SUR=['Hughes','Okafor','Lindqvist','Barros','Nowak','Adeyemi','Castell','Whitlock','Rahman','Fenwick','Marlow','Osei','Draper','Kovacs','Ibarra','Thorne','Mensah','Radley','Suzuki','Pell'];
+const HEADS=[['Cleaning and grounds',.16],['Repairs and maintenance',.22],['Lifts',.09],['Utilities',.14],['Insurance',.18],['Fire and safety',.08],['Management fee',.13]];
+const COMP=['Fire risk assessment','Lift thorough examination','Communal electrical inspection','Water hygiene risk assessment','Asbestos survey review','Buildings insurance renewal','Fire door inspection'];
+const STAGES=['Reported','Under review','Approved / planned','Works underway','Completed'];
+const PCT=[10,25,45,70,100];
+const PRI={Critical:0,High:1,Medium:2,Low:3};
+const CATS=['Maintenance','Compliance','Finance','Cleaning','Safety','Other'];
+const TABS=['Overview','Inbox','Works','Site inspection','Accounts','Compliance','Legal','People','Documents'];
+const LSTAGE={'Section 20':['Notice of intention','Statement of estimates','Award of contract','Closed'],other:['Open','With solicitor','Awaiting response','Closed']};
+const TPL={
+ 'Blank':['',''],
+ 'Works update':['Update on works at {b}','Dear residents,\n\nWe are writing with an update on works at {b}.\n\n[Add update]\n\nWe will write again when the next stage is confirmed.\n\nKind regards,\n{me}\nJFM'],
+ 'Arrears reminder':['Service charge balance, {b}','Dear leaseholder,\n\nOur records show an outstanding service charge balance on your account. Please arrange payment within 14 days or contact us to discuss.\n\nKind regards,\n{me}\nJFM'],
+ 'Section 20 notice':['Notice of intention to carry out works, {b}','Dear leaseholder,\n\nPlease find enclosed a notice under Section 20 of the Landlord and Tenant Act 1985. You are invited to send written observations within 30 days of this notice.\n\nKind regards,\n{me}\nJFM'],
+ 'General notice':['Notice for residents of {b}','Dear residents,\n\n[Add notice]\n\nKind regards,\n{me}\nJFM']};
+const users=[
+ {id:'a1',username:'marc',pw:'123',name:'Marc, Master Admin',short:'Marc',role:'admin'},
+ {id:'a2',username:'naim',pw:'123',name:'Naim, Master Admin',short:'Naim',role:'admin'},
+ {id:'c1',username:'dana',name:'Dana, CEO',short:'Dana',role:'ceo'},
+ {id:'p1',username:'morgan',name:'Morgan, Property Manager',short:'Morgan',role:'pm',buildings:NAMES.slice(0,5)},
+ {id:'p2',username:'jamie',name:'Jamie, Property Manager',short:'Jamie',role:'pm',buildings:NAMES.slice(5)},
+ {id:'l1',username:'flat42.patel',name:'Priya Patel, Flat 42, Leaseholder',short:'Priya',role:'leaseholder',building:'Saffron Square',unit:'42'},
+ {id:'t1',username:'flat18.reed',name:'Sam Reed, Flat 18, Tenant',short:'Sam',role:'tenant',building:'Saffron Square',unit:'18'}];
+
+const iso=n=>new Date(Date.now()+n*864e5).toISOString().slice(0,10);
+const today=()=>iso(0);
+
+function mkSeed(){
+ const buildings=NAMES.map((name,i)=>{
+  const units=24+((i*13+3)%5)*8,total=units*(2100+i*90);
+  const budget=HEADS.map(([head,p],k)=>{const b=Math.round(total*p/100)*100;return{head,budget:b,actual:Math.round(b*(.6+((i+k*3)%6)*.1)/10)*10}});
+  const unitsList=[];
+  for(let n=1;n<=units;n++)unitsList.push({unit:String(n),leaseholder:SUR[(n*7+i*3)%SUR.length],tenant:(n+i)%4===0?SUR[(n*3+i+5)%SUR.length]:'',balance:(n*5+i)%11===0?300+((n*97+i*41)%14)*85:0});
+  return{name,units,manager:i<5?'Morgan':'Jamie',yearEnd:'31 March',reserve:units*(900+i*60),budget,unitsList,compliance:COMP.map((item,k)=>({item,due:iso(((i*37+k*53)%300)-35)}))};
+ });
+ const s=buildings[0];
+ Object.assign(s.unitsList[41],{leaseholder:'Patel',tenant:'',balance:612});
+ Object.assign(s.unitsList[17],{leaseholder:'Okafor',tenant:'Reed',balance:0});
+ s.compliance[6].due=null;
+ const T=(id,building,title,category,priority,stage,due,visibility,description,internal,estimate,history)=>({id,building,title,category,priority,stage,due,visibility,description,internal,estimate,history});
+ const tasks=[
+  T('T101','Saffron Square','Communal water ingress investigation','Maintenance','Critical',3,iso(-17),'Residents','Contractor instructed; attendance date not confirmed.','Recurring water ingress. Check electrical safety before attendance.',3200,['Issue reported','Manager reviewed','Contractor instructed']),
+  T('T102','Saffron Square','Fire door inspection evidence','Compliance','High',1,iso(-15),'Staff only','Awaiting evidence review.','Certificate missing from register; compliance not verified.',0,['Evidence request opened']),
+  T('T103','Saffron Square','Lift repair quotation','Maintenance','Medium',2,iso(9),'Leaseholders','Quotation review underway; no works date confirmed.','Compare contractor quotes before approval.',8400,['Fault reported','Review started']),
+  T('T104','Spline Place','Communal lighting replacement','Maintenance','Medium',2,iso(8),'Residents','Replacement parts under review.','Await contractor specification.',950,['Report received']),
+  T('T105','Saffron Square','Service charge variance review','Finance','Low',1,iso(12),'Staff only','Budget query being reviewed.','Finance records restricted.',0,['Review opened'])];
+ const extra=['Gutter clearance','Entry phone fault','Bin store door repair','Roof inspection after storm','Car park gate service','Stairwell redecoration','Garden boundary fence'];
+ NAMES.slice(2).forEach((b,k)=>tasks.push(T('T'+(106+k),b,extra[k],'Maintenance',k%3===0?'High':'Medium',k%4,iso(k*6-8),'Residents','Being arranged with the contractor.','Generated demo task.',400+k*350,['Report received'])));
+ const docs=[];
+ NAMES.forEach(b=>[['Buildings insurance schedule','Insurance','Leaseholders'],['Service charge budget 2026/27','Budgets','Leaseholders'],['Fire risk assessment','Certificates','All residents'],['Head lease','Leases','Staff'],['AGM minutes','Minutes','Leaseholders'],['Resident handbook','General','All residents']].forEach(([name,cat,vis],k)=>docs.push({id:'D'+(docs.length+1),building:b,name,cat,vis,date:iso(-30-k*40)})));
+ return{v:6,seq:120,buildings,tasks,docs,
+  legal:[
+   {id:'L1',building:'Saffron Square',type:'Section 20',title:'Lift replacement major works',stage:1,next:iso(21),note:'Two estimates received. Observation period running.'},
+   {id:'L2',building:'Saffron Square',type:'Arrears recovery',title:'Flat 11 service charge arrears',stage:1,next:iso(10),note:'Letter before action sent.'},
+   {id:'L3',building:'Spline Place',type:'Insurance claim',title:'Escape of water, Flat 9',stage:2,next:iso(14),note:'Loss adjuster visit booked.'},
+   {id:'L4',building:'Beta Road',type:'Lease query',title:'Flat 4 subletting consent',stage:0,next:iso(7),note:'Lease terms to be checked.'},
+   {id:'L5',building:'Glen Eagle Heights',type:'Dispute',title:'Service charge challenge at tribunal',stage:1,next:iso(35),note:'Bundle due before hearing.'}],
+  invoices:[
+   {id:'INV301',building:'Saffron Square',supplier:'Northway Lifts',desc:'Lift repair, parts and labour',amount:8400,head:'Lifts',status:'Awaiting decision',approver:'a2',requestedBy:'p1',requestedAt:new Date(Date.now()-2*36e5).toISOString(),notes:[{by:'Morgan (Property Manager)',text:'Lowest of three quotes. Engineer can start next week.',at:new Date(Date.now()-2*36e5).toISOString(),tag:'With request'}]},
+   {id:'INV302',building:'Saffron Square',supplier:'ClearFlow Drainage',desc:'Drain survey, communal corridor',amount:1150,head:'Repairs and maintenance',status:'Awaiting approval'},
+   {id:'INV303',building:'Spline Place',supplier:'BrightLine Electrical',desc:'Communal lighting parts',amount:950,head:'Repairs and maintenance',status:'Awaiting approval'},
+   {id:'INV304',building:'Hamilton Court',supplier:'Greenleaf Grounds',desc:'Quarterly grounds contract',amount:2300,head:'Cleaning and grounds',status:'Awaiting approval'}],
+  emails:[
+   {id:'E1',mailbox:'b:Saffron Square',building:'Saffron Square',dir:'in',from:'Flat 7, Hughes',to:'Saffron Square inbox',subject:'Water coming through corridor ceiling again',body:'The leak outside flat 7 is back after last night. There is water near the light fitting.',date:iso(-1),status:'New'},
+   {id:'E2',mailbox:'b:Saffron Square',building:'Saffron Square',dir:'in',from:'Northway Lifts',to:'Saffron Square inbox',subject:'Quotation for lift repair',body:'Please find our quotation for the repair. We can attend within ten working days of approval.',date:iso(-2),status:'New'},
+   {id:'E3',mailbox:'b:Spline Place',building:'Spline Place',dir:'in',from:'Flat 3, Barros',to:'Spline Place inbox',subject:'Query on service charge demand',body:'Could you explain the increase in the insurance line on my latest demand?',date:iso(-3),status:'New'},
+   {id:'E4',mailbox:'b:Park View Estate',building:'Park View Estate',dir:'in',from:'Flat 20, Thorne',to:'Park View Estate inbox',subject:'Car park gate stuck open',body:'The gate has been open since Friday and non residents are parking.',date:iso(-1),status:'New'},
+   {id:'E5',mailbox:'b:Beta Road',building:'Beta Road',dir:'in',from:'BrightClean Services',to:'Beta Road inbox',subject:'Cleaning rota change from next week',body:'Our team will now attend on Tuesdays and Fridays instead of Mondays and Thursdays.',date:iso(-2),status:'New'},
+   {id:'E6',mailbox:'u:p1',building:null,dir:'in',from:'Dana (CEO)',to:'Morgan',subject:'Monthly portfolio review',body:'Can you bring a short update on your five buildings to Thursday\'s review? Focus on overdue works and compliance.',date:iso(-1),status:'New'},
+   {id:'E7',mailbox:'u:p1',building:null,dir:'in',from:'JFM Training',to:'Morgan',subject:'Fire safety refresher booking',body:'Please book your annual fire safety refresher before the end of the month.',date:iso(-4),status:'New'},
+   {id:'E8',mailbox:'u:p2',building:null,dir:'in',from:'Dana (CEO)',to:'Jamie',subject:'Hamilton Court handover notes',body:'Please send me your handover notes for Hamilton Court by Friday.',date:iso(-2),status:'New'},
+   {id:'E9',mailbox:'u:c1',building:null,dir:'in',from:'PHM Group',to:'Dana',subject:'Quarterly figures due',body:'Quarterly figures for the UK companies are due on the 30th.',date:iso(-3),status:'New'},
+   {id:'E10',mailbox:'u:a1',building:null,dir:'in',from:'Dana (CEO)',to:'Marc',subject:'Platform access for new starters',body:'Two new property managers start next month. Please set up their access.',date:iso(-1),status:'New'},
+   {id:'E11',mailbox:'u:a2',building:null,dir:'in',from:'Dana (CEO)',to:'Naim',subject:'Demo for the PHM board',body:'Can we show the platform to the PHM board next week? Please pick a time.',date:iso(-1),status:'New'}],
+  mytasks:[{id:'M1',owner:'p1',title:'Prepare monthly portfolio update for Dana',due:iso(3),done:false,source:'From email: Monthly portfolio review',notes:[],createdAt:new Date(Date.now()-864e5).toISOString()}],
+  inspections:[],
+  notes:[{id:'N1',to:'a2',from:'p1',text:'Morgan (Property Manager) asked you to approve £8,400 from Northway Lifts at Saffron Square.',at:new Date(Date.now()-2*36e5).toISOString(),read:false,inv:'INV301'}],
+  requests:[],sync:[]};
+}
+function load(){try{const s=JSON.parse(localStorage.getItem(KEY));if(s&&s.v===6){KINDS.forEach(k=>s[k]=s[k]||[]);return s}}catch(e){}return mkSeed()}
+const recKey=(k,x)=>k+':'+(k==='buildings'?x.name:x.id);
+const allRecs=()=>KINDS.flatMap(k=>(db[k]||[]).map(x=>[recKey(k,x),k,x]));
+function takeSnap(){snap=new Map(allRecs().map(([key,,x])=>[key,JSON.stringify(x)]))}
+function save(){
+ try{localStorage.setItem(KEY,JSON.stringify(db))}catch(e){}
+ if(!live)return;
+ const now=new Date().toISOString(),by=me()?me().name:'System',ups=[],seen=new Set();
+ for(const [key,kind,x] of allRecs()){
+  seen.add(key);
+  if(snap.get(key)!==JSON.stringify(x)){if(kind!=='sync'){x.updatedAt=now;x.updatedBy=by}ups.push({id:key,kind,data:x,updated_at:now,updated_by:by})}
+ }
+ const dels=[...snap.keys()].filter(k=>!seen.has(k));
+ takeSnap();
+ for(let i=0;i<ups.length;i+=200)sb.from('records').upsert(ups.slice(i,i+200)).then(r=>{if(r.error)netErr(r.error)});
+ if(dels.length)sb.from('records').delete().in('id',dels).then(r=>{if(r.error)netErr(r.error)});
+}
+function netErr(e){liveState='error';paintLive();toast('Could not save to the live database. Check your connection and try again.');try{console.warn(e)}catch(x){}}
+/* Who changed it and when, for any record */
+const when=d=>{if(!d)return'';const t=new Date(d),tm=t.toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'});return t.toDateString()===new Date().toDateString()?'today at '+tm:t.toLocaleDateString('en-GB',{day:'numeric',month:'short'})+' at '+tm};
+const stamp=x=>x&&x.updatedAt?`Last updated ${when(x.updatedAt)} by ${esc(x.updatedBy||'someone')}`:'';
+
+/* Session: kept for this tab only, or on this device if "Keep me signed in" is ticked */
+const SKEY=KEY+'_session';
+function readSession(){for(const s of ['localStorage','sessionStorage']){try{const v=window[s].getItem(SKEY);if(v&&users.some(x=>x.id===v))return v}catch(e){}}return null}
+function writeSession(id,keep){try{localStorage.removeItem(SKEY);sessionStorage.removeItem(SKEY)}catch(e){}if(!id)return;try{(keep?localStorage:sessionStorage).setItem(SKEY,id)}catch(e){}}
+
+let db=load(),uid=readSession(),view={page:'portfolio',b:NAMES[0],tab:'Overview'},ui={task:null,form:null,sys:'All',set:null},compose=null;
+
+const $=id=>document.getElementById(id);
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const me=()=>users.find(x=>x.id===uid);
+const isTop=()=>me().role==='ceo'||me().role==='admin';
+const staff=()=>isTop()||me().role==='pm';
+const timeGreet=()=>{const h=new Date().getHours();return h<12?'Good morning':h<18?'Good afternoon':'Good evening'};
+const hello=()=>staff()?`Hello ${me().short}! Ready to work?`:`Hello ${me().short}! Welcome home.`;
+/* What a resident may see: tenants only "All residents"; leaseholders also "Leaseholders only" */
+const resVis=t=>t.visibility==='Residents'||(t.visibility==='Leaseholders'&&me().role==='leaseholder');
+const myB=()=>isTop()?db.buildings:db.buildings.filter(b=>me().role==='pm'?me().buildings.includes(b.name):b.name===me().building);
+const canSee=n=>myB().some(b=>b.name===n);
+const B=()=>db.buildings.find(b=>b.name===view.b);
+const fmtDate=d=>d?new Date(d+'T00:00:00').toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'}):'Not recorded';
+const money=n=>new Intl.NumberFormat('en-GB',{style:'currency',currency:'GBP',maximumFractionDigits:0}).format(n);
+const sum=(a,f)=>a.reduce((s,x)=>s+f(x),0);
+const compStatus=c=>!c.due?'Missing':c.due<today()?'Overdue':c.due<=iso(30)?'Due soon':'Valid';
+const late=t=>t.stage<4&&t.due<today();
+const tasksOf=b=>db.tasks.filter(t=>t.building===b.name);
+const openT=b=>tasksOf(b).filter(t=>t.stage<4);
+const arrears=b=>sum(b.unitsList,x=>x.balance);
+const compBad=b=>b.compliance.filter(c=>['Overdue','Missing'].includes(compStatus(c)));
+const invPend=b=>db.invoices.filter(v=>v.building===b.name&&v.status.startsWith('Awaiting'));
+const mailNew=b=>db.emails.filter(e=>e.mailbox==='b:'+b.name&&e.dir==='in'&&e.status==='New');
+const slug=t=>t.toLowerCase().replace(/[^a-z0-9]+/g,'');
+const bAddr=n=>slug(n)+'@jfm.example';
+const myAddr=()=>slug(me().short)+'@jfm.example';
+const myBox=()=>'u:'+uid;
+const myMailNew=()=>db.emails.filter(e=>e.mailbox===myBox()&&e.dir==='in'&&e.status==='New');
+const myOpen=()=>db.mytasks.filter(t=>t.owner===uid&&!t.done);
+/* Who may act on an email: its own person, or staff who can see its building */
+const canMail=e=>!!e&&(e.mailbox===myBox()||(!!e.building&&e.mailbox==='b:'+e.building&&staff()&&canSee(e.building)));
+const attention=b=>openT(b).filter(late).length+compBad(b).length+invPend(b).length+mailNew(b).length;
+const byUrgency=(a,b)=>PRI[a.priority]-PRI[b.priority]||a.due.localeCompare(b.due);
+const pill=(t,k)=>`<span class="tag ${k||''}">${esc(t)}</span>`;
+const opts=(l,sel)=>l.map(x=>`<option ${x===sel?'selected':''}>${esc(x)}</option>`).join('');
+const tile=(k,v)=>`<div class="panel"><div class="muted">${k}</div><div class="metric">${v}</div></div>`;
+function sync(system,text,building){db.sync.unshift({id:newId('S'),at:new Date().toISOString(),by:me().name,system,text,building});db.sync.length=Math.min(db.sync.length,300)}
+let tt;function toast(m){const t=$('toast');t.textContent=m;t.classList.add('show');clearTimeout(tt);tt=setTimeout(()=>t.classList.remove('show'),2800)}
+/* Confirmation tick. Each user can switch it off; the choice is remembered per person. */
+const FX={email:['Email sent','var(--accent)'],created:['Task created','#7c3aed'],done:['Task done','var(--good)']};
+/* Per-user preferences (saved in this browser) */
+const PREF_DEF={fx:'on',sound:'off',haptics:'off',theme:'system',motion:'off'};
+const prefKey=k=>KEY+'_'+k+'_'+uid;
+const prefMem={};
+function pref(k){const m=prefMem[prefKey(k)];if(m)return m;try{return localStorage.getItem(prefKey(k))||PREF_DEF[k]}catch(e){return PREF_DEF[k]}}
+function setPref(k,v){prefMem[prefKey(k)]=v;try{localStorage.setItem(prefKey(k),v)}catch(e){}}
+const prefOn=k=>pref(k)==='on';
+const fxOn=()=>prefOn('fx');
+function applyPrefs(){const r=document.documentElement,t=pref('theme');if(t==='system')r.removeAttribute('data-theme');else r.dataset.theme=t;r.classList.toggle('reduce-motion',prefOn('motion'))}
+let actx;
+function chime(){try{actx=actx||new (window.AudioContext||window.webkitAudioContext)();const t=actx.currentTime;[[660,0],[990,.09]].forEach(([f,d])=>{const o=actx.createOscillator(),g=actx.createGain();o.type='sine';o.frequency.value=f;g.gain.setValueAtTime(0,t+d);g.gain.linearRampToValueAtTime(.12,t+d+.015);g.gain.exponentialRampToValueAtTime(.001,t+d+.22);o.connect(g).connect(actx.destination);o.start(t+d);o.stop(t+d+.25)})}catch(e){}}
+function buzz(){try{navigator.vibrate&&navigator.vibrate(25)}catch(e){}}
+function confirmFx(type,label){
+ if(prefOn('sound'))chime();if(prefOn('haptics'))buzz();
+ if(!fxOn())return;const f=FX[type]||FX.done;
+ document.querySelectorAll('.jfm-confirm').forEach(x=>x.remove());
+ const el=document.createElement('div');el.className='jfm-confirm';el.setAttribute('aria-hidden','true');el.style.setProperty('--jfm-c',f[1]);
+ el.innerHTML='<svg viewBox="0 0 26 26"><circle cx="13" cy="13" r="13"/><path d="M7.5 13.5l3.6 3.6 7.4-7.6"/></svg><span></span>';
+ el.querySelector('span').textContent=label||f[0];document.body.appendChild(el);setTimeout(()=>el.remove(),1050);
+}
+function newTask(building,title,category,priority,internal,from){
+ const id=newId('T');
+ db.tasks.push({id,building,title,category,priority,stage:0,due:iso(7),visibility:'Staff only',description:'New issue under review.',internal,estimate:0,history:[from]});
+ sync('Asana','Task '+id+' created: '+title,building);return id;
+}
+
+/* ---------- staff pages ---------- */
+function attentionList(bs,max){
+ const out=[];
+ bs.forEach(b=>{
+  openT(b).filter(late).forEach(t=>out.push([b.name,'Works',`Overdue: ${t.title}`,'warn']));
+  compBad(b).forEach(c=>out.push([b.name,'Compliance',`${compStatus(c)}: ${c.item}`,'crit']));
+  invPend(b).forEach(v=>out.push([b.name,'Accounts',`Invoice ${money(v.amount)} from ${v.supplier}`,'']));
+  mailNew(b).forEach(e=>out.push([b.name,'Inbox',`Email: ${e.subject}`,'']));
+ });
+ return out.slice(0,max).map(([b,tab,text,k])=>`<div class="row flex"><span>${pill(tab,k)} ${esc(text)}<br><span class="muted small">${esc(b)}</span></span><button class="btn light" data-act="openB" data-id="${esc(b)}" data-x="${tab}">Open</button></div>`).join('')||'<p class="muted">Nothing needs attention</p>';
+}
+function pagePortfolio(){
+ const bs=myB(),ceoInv=db.invoices.filter(canDecide);
+ return `<div class="grid four">${tile('Buildings',bs.length)}${tile('Units',sum(bs,b=>b.units))}${tile('Open works',sum(bs,b=>openT(b).length))}${tile('Arrears',money(sum(bs,arrears)))}</div>
+ ${isTop()?`<div class="panel"><h3>Awaiting your decision</h3>${ceoInv.map(invRow).join('')||`<p class="muted">Nothing waiting. Invoices above ${money(LIMIT)} that are tagged to you come here.</p>`}</div>`:''}
+ <div class="panel"><h3>Needs attention</h3>${attentionList(bs,8)}</div>
+ <div class="panel"><h3>${isTop()?'All buildings':'My buildings'}</h3><div class="tablewrap"><table><thead><tr><th>Building</th><th>Manager</th><th class="num">Units</th><th class="num">Open works</th><th class="num">Arrears</th><th>Compliance</th><th class="num">To action</th></tr></thead><tbody>
+ ${bs.map(b=>{const c=compBad(b).length;return `<tr><td><button class="btn link" data-act="openB" data-id="${esc(b.name)}">${esc(b.name)}</button></td><td>${esc(b.manager)}</td><td class="num">${b.units}</td><td class="num">${openT(b).length}</td><td class="num">${money(arrears(b))}</td><td>${c?pill(c+' to fix','crit'):pill('In date','good')}</td><td class="num">${attention(b)}</td></tr>`}).join('')}
+ </tbody></table></div></div>`;
+}
+function mailRow(e){
+ return `<div class="row"><div class="flex"><b>${esc(e.subject)}</b><span class="tags">${pill(e.dir==='in'?'Received':e.status,e.status==='New'?'warn':e.status==='Draft'?'':'good')}</span></div>
+ <p class="muted small">${e.dir==='in'?'From '+esc(e.from):'To '+esc(e.to)} · ${e.building?esc(e.building)+' inbox':'Your inbox'} · ${fmtDate(e.date)}</p><details><summary>Read</summary><pre>${esc(e.body)}</pre></details>
+ <div class="acts">${e.dir==='in'&&e.status==='New'?`<button class="btn" data-act="mailTask" data-id="${e.id}">${e.building?'Create building task':'Add to my tasks'}</button><button class="btn light" data-act="mailReply" data-id="${e.id}">Reply</button><button class="btn light" data-act="mailDone" data-id="${e.id}">Mark done</button>`:''}${e.status==='Draft'?`<button class="btn" data-act="sendDraft" data-id="${e.id}">Send</button>`:''}</div></div>`;
+}
+function inboxLayout(box,title,addr,sub,composeHtml){
+ const recv=db.emails.filter(e=>e.mailbox===box&&e.dir==='in').sort((a,b)=>(a.status==='New'?0:1)-(b.status==='New'?0:1)||b.date.localeCompare(a.date));
+ const sent=db.emails.filter(e=>e.mailbox===box&&e.dir==='out').sort((a,z)=>z.date.localeCompare(a.date)||z.id.localeCompare(a.id));
+ const n=recv.filter(e=>e.status==='New').length;
+ return `<div class="panel mailhead"><div class="flex"><span><span class="muted small">${esc(title)}</span><br><b class="addr">${esc(addr)}</b></span>${pill(n?n+' new':'All read',n?'warn':'good')}</div><p class="muted small" style="margin:6px 0 0">${sub}</p></div>
+ <div class="grid"><div class="panel"><h3>Received</h3>${recv.map(mailRow).join('')||'<p class="muted">Inbox clear</p>'}</div>
+ <div><div class="panel" style="margin-top:0">${composeHtml}</div><div class="panel"><h3>Sent and drafts</h3>${sent.map(mailRow).join('')||'<p class="muted">Nothing sent yet</p>'}</div></div></div>`;
+}
+/* ---------- Outlook (Microsoft Graph), read only ----------
+   Connects the signed in person's own Microsoft 365 or Outlook mailbox to their personal Inbox.
+   The Application (client) ID comes from the Microsoft Entra app registration.
+   The redirect URI registered there must be this page's address, e.g. https://nai-jet.vercel.app/ */
+const OUTLOOK={clientId:'b312ba3f-e932-4cce-9976-e1b10f1c5c30',authority:'https://login.microsoftonline.com/common/oauth2/v2.0',scopes:'openid profile offline_access User.Read Mail.Read'};
+const olRedirect=()=>location.origin+location.pathname;
+const olReady=()=>/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(OUTLOOK.clientId);
+const ol={me:null,msgs:null,err:'',busy:false,bodies:{}};
+const olStore={get(k){try{return JSON.parse(sessionStorage.getItem('jfm_ol_'+k))}catch(e){return null}},set(k,v){try{v==null?sessionStorage.removeItem('jfm_ol_'+k):sessionStorage.setItem('jfm_ol_'+k,JSON.stringify(v))}catch(e){}}};
+const b64u=buf=>btoa(String.fromCharCode(...new Uint8Array(buf))).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,'');
+const olRand=n=>b64u(crypto.getRandomValues(new Uint8Array(n)));
+async function olSignIn(){
+ const verifier=olRand(48),state=olRand(16),challenge=b64u(await crypto.subtle.digest('SHA-256',new TextEncoder().encode(verifier)));
+ olStore.set('pkce',{verifier,state});
+ const q=new URLSearchParams({client_id:OUTLOOK.clientId,response_type:'code',redirect_uri:olRedirect(),response_mode:'query',scope:OUTLOOK.scopes,code_challenge:challenge,code_challenge_method:'S256',state,prompt:'select_account'});
+ location.assign(OUTLOOK.authority+'/authorize?'+q);
+}
+async function olTokenRequest(params){
+ const r=await fetch(OUTLOOK.authority+'/token',{method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded'},body:new URLSearchParams({client_id:OUTLOOK.clientId,scope:OUTLOOK.scopes,...params})});
+ const j=await r.json().catch(()=>({}));if(!r.ok)throw new Error(j.error_description||j.error||'Sign in failed');
+ olStore.set('tok',{access:j.access_token,refresh:j.refresh_token,exp:Date.now()+((j.expires_in||3600)-60)*1000});
+}
+async function olHandleRedirect(){
+ const u=new URL(location.href),code=u.searchParams.get('code'),err=u.searchParams.get('error');
+ if(!code&&!err)return false;
+ const p=olStore.get('pkce');olStore.set('pkce',null);history.replaceState(null,'',olRedirect()+location.hash);
+ if(err){ol.err='Outlook sign in was not completed: '+(u.searchParams.get('error_description')||err);return true}
+ if(!p||p.state!==u.searchParams.get('state')){ol.err='Outlook sign in could not be verified. Please try again.';return true}
+ try{await olTokenRequest({grant_type:'authorization_code',code,redirect_uri:olRedirect(),code_verifier:p.verifier})}catch(e){ol.err='Outlook sign in failed: '+e.message}
+ return true;
+}
+async function olToken(){
+ const t=olStore.get('tok');if(!t)return null;if(Date.now()<t.exp)return t.access;
+ if(!t.refresh){olStore.set('tok',null);return null}
+ try{await olTokenRequest({grant_type:'refresh_token',refresh_token:t.refresh});return olStore.get('tok').access}catch(e){olStore.set('tok',null);return null}
+}
+async function graph(path,headers){
+ const tk=await olToken();if(!tk)throw new Error('signed-out');
+ const r=await fetch('https://graph.microsoft.com/v1.0'+path,{headers:{Authorization:'Bearer '+tk,...(headers||{})}});
+ if(r.status===401){olStore.set('tok',null);throw new Error('signed-out')}
+ if(!r.ok)throw new Error('Outlook returned an error ('+r.status+')');return r.json();
+}
+async function olLoad(){
+ if(!olStore.get('tok')||ol.busy)return;ol.busy=true;ol.err='';render();
+ try{
+  if(!ol.me)ol.me=await graph('/me?$select=displayName,mail,userPrincipalName');
+  const q=new URLSearchParams({'$top':'25','$orderby':'receivedDateTime desc','$select':'id,subject,from,receivedDateTime,bodyPreview,isRead,webLink'});
+  const j=await graph('/me/mailFolders/inbox/messages?'+q.toString().replace(/\+/g,'%20'));ol.msgs=j.value||[];
+ }catch(e){if(e.message==='signed-out'){ol.me=null;ol.msgs=null;ol.err='Your Outlook sign in has expired. Please connect again.'}else ol.err=e.message}
+ ol.busy=false;render();
+}
+/* Emails already turned into tasks, remembered per person */
+const olDoneKey=()=>KEY+'_olTasked_'+uid;
+function olDone(){try{return JSON.parse(localStorage.getItem(olDoneKey()))||[]}catch(e){return []}}
+function olSaveDone(d){try{localStorage.setItem(olDoneKey(),JSON.stringify(d.slice(-500)))}catch(e){}}
+function outlookPanel(){
+ const head=`<div class="flex"><h3>Your Outlook</h3>${pill('Live · read only','good')}</div>`,err=ol.err?`<div class="notice">${esc(ol.err)}</div>`:'';
+ if(!olReady())return `<div class="panel">${head}<p class="muted">Outlook is not set up yet. Add the app's client ID to <b>OUTLOOK.clientId</b> in the code.</p></div>`;
+ if(!olStore.get('tok'))return `<div class="panel">${head}${err}<p class="muted">Connect your Microsoft 365 or Outlook account to see your real emails here. The platform can only read your inbox. It cannot send, change or delete anything.</p><button class="btn" data-act="olConnect">Connect Outlook</button></div>`;
+ if(!ol.msgs&&!ol.busy&&!ol.err)setTimeout(olLoad);
+ const done=olDone(),dest=[['__my','My tasks'],...myB().map(b=>[b.name,b.name+' works'])];
+ const rows=(ol.msgs||[]).map((m,i)=>{const f=(m.from&&m.from.emailAddress)||{},body=ol.bodies[m.id],has=done.includes(m.id);
+  return `<div class="row"><div class="flex"><b>${esc(m.subject||'(no subject)')}</b><span class="tags">${m.isRead?'':pill('Unread','warn')}${has?pill('Task created','good'):''}</span></div>
+  <p class="muted small">From ${esc(f.name||f.address||'Unknown')}${f.name&&f.address?' · '+esc(f.address):''} · ${esc(new Date(m.receivedDateTime).toLocaleString('en-GB',{day:'numeric',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'}))}</p>
+  ${body==null?`<p class="small">${esc(m.bodyPreview)}</p>`:`<pre class="olbody">${esc(body)}</pre>`}
+  <div class="acts">${body==null?`<button class="btn light" data-act="olRead" data-id="${i}">Read full email</button>`:''}${m.webLink?`<a class="btn light" href="${esc(m.webLink)}" target="_blank" rel="noopener">Open in Outlook</a>`:''}${has?'':`<select id="olB${i}" class="olsel" aria-label="Where the task goes">${dest.map(([v,l])=>`<option value="${esc(v)}">${esc(l)}</option>`).join('')}</select><button class="btn" data-act="olTask" data-id="${i}">Create task</button>`}</div></div>`}).join('');
+ return `<div class="panel">${head}<p class="muted small">Connected as ${ol.me?esc(ol.me.displayName)+' · '+esc(ol.me.mail||ol.me.userPrincipalName):'…'} · Latest 25 emails</p>${err}
+ <div class="acts"><button class="btn light" data-act="olRefresh">${ol.busy?'Loading…':'Refresh'}</button><button class="btn light" data-act="olDisconnect">Disconnect</button></div>
+ ${ol.msgs?(rows||'<p class="muted">Your inbox is empty</p>'):'<p class="muted">Loading your emails…</p>'}</div>`;
+}
+function pageInbox(){
+ const c=compose&&compose.box===myBox()?compose:{};
+ const comp=`<div class="flex"><h3>Write an email</h3>${pill('From '+myAddr())}</div>
+ <label for="mTo">To</label><input id="mTo" value="${esc(c.to||'')}" placeholder="Name or email address">
+ <label for="mSub">Subject</label><input id="mSub" value="${esc(c.subject||'')}"><label for="mBody">Message</label><textarea id="mBody">${esc(c.body||'')}</textarea>
+ <div class="acts"><button class="btn" data-act="sendMail">Send</button><button class="btn light" data-act="saveDraft">Save as draft</button></div>`;
+ return outlookPanel()+inboxLayout(myBox(),'Your personal inbox',myAddr(),'Only you see this inbox. Turning an email into a task adds it to <b>My tasks</b>, not to a building.',comp);
+}
+function pageMyTasks(){
+ const mine=db.mytasks.filter(t=>t.owner===uid),open=mine.filter(t=>!t.done).sort((a,b)=>a.due.localeCompare(b.due)),done=mine.filter(t=>t.done);
+ const row=t=>`<div class="row ${!t.done&&t.due<today()?'late':''}"><div class="flex"><label class="check" style="margin:0"><input type="checkbox" data-act="myDone" data-id="${t.id}" ${t.done?'checked':''}> <b>${esc(t.title)}</b></label><span class="tags">${!t.done&&t.due<today()?pill('Overdue','warn'):''}${pill('Due '+fmtDate(t.due))}</span></div>
+  ${t.source?`<p class="muted small">${esc(t.source)}</p>`:''}${t.body?`<details><summary>Email text</summary><pre>${esc(t.body)}</pre></details>`:''}
+  <details class="ntd" data-nid="${t.id}" ${ui.openNotes===t.id?'open':''}><summary>${(t.notes||[]).length?'Notes ('+t.notes.length+')':'Add a note'}</summary>${notesHtml(t.notes)}${noteForm('my',t.id)}</details></div>`;
+ return `<div class="panel"><div class="flex"><h3>My tasks</h3>${pill(open.length+' open')}</div><p class="muted small">Your own tasks, separate from building works. Only you can see them. Emails from your personal inbox land here.</p>
+ <div class="form2"><div><label for="myTitle">New task</label><input id="myTitle" placeholder="What do you need to do?"></div><div><label for="myDue">Due</label><input id="myDue" type="date" value="${iso(7)}"></div></div>
+ <button class="btn" data-act="myAdd">Add to my tasks</button>
+ ${open.map(row).join('')||'<p class="muted" style="margin-top:12px">Nothing open. Nice work.</p>'}</div>
+ ${done.length?`<div class="panel"><details><summary>Done (${done.length})</summary>${done.map(row).join('')}</details></div>`:''}`;
+}
+function pageSync(){
+ const list=db.sync.filter(s=>canSee(s.building)&&(ui.sys==='All'||s.system===ui.sys));
+ return `<div class="panel"><h3>Sync activity</h3><p class="muted">Every change this app pushes to another system, with who did it and when. This is also the audit trail.</p>
+ <label for="sysSel">System</label><select id="sysSel">${opts(['All','Asana','Outlook','Blockman','Resident portal','Approvals'],ui.sys)}</select>
+ ${list.map(s=>`<div class="row"><div class="flex"><span>${pill(s.system)} ${esc(s.text)}</span>${pill('Simulated','warn')}</div><p class="muted small">${esc(s.building)} · ${esc(s.by)} · ${esc(new Date(s.at).toLocaleString('en-GB'))}</p></div>`).join('')||'<p class="muted">No activity yet. Update a task or approve an invoice and it appears here.</p>'}</div>`;
+}
+function taskRow(t,sel){
+ return `<div class="row ${sel?'sel':t.priority==='Critical'?'crit':late(t)?'late':''}"><div class="flex"><b>${esc(t.title)}</b><span class="tags">${late(t)?pill('Overdue','warn'):''}${pill(t.priority,t.priority==='Critical'?'crit':'')}${pill(VISL[t.visibility]||t.visibility,t.visibility==='Staff only'?'warn':'')}${(t.notes||[]).length?pill(t.notes.length+' note'+(t.notes.length===1?'':'s')):''}</span></div>
+ <p class="muted small">${t.id} · ${esc(t.category)} · Due ${fmtDate(t.due)}</p>${t.updatedAt?`<p class="small stamp">${stamp(t)}</p>`:''}<div class="bar"><span style="width:${PCT[t.stage]}%"></span></div>
+ <div class="flex"><span class="small">${STAGES[t.stage]}</span><button class="btn light" data-act="pickTask" data-id="${t.id}">${sel?'Selected':'Open'}</button></div></div>`;
+}
+const ROLE={ceo:'CEO',admin:'Master Admin',pm:'Property Manager',leaseholder:'Leaseholder',tenant:'Tenant'};
+const posOf=id=>{const u=users.find(x=>x.id===id);return u?ROLE[u.role]:''};
+/* Name with position, e.g. Dana (CEO) */
+const nameOf=id=>{const u=users.find(x=>x.id===id);return u?`${u.short} (${ROLE[u.role]})`:'someone'};
+const NOTE_MAX=140;
+function notesHtml(list){return (list||[]).map(n=>`<div class="nt"><b>${esc(n.by)}</b> ${esc(n.text)}<span class="muted small"> · ${esc(when(n.at))}${n.tag?' · '+esc(n.tag):''}</span></div>`).join('')}
+function noteInput(id,label,ph){return `<label for="${id}">${label}</label><input id="${id}" maxlength="${NOTE_MAX}" data-count="${id}_c" placeholder="${ph||'Short note'}" autocomplete="off"><p class="small muted ntcount"><span id="${id}_c">0/${NOTE_MAX}</span> characters</p>`}
+function noteForm(kind,id){const f='nf_'+id;return `<div class="ntform">${noteInput(f,'Add a note','Short note for anyone who can see this')}<div class="flex"><span class="small muted">${kind==='my'?'Only you can see this task and its notes.':'Everyone who can see this '+(kind==='task'?'task':'approval')+' can read its notes.'}</span><button class="btn light" data-act="addNote" data-id="${id}" data-x="${kind}">Add note</button></div></div>`}
+const approvers=()=>users.filter(u=>u.role==='ceo'||u.role==='admin');
+const canDecide=v=>v.amount>LIMIT&&((v.status==='Awaiting decision'&&v.approver===uid)||(v.status==='Awaiting approval'&&isTop()));
+function notesBlock(x,kind){const n=(x.notes||[]).length;return `<details class="ntd" data-nid="${x.id}" ${ui.openNotes===x.id?'open':''}><summary>${n?'Notes ('+n+')':'Add a note'}</summary>${notesHtml(x.notes)}${staff()&&canSee(x.building)?noteForm(kind,x.id):''}</details>`}
+function invRow(v){
+ const big=v.amount>LIMIT,label=v.status==='Awaiting decision'?'Awaiting '+nameOf(v.approver):v.status;
+ let act='';
+ if(canDecide(v))act=`<button class="btn" data-act="decide" data-id="${v.id}">Decide</button>`;
+ else if(v.status==='Awaiting approval')act=big?`<button class="btn" data-act="askApproval" data-id="${v.id}">Send for approval</button>`:`<button class="btn" data-act="approveInv" data-id="${v.id}">Approve</button>`;
+ const who=v.decidedBy?`${v.status} by ${esc(v.decidedBy)} ${when(v.decidedAt)}`:v.requestedBy?`Requested by ${esc(nameOf(v.requestedBy))} ${when(v.requestedAt)}`:'';
+ return `<div class="row flex"><span><b>${esc(v.supplier)}</b> · ${money(v.amount)}<br><span class="muted small">${v.id} · ${esc(v.building)} · ${esc(v.desc)} · ${esc(v.head)}</span>${who?`<br><span class="small stamp">${who}</span>`:''}${notesBlock(v,'inv')}</span><span class="tags">${pill(label,v.status==='Approved'?'good':v.status==='Rejected'?'crit':'warn')}${act}</span></div>`;
+}
+/* ---------- site inspection ---------- */
+const SOP_NAME='Standard site inspection SOP, version 1';
+const SOP=[
+ ['Arrival and access','Maintenance',[
+  ['entry','Main entrance and door entry','Door closes and locks fully. Entry phone and fobs work.'],
+  ['signage','Notices and signage','Fire action notices, managing agent details and the out of hours number are displayed and current.']]],
+ ['External areas','Maintenance',[
+  ['paths','Paths, steps and car park','No trip hazards, potholes or loose slabs. External lighting works.'],
+  ['grounds','Gardens and grounds','Grass, hedges and planting tidy. No fly tipping.'],
+  ['roof','Roof, gutters and downpipes, seen from the ground','No visible damage, blockages or overflowing gutters.'],
+  ['walls','External walls, windows and doors','No cracks, damp patches, broken glass or graffiti.'],
+  ['bins','Bin store','Clean, doors secure, bins not overflowing, no pests.']]],
+ ['Communal areas','Maintenance',[
+  ['halls','Entrance hall, corridors and stairs','Clean and clear. Flooring safe. Handrails secure.'],
+  ['lighting','Communal and emergency lighting','All lights work. Emergency lights show a green charging light.'],
+  ['damp','Leaks, damp and mould','No water ingress, staining or mould on walls and ceilings.'],
+  ['decor','Decoration and fixtures','Walls, ceilings and doors in reasonable condition.']]],
+ ['Fire safety','Safety',[
+  ['escape','Escape routes','All routes clear. Nothing stored in corridors or stairwells.'],
+  ['firedoors','Fire doors','Close fully on their own. Seals and closers intact. Not wedged open.'],
+  ['alarm','Fire alarm and detection','Panel shows no faults. Log book up to date.'],
+  ['extinguishers','Extinguishers and fire blankets','In place, in date and seals intact.'],
+  ['fra','Fire risk assessment actions','Open actions from the latest fire risk assessment checked.']]],
+ ['Lifts','Maintenance',[
+  ['liftrun','Lift operation','Lift arrives, levels correctly, doors and alarm work.'],
+  ['liftcert','Lift certificate','Thorough examination certificate in date and displayed.']]],
+ ['Plant and utilities','Maintenance',[
+  ['plant','Plant and meter rooms','Locked, clean, nothing stored, no leaks.'],
+  ['water','Water tanks and pumps','No leaks or unusual noise. Water hygiene checks recorded.'],
+  ['electric','Electrical cupboards','Locked. No exposed wiring. Nothing stored.']]],
+ ['Cleaning and security','Cleaning',[
+  ['clean','Cleaning standard','Cleaning schedule followed and standard acceptable.'],
+  ['cctv','CCTV, gates and security','Cameras working. Gates and doors secure.'],
+  ['pests','Pests','No signs of rodents, birds or insects.']]],
+ ['Residents','Other',[
+  ['residents','Issues raised by residents on site','Any concerns raised during the visit are recorded.']]]];
+const SOP_ITEMS=SOP.flatMap(([sec,cat,items])=>items.map(([key,label,guide])=>({key,label,guide,sec,cat})));
+const sopItem=k=>SOP_ITEMS.find(x=>x.key===k);
+const HIGH_KEYS=['escape','firedoors','alarm','extinguishers','fra','damp','liftrun'];
+const inspOf=b=>db.inspections.filter(i=>i.building===b.name);
+const inspOpen=b=>inspOf(b).find(i=>i.status==='In progress');
+const inspDone=b=>inspOf(b).filter(i=>i.status==='Completed').sort((a,z)=>z.completedAt.localeCompare(a.completedAt));
+/* Photos and videos: kept in this browser (IndexedDB), and in Supabase Storage when the live database is on */
+const mediaURL={};
+function idb(){return new Promise((res,rej)=>{const r=indexedDB.open('jfm_media',1);r.onupgradeneeded=()=>r.result.createObjectStore('m');r.onsuccess=()=>res(r.result);r.onerror=()=>rej(r.error)})}
+async function mediaPut(id,blob){const d=await idb();return new Promise((res,rej)=>{const t=d.transaction('m','readwrite');t.objectStore('m').put(blob,id);t.oncomplete=()=>res();t.onerror=()=>rej(t.error)})}
+async function mediaGet(id){const d=await idb();return new Promise(res=>{const r=d.transaction('m').objectStore('m').get(id);r.onsuccess=()=>res(r.result||null);r.onerror=()=>res(null)})}
+function shrinkImage(file){return new Promise(res=>{const u=URL.createObjectURL(file),img=new Image();img.onload=()=>{const k=Math.min(1,1600/Math.max(img.width,img.height)),c=document.createElement('canvas');c.width=Math.round(img.width*k);c.height=Math.round(img.height*k);c.getContext('2d').drawImage(img,0,0,c.width,c.height);URL.revokeObjectURL(u);c.toBlob(b=>res(b||file),'image/jpeg',.8)};img.onerror=()=>{URL.revokeObjectURL(u);res(file)};img.src=u})}
+const mSrc=m=>m.url||mediaURL[m.id]||'';
+function mediaHtml(list,editable,key){
+ return (list||[]).length?`<div class="media">${list.map(m=>{const src=mSrc(m);const inner=m.type==='video'?`<video ${src?`src="${src}"`:''} data-mid="${m.id}" data-mtype="video" controls preload="metadata" playsinline></video>`:`<a ${src?`href="${src}"`:''} target="_blank" rel="noopener" data-mlink="${m.id}"><img ${src?`src="${src}"`:''} data-mid="${m.id}" data-mtype="image" alt="${esc(m.name||'Inspection photo')}"></a>`;
+  return `<figure>${inner}<figcaption>${esc(m.by)} · ${esc(when(m.at))}</figcaption>${editable?`<button class="mdel" data-act="inspDelMedia" data-id="${m.id}" data-x="${key}" aria-label="Remove">×</button>`:''}</figure>`}).join('')}</div>`:'';
+}
+/* Fill in media that lives only in this browser */
+async function hydrateMedia(){
+ for(const el of document.querySelectorAll('[data-mid]:not([src])')){
+  const id=el.dataset.mid;if(!mediaURL[id]){let b=null;try{b=await mediaGet(id)}catch(e){}if(b)mediaURL[id]=URL.createObjectURL(b)}
+  if(mediaURL[id]){el.src=mediaURL[id];const a=el.closest('a');if(a)a.href=mediaURL[id]}else if(!el.dataset.missing){el.dataset.missing='1';el.closest('figure').classList.add('missing')}
+ }
+}
+const TAB={
+'Overview'(b){
+ const act=db.sync.filter(s=>s.building===b.name).slice(0,5);
+ return `<div class="grid four">${tile('Units',b.units)}${tile('Open works',openT(b).length)}${tile('Arrears',money(arrears(b)))}${tile('Reserve fund',money(b.reserve))}</div>
+ <div class="grid"><div class="panel"><h3>Needs attention</h3>${attentionList([b],10)}</div>
+ <div class="panel"><h3>Building facts</h3><p><b>Manager:</b> ${esc(b.manager)}</p><p><b>Service charge year end:</b> ${esc(b.yearEnd)}</p><p><b>Annual budget:</b> ${money(sum(b.budget,x=>x.budget))}</p><p><b>Last site inspection:</b> ${(()=>{const l=inspDone(b)[0];return l?esc(when(l.completedAt))+' by '+esc(l.completedBy):'None recorded'})()}${inspOpen(b)?' · '+pill('One in progress','warn'):''}</p><p><b>Open legal matters:</b> ${db.legal.filter(l=>l.building===b.name&&LSTAGEOF(l)[l.stage]!=='Closed').length}</p>
+ <h3 style="margin-top:14px">Latest activity</h3>${act.map(s=>`<p class="small">${pill(s.system)} ${esc(s.text)}</p>`).join('')||'<p class="muted small">No activity yet</p>'}</div></div>`;
+},
+'Works'(b){
+ const list=tasksOf(b).sort(byUrgency),t=list.find(x=>x.id===ui.task)||list[0],reqs=db.requests.filter(r=>r.building===b.name&&r.status==='Awaiting review');
+ let d='<p class="muted">No tasks yet</p>';
+ if(t){
+  d=`<h3>${esc(t.title)}</h3>${t.updatedAt?`<p class="small stamp">${stamp(t)}</p>`:''}<p class="muted small">${t.id} · Linked to Asana · Due ${fmtDate(t.due)}${t.estimate?' · Estimate '+money(t.estimate):''}</p>
+  <div class="note"><b>Internal:</b> ${esc(t.internal)}</div>
+  <details><summary>Timeline</summary>${t.history.map(h=>`<p class="small">✓ ${esc(h)}</p>`).join('')}</details>
+  <h3 style="margin-top:14px">Notes${(t.notes||[]).length?' ('+t.notes.length+')':''}</h3>${notesHtml(t.notes)||'<p class="muted small">No notes yet</p>'}${noteForm('task',t.id)}
+  <h3 style="margin-top:14px">Update once</h3>
+  <label for="uStage">Stage</label><select id="uStage">${STAGES.map((s,i)=>`<option value="${i}" ${i===t.stage?'selected':''}>${s}</option>`).join('')}</select>
+  <label for="uMsg">Message residents will read</label><textarea id="uMsg">${esc(t.description)}</textarea>
+  <label class="check"><input type="checkbox" id="uAsana" checked> Update the Asana task</label>
+  <label for="uPortal">Show on the resident portal to</label><select id="uPortal">${[['Staff only','Nobody, keep it internal'],['Residents','All residents, leaseholders and tenants'],['Leaseholders','Leaseholders only, for costs and quotes']].map(([v,l])=>`<option value="${v}" ${t.visibility===v?'selected':''}>${l}</option>`).join('')}</select>
+  <p class="small muted" style="margin-top:-6px">Tenants never see costs, quotes or charges. If your message mentions money, choose Leaseholders only.</p>
+  <label class="check"><input type="checkbox" id="uMail"> Email all leaseholders through Outlook</label>
+  <p><button class="btn" data-act="updateAll" data-id="${t.id}">Update everywhere</button></p>`;}
+ return `${reqs.length?`<div class="panel"><h3>Reported by residents</h3>${reqs.map(r=>`<div class="row"><b>${esc(r.category)} · ${esc(r.location)}</b><p>${esc(r.body)}</p><div class="acts"><button class="btn" data-act="convertReq" data-id="${r.id}">Convert to task</button><button class="btn light" data-act="closeReq" data-id="${r.id}">Close</button></div></div>`).join('')}</div>`:''}
+ <div class="grid"><div class="panel"><div class="flex"><h3>Works and tasks</h3><button class="btn light" data-act="form" data-id="task">${ui.form==='task'?'Cancel':'New task'}</button></div>
+ ${ui.form==='task'?`<div class="note"><label for="ntTitle">Title</label><input id="ntTitle"><div class="form2"><div><label for="ntCat">Category</label><select id="ntCat">${opts(CATS)}</select></div><div><label for="ntPri">Priority</label><select id="ntPri">${opts(Object.keys(PRI),'Medium')}</select></div></div><label for="ntNote">Internal note</label><input id="ntNote"><button class="btn" data-act="createTask">Save and create in Asana</button></div>`:''}
+ ${list.map(x=>taskRow(x,t&&x.id===t.id)).join('')}</div><div class="panel">${d}</div></div>`;
+},
+'Accounts'(b){
+ const bud=sum(b.budget,x=>x.budget),act=sum(b.budget,x=>x.actual),inv=db.invoices.filter(v=>v.building===b.name),ar=b.unitsList.filter(x=>x.balance>0);
+ return `<div class="grid four">${tile('Annual budget',money(bud))}${tile('Spent to date',money(act))}${tile('Reserve fund',money(b.reserve))}${tile('Arrears',money(arrears(b)))}</div>
+ <div class="panel"><div class="flex"><h3>Service charge budget</h3>${pill('Source: Blockman')}</div><div class="tablewrap"><table><thead><tr><th>Heading</th><th class="num">Budget</th><th class="num">Actual</th><th>Used</th></tr></thead><tbody>
+ ${b.budget.map(x=>{const p=Math.round(x.actual/x.budget*100);return `<tr><td>${esc(x.head)}</td><td class="num">${money(x.budget)}</td><td class="num">${money(x.actual)}</td><td><div class="bar"><span class="${p>100?'over':''}" style="width:${Math.min(100,p)}%"></span></div><span class="small ${p>100?'':'muted'}">${p}%${p>100?' over budget':''}</span></td></tr>`}).join('')}</tbody></table></div></div>
+ <div class="grid"><div class="panel"><h3>Supplier invoices</h3><p class="muted small">Managers approve up to ${money(LIMIT)}. Anything above is sent to a named approver.</p>${inv.map(invRow).join('')||'<p class="muted">No invoices</p>'}</div>
+ <div class="panel"><h3>Arrears</h3>${ar.map(x=>`<div class="row flex"><span><b>Flat ${esc(x.unit)}, ${esc(x.leaseholder)}</b><br><span class="muted small">${money(x.balance)} outstanding</span></span><button class="btn light" data-act="remind" data-id="${esc(x.unit)}">Draft reminder</button></div>`).join('')||'<p class="muted">No arrears</p>'}</div></div>`;
+},
+'Compliance'(b){
+ return `<div class="panel"><h3>Compliance register</h3><div class="tablewrap"><table><thead><tr><th>Item</th><th>Next due</th><th>Status</th><th></th></tr></thead><tbody>
+ ${b.compliance.map((c,i)=>{const s=compStatus(c);return `<tr><td>${esc(c.item)}</td><td>${fmtDate(c.due)}</td><td>${pill(s,s==='Valid'?'good':s==='Due soon'?'warn':'crit')}</td><td><div class="acts" style="margin:0">${s!=='Valid'?`<button class="btn light" data-act="compTask" data-id="${i}">Create task</button>`:''}<button class="btn light" data-act="compRenew" data-id="${i}">Record renewal</button></div></td></tr>`}).join('')}</tbody></table></div></div>`;
+},
+'Legal'(b){
+ const list=db.legal.filter(l=>l.building===b.name);
+ return `<div class="panel"><div class="flex"><h3>Legal matters</h3><button class="btn light" data-act="form" data-id="legal">${ui.form==='legal'?'Cancel':'New matter'}</button></div>
+ ${ui.form==='legal'?`<div class="note"><div class="form2"><div><label for="lgType">Type</label><select id="lgType">${opts(['Section 20','Arrears recovery','Insurance claim','Lease query','Dispute'])}</select></div><div><label for="lgTitle">Title</label><input id="lgTitle"></div></div><label for="lgNote">Note</label><input id="lgNote"><button class="btn" data-act="addLegal">Save matter</button></div>`:''}
+ ${list.map(l=>{const st=LSTAGEOF(l);return `<div class="row"><div class="flex"><b>${esc(l.title)}</b><span class="tags">${pill(l.type)}${pill(st[l.stage],st[l.stage]==='Closed'?'good':'')}</span></div><p>${esc(l.note)}</p><p class="muted small">Next action by ${fmtDate(l.next)}</p>
+ <div class="form2"><div><label for="ls${l.id}">Stage</label><select id="ls${l.id}" data-legal="${l.id}">${st.map((s,i)=>`<option value="${i}" ${i===l.stage?'selected':''}>${s}</option>`).join('')}</select></div><div style="align-self:center">${l.type==='Section 20'?`<button class="btn light" data-act="legalDraft" data-id="${l.id}">Draft notice in Outlook</button>`:''}</div></div></div>`}).join('')||'<p class="muted">No legal matters</p>'}</div>`;
+},
+'People'(b){
+ return `<div class="panel"><div class="flex"><h3>Units and people</h3>${pill(b.units+' units')}</div><label for="pf">Search flat or name</label><input id="pf" placeholder="Type to filter">
+ <div class="tablewrap"><table><thead><tr><th>Flat</th><th>Leaseholder</th><th>Tenant</th><th class="num">Balance</th></tr></thead><tbody id="pRows">
+ ${b.unitsList.map(x=>`<tr data-s="${esc(('flat '+x.unit+' '+x.leaseholder+' '+x.tenant).toLowerCase())}"><td>Flat ${esc(x.unit)}</td><td>${esc(x.leaseholder)}</td><td>${esc(x.tenant)||'<span class="muted">Owner occupied</span>'}</td><td class="num">${x.balance?pill(money(x.balance),'warn'):money(0)}</td></tr>`).join('')}</tbody></table></div></div>`;
+},
+'Documents'(b){
+ const list=db.docs.filter(d=>d.building===b.name);
+ return `<div class="panel"><div class="flex"><h3>Documents</h3><button class="btn light" data-act="form" data-id="doc">${ui.form==='doc'?'Cancel':'Add record'}</button></div>
+ ${ui.form==='doc'?`<div class="note"><label for="dcName">Name</label><input id="dcName"><div class="form2"><div><label for="dcCat">Category</label><select id="dcCat">${opts(['Leases','Insurance','Certificates','Budgets','Minutes','Legal','General'])}</select></div><div><label for="dcVis">Who can see it</label><select id="dcVis">${opts(['Staff','Leaseholders','All residents'])}</select></div></div><button class="btn" data-act="addDoc">Save record</button> <span class="small muted">File upload needs the live build.</span></div>`:''}
+ ${list.map(d=>`<div class="row flex"><span><b>${esc(d.name)}</b><br><span class="muted small">${esc(d.cat)} · ${fmtDate(d.date)}</span></span>${pill(d.vis,d.vis==='Staff'?'warn':'')}</div>`).join('')}</div>`;
+},
+'Site inspection'(b){
+ const cur=inspOpen(b),past=inspDone(b);
+ let main;
+ if(!cur){
+  main=`<div class="panel"><div class="flex"><h3>Site inspection</h3>${pill(SOP_NAME)}</div>
+  <p>Walk the building and check each point of the standard SOP. Add a photo or video wherever it helps. When you finish, the platform reads the results and updates this building's works: issues become tasks, and open inspection tasks that now pass are closed.</p>
+  <p><button class="btn" data-act="inspStart">Start site inspection</button></p>
+  <details><summary>Read the SOP (${SOP_ITEMS.length} checks)</summary>${SOP.map(([sec,,items])=>`<p class="setgroup" style="margin-top:12px">${esc(sec.toUpperCase())}</p>${items.map(([,l,g])=>`<p class="small"><b>${esc(l)}</b><br><span class="muted">${esc(g)}</span></p>`).join('')}`).join('')}</details></div>`;
+ }else{
+  const ans=Object.keys(cur.items).filter(k=>cur.items[k].st).length,pct=Math.round(ans/SOP_ITEMS.length*100);
+  main=`<div class="panel"><div class="flex"><h3>Inspection in progress</h3>${pill(ans+' of '+SOP_ITEMS.length+' checked',ans===SOP_ITEMS.length?'good':'warn')}</div>
+  <p class="small stamp">Started by ${esc(cur.startedBy)} ${esc(when(cur.startedAt))}</p><div class="bar"><span style="width:${pct}%"></span></div>
+  <p class="muted small">Saved as you go, so anyone with access to ${esc(b.name)} can pick it up on another device.</p></div>
+  ${SOP.map(([sec,,items])=>`<div class="panel"><h3>${esc(sec)}</h3>${items.map(([key,label,guide])=>{const it=cur.items[key]||{};
+   return `<div class="ins ${it.st||''}"><div class="flex"><span><b>${esc(label)}</b><br><span class="muted small">${esc(guide)}</span></span>
+    <div class="seg" role="radiogroup" aria-label="${esc(label)}">${[['ok','OK'],['issue','Issue'],['na','N/A']].map(([v,l])=>`<button role="radio" aria-checked="${it.st===v}" class="s_${v}" data-act="inspSet" data-id="${key}" data-x="${v}">${l}</button>`).join('')}</div></div>
+    ${it.by?`<p class="small stamp">Checked by ${esc(it.by)} ${esc(when(it.at))}</p>`:''}
+    ${noteInput('in_'+key,it.st==='issue'?'Describe the issue':'Note (optional)',it.st==='issue'?'What is wrong and where':'Anything worth recording').replace('<input ',`<input data-inote="${key}" value="${esc(it.note||'')}" `)}
+    ${mediaHtml(it.media,true,key)}
+    <label class="upl"><input type="file" accept="image/*,video/*" multiple data-ifile="${key}"> Add photo or video</label></div>`}).join('')}</div>`).join('')}
+  <div class="panel"><div class="flex"><span class="muted small">${SOP_ITEMS.length-ans?`${SOP_ITEMS.length-ans} checks left`:'All checks done'}</span><span class="acts" style="margin:0"><button class="btn light" data-act="inspCancel">Discard</button><button class="btn" data-act="inspFinish">Finish and update works</button></span></div></div>`;
+ }
+ const hist=past.map(i=>{const v=Object.values(i.items),iss=v.filter(x=>x.st==='issue').length,ok=v.filter(x=>x.st==='ok').length,na=v.filter(x=>x.st==='na').length,med=v.reduce((n,x)=>n+(x.media||[]).length,0),r=i.result||{};
+  return `<div class="row"><div class="flex"><b>${fmtDate(i.completedAt.slice(0,10))}</b><span class="tags">${pill(ok+' OK','good')}${iss?pill(iss+' issue'+(iss===1?'':'s'),'crit'):''}${na?pill(na+' N/A'):''}${med?pill(med+' photo'+(med===1?'':'s')+' or videos'):''}</span></div>
+  <p class="small stamp">Completed by ${esc(i.completedBy)} ${esc(when(i.completedAt))}${i.startedBy!==i.completedBy?' · started by '+esc(i.startedBy):''}</p>
+  <p class="muted small">Works updated: ${(r.raised||[]).length} raised, ${(r.updated||[]).length} updated, ${(r.closed||[]).length} closed</p>
+  <details><summary>Full record</summary>${SOP_ITEMS.map(x=>{const it=i.items[x.key]||{};return `<div class="ins ${it.st||''}"><div class="flex"><b>${esc(x.label)}</b>${pill(it.st==='ok'?'OK':it.st==='issue'?'Issue':'N/A',it.st==='ok'?'good':it.st==='issue'?'crit':'')}</div>${it.note?`<p class="small">${esc(it.note)}</p>`:''}${it.by?`<p class="small muted">${esc(it.by)} · ${esc(when(it.at))}</p>`:''}${mediaHtml(it.media,false)}</div>`}).join('')}</details></div>`}).join('');
+ return main+`<div class="panel"><h3>Inspection records</h3>${hist||'<p class="muted">No inspections recorded yet.</p>'}</div>`;
+},
+'Inbox'(b){
+ const lh=b.units,res=b.units+b.unitsList.filter(x=>x.tenant).length,c=compose&&compose.box==='b:'+b.name?compose:{};
+ const tos=[`All leaseholders (${lh})`,`All residents (${res})`];if(c.to&&!tos.includes(c.to))tos.unshift(c.to);
+ const comp=`<div class="flex"><h3>Write an email</h3>${pill('From '+bAddr(b.name))}</div>
+ <div class="form2"><div><label for="mTo">To</label><select id="mTo">${opts(tos,c.to)}</select></div><div><label for="mTpl">Template</label><select id="mTpl">${opts(Object.keys(TPL))}</select></div></div>
+ <label for="mSub">Subject</label><input id="mSub" value="${esc(c.subject||'')}"><label for="mBody">Message</label><textarea id="mBody">${esc(c.body||'')}</textarea>
+ <div class="acts"><button class="btn" data-act="sendMail">Send</button><button class="btn light" data-act="saveDraft">Save as draft</button></div>`;
+ return inboxLayout('b:'+b.name,b.name+' building inbox',bAddr(b.name),'This inbox belongs to the building, not to you. Turning an email into a task adds it to this building\'s Works only.',comp);
+}};
+const LSTAGEOF=l=>LSTAGE[l.type]||LSTAGE.other;
+const fill=(s,b)=>s.replaceAll('{b}',b).replaceAll('{me}',me().short||me().name);
+
+const sw=(k,title,desc)=>`<div class="setrow"><span><b id="lb_${k}">${title}</b><span class="muted">${desc}</span></span><button class="switch" role="switch" aria-checked="${prefOn(k)}" aria-labelledby="lb_${k}" data-act="pref" data-id="${k}"></button></div>`;
+const ICON={
+ bell:'<path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.9 1.9 0 0 0 3.4 0"/>',
+ sound:'<path d="M11 5 6 9H2v6h4l5 4V5z"/><path d="M15.5 8.5a5 5 0 0 1 0 7"/><path d="M19 5a10 10 0 0 1 0 14"/>',
+ sun:'<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/>',
+ access:'<circle cx="12" cy="4.5" r="1.5"/><path d="M5 8l7 1.5L19 8M12 9.5V15m0 0-3 6m3-6 3 6"/>'};
+const ico=n=>`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${ICON[n]}</svg>`;
+const SETTINGS={
+ notifications:{title:'Notifications',icon:'bell',color:'#e5484d',sum:()=>'Pop-ups '+(fxOn()?'on':'off'),
+  body:()=>`<p class="setgroup">IN-APP</p>${sw('fx','Confirmation animation pop-ups','A quick tick when an email is sent or a task is created or completed.')}`},
+ sound:{title:'Sound & haptics',icon:'sound',color:'#d6409f',sum:()=>'Sound '+pref('sound')+' · Haptics '+pref('haptics'),
+  body:()=>`<p class="setgroup">CONFIRMATIONS</p>${sw('sound','Confirmation sound','A soft chime when an action is confirmed.')}${sw('haptics','Haptic feedback','A short vibration when an action is confirmed. Works on supported phones, mostly Android.')}`},
+ appearance:{title:'Appearance',icon:'sun',color:'#3e63dd',sum:()=>({system:'Match device',light:'Light',dark:'Dark'})[pref('theme')],
+  body:()=>`<p class="setgroup">THEME</p><div class="setrow"><span><b>Theme</b><span class="muted">Choose light, dark or follow your device.</span></span><div class="seg" role="radiogroup" aria-label="Theme">${[['system','Device'],['light','Light'],['dark','Dark']].map(([v,l])=>`<button role="radio" aria-checked="${pref('theme')===v}" data-act="theme" data-id="${v}">${l}</button>`).join('')}</div></div>`},
+ accessibility:{title:'Accessibility',icon:'access',color:'#30a46c',sum:()=>'Reduce motion '+pref('motion'),
+  body:()=>`<p class="setgroup">MOTION</p>${sw('motion','Reduce motion','Turns off sliding and pop animations across the platform. Pop-ups still show, without moving.')}`}};
+function pageSettings(){
+ const s=SETTINGS[ui.set];
+ if(s)return `<div class="panel setpanel"><button class="back" data-act="setSec" data-id=""><span aria-hidden="true">‹</span> Back to User settings</button><h3 class="sethead"><span class="seticon" style="--ic:${s.color}">${ico(s.icon)}</span>${s.title}</h3>${s.body()}</div>`;
+ return `<div class="panel setpanel"><h3>${esc(me().name)}</h3><p class="muted small">These settings apply to you only, on this device.</p>
+ <div class="setlist">${Object.entries(SETTINGS).map(([k,x])=>`<button class="setitem" data-act="setSec" data-id="${k}"><span class="seticon" style="--ic:${x.color}">${ico(x.icon)}</span><span class="setitxt"><b>${x.title}</b><span class="muted">${esc(x.sum())}</span></span><span class="chev" aria-hidden="true">›</span></button>`).join('')}</div></div>`;
+}
+
+/* ---------- resident pages ---------- */
+const myUnit=()=>B().unitsList.find(x=>x.unit===me().unit);
+const RES={
+'Home'(b){
+ const list=tasksOf(b).filter(resVis).sort((a,z)=>a.stage-z.stage),lh=me().role==='leaseholder';
+ return `<div class="grid four">${tile('Active works',list.filter(t=>t.stage<4).length)}${tile('Completed',list.filter(t=>t.stage===4).length)}${lh?tile('My balance',money(myUnit().balance)):''}${tile('Your manager',esc(b.manager))}</div>
+ <div class="panel"><h3>Works and updates at ${esc(b.name)}</h3>${list.map(t=>`<div class="row"><div class="flex"><b>${esc(t.title)}</b>${pill(STAGES[t.stage],t.stage===4?'good':'')}</div><div class="bar"><span style="width:${PCT[t.stage]}%"></span></div><p>${esc(t.description)}</p>${t.updatedAt?`<p class="small muted">Updated ${when(t.updatedAt)}</p>`:''}${(t.notes||[]).length?`<details><summary>Notes (${t.notes.length})</summary>${notesHtml(t.notes)}</details>`:''}<details><summary>Timeline</summary>${t.history.map(h=>`<p class="small">✓ ${esc(h)}</p>`).join('')}</details></div>`).join('')||'<p class="muted">No works to show</p>'}</div>`;
+},
+'My account'(b){
+ const x=myUnit(),annual=Math.round(sum(b.budget,h=>h.budget)/b.units),half=Math.round(annual/2);
+ const lines=[['1 Apr 2026','Service charge demand, first half',half,0],['14 Apr 2026','Payment received, thank you',0,half],['1 Oct 2026','Service charge demand, second half',half,0],['20 Oct 2026','Payment received, thank you',0,half-x.balance]];
+ return `<div class="grid four">${tile('Balance due',money(x.balance))}${tile('Annual charge',money(annual))}${tile('Year end',esc(b.yearEnd))}${tile('Reserve fund',money(b.reserve))}</div>
+ <div class="panel"><h3>Statement, Flat ${esc(x.unit)}</h3><div class="tablewrap"><table><thead><tr><th>Date</th><th>Detail</th><th class="num">Charge</th><th class="num">Paid</th></tr></thead><tbody>${lines.map(l=>`<tr><td>${l[0]}</td><td>${l[1]}</td><td class="num">${l[2]?money(l[2]):''}</td><td class="num">${l[3]?money(l[3]):''}</td></tr>`).join('')}</tbody></table></div></div>
+ <div class="panel"><h3>Where your service charge goes</h3><div class="tablewrap"><table><thead><tr><th>Heading</th><th class="num">Building budget</th><th class="num">Your share</th></tr></thead><tbody>${b.budget.map(h=>`<tr><td>${esc(h.head)}</td><td class="num">${money(h.budget)}</td><td class="num">${money(Math.round(h.budget/b.units))}</td></tr>`).join('')}</tbody></table></div></div>`;
+},
+'Documents'(b){
+ const ok=me().role==='leaseholder'?['All residents','Leaseholders']:['All residents'];
+ return `<div class="panel"><h3>Building documents</h3>${db.docs.filter(d=>d.building===b.name&&ok.includes(d.vis)).map(d=>`<div class="row flex"><span><b>${esc(d.name)}</b><br><span class="muted small">${esc(d.cat)} · ${fmtDate(d.date)}</span></span>${pill('Demo record')}</div>`).join('')}</div>`;
+},
+'Report issue'(b){
+ const mine=db.requests.filter(r=>r.by===uid);
+ return `<div class="panel"><h3>Report a building issue</h3><label for="rc">Category</label><select id="rc">${opts(['Maintenance','Cleaning','Safety','Noise','Other'])}</select><label for="rl">Location</label><input id="rl" placeholder="Communal corridor, floor 4"><label for="rb">What happened?</label><textarea id="rb"></textarea><button class="btn" data-act="submitIssue">Send report</button></div>
+ <div class="panel"><h3>My reports</h3>${mine.map(r=>`<div class="row"><div class="flex"><b>${esc(r.category)} · ${esc(r.location)}</b>${pill(r.status,r.status==='Awaiting review'?'warn':'')}</div><p>${esc(r.body)}</p></div>`).join('')||'<p class="muted">No reports yet</p>'}</div>`;
+}};
+const resTabs=()=>me().role==='leaseholder'?['Home','My account','Documents','Report issue']:['Home','Documents','Report issue'];
+
+/* ---------- actions ---------- */
+function mailOut(status){
+ const to=$('mTo').value,subject=$('mSub').value.trim(),body=$('mBody').value.trim();
+ if(!subject||!body)return toast('Add a subject and a message');
+ if(to.startsWith('All residents')&&MONEY.test(subject+' '+body))return toast('This email mentions money, and tenants must not see that. Send it to All leaseholders instead.');
+ const personal=view.page==='inbox',bld=personal?null:view.b;
+ db.emails.unshift({id:newId('E'),mailbox:personal?myBox():'b:'+bld,building:bld,dir:'out',from:personal?me().name:bld+' inbox ('+me().short+')',to,subject,body,date:today(),status});
+ if(!personal)sync('Outlook',(status==='Draft'?'Draft saved: ':'Email to '+to+': ')+subject,bld);compose=null;save();render();
+ toast(status==='Draft'?'Saved to Outlook drafts (simulated)':'Send recorded (simulated)');if(status!=='Draft')confirmFx('email');
+}
+const ok=name=>staff()&&canSee(name);
+function notify(to,text,inv,read){db.notes.unshift({id:newId('N'),to,from:uid,text,at:new Date().toISOString(),read:!!read,inv:inv||null});db.notes.length=Math.min(db.notes.length,500)}
+function applyDecision(v,yes,note){
+ Object.assign(v,{status:yes?'Approved':'Rejected',decidedBy:nameOf(uid),decidedAt:new Date().toISOString(),note:note||''});
+ if(yes){const h=db.buildings.find(b=>b.name===v.building).budget.find(x=>x.head===v.head);if(h)h.actual+=v.amount;
+  sync('Blockman','Invoice '+v.id+' from '+v.supplier+' approved for payment by '+nameOf(uid)+', '+money(v.amount),v.building)}
+ else sync('Approvals','Invoice '+v.id+' from '+v.supplier+' rejected by '+nameOf(uid),v.building);
+}
+const myNotes=()=>me()?db.notes.filter(n=>n.to===uid).sort((a,b)=>b.at.localeCompare(a.at)):[];
+function paintBell(){
+ const b=$('bell'),p=$('bPanel');if(!me()){b.hidden=true;p.hidden=true;ui.bell=false;return}
+ const list=myNotes(),n=list.filter(x=>!x.read).length;
+ b.hidden=false;b.classList.toggle('has',n>0);$('bCount').textContent=n?(n>9?'9+':n):'';
+ b.setAttribute('aria-label',n?`Notifications, ${n} unread`:'Notifications');b.setAttribute('aria-expanded',!!ui.bell);
+ p.hidden=!ui.bell;if(!ui.bell)return;
+ p.innerHTML=`<div class="bhead"><b>Notifications</b>${n?'<button class="btn link small" data-act="markAll">Mark all as read</button>':''}</div>`+
+  (list.slice(0,40).map(x=>{const v=x.inv&&db.invoices.find(i=>i.id===x.inv),dec=v&&canDecide(v);
+   return `<button class="ni ${x.read?'':'unread'}" data-act="noteOpen" data-id="${x.id}">${esc(x.text)}<span class="muted">${esc(when(x.at))}</span>${dec?'<span class="go">Decide now ›</span>':''}</button>`}).join('')||'<p class="bempty">You have no notifications yet.</p>');
+}
+function closeBell(){ui.bell=false;paintBell()}
+function closeDlg(){ui.dlg=null;paintDlg();const b=$('bell');if(b&&!b.hidden)b.focus()}
+function paintDlg(){
+ const box=$('dlg'),d=ui.dlg;if(!d){box.innerHTML='';return}
+ const v=db.invoices.find(x=>x.id===d.id);if(!v){ui.dlg=null;box.innerHTML='';return}
+ const sum=`<div class="amt">${money(v.amount)}</div><p><b>${esc(v.supplier)}</b> · ${esc(v.building)}</p><p class="muted small">${esc(v.desc)} · ${esc(v.head)}${v.requestedBy?' · Requested by '+esc(nameOf(v.requestedBy)):''}</p>`;
+ let h;
+ if(d.step==='tag')h=`<h3 id="dlgT">Who should approve this?</h3>${sum}<div class="pick" role="radiogroup" aria-labelledby="dlgT">${approvers().map(a=>`<label><input type="radio" name="appr" value="${a.id}" data-act="dlgPick" data-id="${a.id}" ${d.pick===a.id?'checked':''}> <span><b>${esc(a.short)}</b><br><span class="muted small">${esc(ROLE[a.role])}</span></span></label>`).join('')}</div><div style="margin-top:14px">${noteInput('dlgNote','Note for the approver (optional)','Why it needs approving')}</div><div class="choice"><button class="btn light big" data-act="dlgClose">Cancel</button><button class="btn big" data-act="dlgSend">Send</button></div>`;
+ else if(d.step==='choose')h=`<h3 id="dlgT">Approve this invoice?</h3>${sum}${(v.notes||[]).length?`<div class="dlgnotes">${notesHtml(v.notes)}</div>`:''}<div class="choice"><button class="btn yes big" data-act="dlgChoose" data-id="yes">Yes</button><button class="btn no big" data-act="dlgChoose" data-id="no">No</button></div><div class="dlgfoot"><button class="btn link small" data-act="dlgClose">Not now</button></div>`;
+ else h=`<h3 id="dlgT">Are you sure?</h3><p>You are about to <b>${d.yes?'approve':'reject'}</b> ${money(v.amount)} to ${esc(v.supplier)} for ${esc(v.building)}.${v.requestedBy?' '+esc(nameOf(v.requestedBy))+' will be notified.':''}</p>${noteInput('dlgNote',d.yes?'Add a note (optional)':'Reason (optional)',d.yes?'Anything they should know':'Tell them why')}<div class="choice"><button class="btn light big" data-act="dlgBack">Go back</button><button class="btn ${d.yes?'yes':'no'} big" data-act="dlgConfirm">Yes, ${d.yes?'approve':'reject'}</button></div>`;
+ box.innerHTML=`<div class="dlgback" data-act="dlgOut"><div class="dlgbox" role="dialog" aria-modal="true" aria-labelledby="dlgT">${h}</div></div>`;
+ setTimeout(()=>{const f=box.querySelector('.choice .btn:last-child, .choice .btn');if(f)f.focus()},30);
+}
+const ACT={
+ nav(p){view.page=p;ui.form=null;render()},
+ openB(n,x){if(!canSee(n))return;view={page:'building',b:n,tab:x&&TABS.includes(x)?x:'Overview'};ui.form=null;ui.task=null;render();window.scrollTo(0,0)},
+ tab(t){if(view.page==='settings'&&!staff())view.page='res';view.tab=t;ui.form=null;render()},
+ settings(){view.page='settings';ui.set=null;ui.form=null;render();window.scrollTo(0,0)},
+ setSec(k){ui.set=k||null;render();window.scrollTo(0,0)},
+ pref(k){const on=!prefOn(k);setPref(k,on?'on':'off');applyPrefs();render();if(on&&k==='fx')setTimeout(()=>confirmFx('done','Pop-ups on'),250);else if(on&&k==='sound')chime();else if(on&&k==='haptics')buzz()},
+ theme(v){setPref('theme',v);applyPrefs();render()},
+ signOut(){writeSession(null);uid=null;compose=null;showLogin(true)},
+ reset(){
+  if(live&&!isTop())return toast('Only a master admin or the CEO can reset shared data.');
+  const b=$('resetBtn');if(live&&b.dataset.arm!=='1'){b.dataset.arm='1';b.textContent='Tap again to reset for everyone';setTimeout(()=>{b.dataset.arm='';b.textContent='Reset demo'},4000);return}
+  b.dataset.arm='';b.textContent='Reset demo';
+  if(live)return resetLive();
+  db=mkSeed();save();compose=null;ui={task:null,form:null,sys:'All',set:null};render();toast('Demo data reset')},
+ form(k){ui.form=ui.form===k?null:k;render()},
+ pickTask(id){ui.task=id;render()},
+ createTask(){
+  if(!ok(view.b))return;const title=$('ntTitle').value.trim();if(!title)return toast('Add a title');
+  ui.task=newTask(view.b,title,$('ntCat').value,$('ntPri').value,$('ntNote').value.trim()||'No internal note','Created by '+me().name);ui.form=null;save();render();toast('Task created here and in Asana');confirmFx('created');
+ },
+ updateAll(id){
+  const t=db.tasks.find(x=>x.id===id);if(!t||!ok(t.building))return;
+  const stage=+$('uStage').value,msg=$('uMsg').value.trim(),vis=$('uPortal').value,b=B();if(!msg)return toast('Add the message residents will read');
+  if(vis==='Residents'&&MONEY.test(t.title+' '+msg))return toast('This update mentions money, and tenants must not see that. Choose Leaseholders only, or take the cost out.');
+  t.stage=stage;t.description=msg;t.history.push(fmtDate(today())+': '+STAGES[stage]);let n=0;
+  if($('uAsana').checked){sync('Asana','Task '+t.id+' moved to '+STAGES[stage],t.building);n++}
+  if(vis!=='Staff only'){sync('Resident portal','Update published to '+VISL[vis].toLowerCase()+': '+t.title,t.building);n++}
+  else if(t.visibility!=='Staff only')sync('Resident portal','Update taken off the portal: '+t.title,t.building);
+  t.visibility=vis;
+  if($('uMail').checked){const to=`All leaseholders (${b.units})`,subject='Update: '+t.title;
+   db.emails.unshift({id:newId('E'),mailbox:'b:'+t.building,building:t.building,dir:'out',from:t.building+' inbox ('+me().short+')',to,subject,body:'Dear leaseholders,\n\n'+msg+'\n\nCurrent stage: '+STAGES[stage]+'.\n\nKind regards,\n'+(me().short||me().name)+'\nJFM',date:today(),status:'Sent'});
+   sync('Outlook','Email to '+to+': '+subject,t.building);n++}
+  save();render();toast(n?'Saved and pushed to '+n+' place'+(n===1?'':'s'):'Saved in this app only');confirmFx('done',stage===4?'Task done':'Task updated');
+ },
+ convertReq(id){const r=db.requests.find(x=>x.id===id);if(!r||!ok(r.building))return;ui.task=newTask(r.building,r.category+': '+r.location,CATS.includes(r.category)?r.category:'Other',r.category==='Safety'?'High':'Medium',r.body,'Reported through the portal');r.status='In progress';notify(r.by,`Your report about ${r.location} is now being handled by ${me().short}.`);save();render();toast('Task created here and in Asana');confirmFx('created')},
+ closeReq(id){const r=db.requests.find(x=>x.id===id);if(!r||!ok(r.building))return;r.status='Closed';save();render()},
+ approveInv(id){
+  const v=db.invoices.find(x=>x.id===id);if(!v||!ok(v.building)||v.amount>LIMIT||v.status!=='Awaiting approval')return;
+  applyDecision(v,true);save();render();toast('Approved and passed to accounts');
+ },
+ askApproval(id){const v=db.invoices.find(x=>x.id===id);if(!v||!ok(v.building)||v.amount<=LIMIT||v.status!=='Awaiting approval')return;ui.dlg={id,step:'tag',pick:approvers()[0].id};paintDlg()},
+ decide(id){const v=db.invoices.find(x=>x.id===id);if(!v||!canDecide(v))return closeBell(),toast('This invoice has already been decided.');closeBell();ui.dlg={id,step:'choose'};paintDlg()},
+ dlgPick(id){ui.dlg.pick=id},
+ dlgSend(){
+  const v=db.invoices.find(x=>x.id===ui.dlg.id),to=ui.dlg.pick;if(!v||v.status!=='Awaiting approval')return closeDlg();
+  Object.assign(v,{status:'Awaiting decision',approver:to,requestedBy:uid,requestedAt:new Date().toISOString()});
+  const sn=(($('dlgNote')||{}).value||'').trim().slice(0,NOTE_MAX);
+  if(sn)(v.notes=v.notes||[]).push({by:nameOf(uid),text:sn,at:new Date().toISOString(),tag:'With request'});
+  notify(to,`${nameOf(uid)} asked you to approve ${money(v.amount)} from ${v.supplier} at ${v.building}.${sn?' Note: '+sn:''}`,v.id);
+  sync('Approvals',`Invoice ${v.id} sent to ${nameOf(to)} for approval, ${money(v.amount)}`,v.building);
+  closeDlg();save();render();toast(`Sent to ${nameOf(to)}. They have been notified.`);confirmFx('email','Sent for approval');
+ },
+ dlgChoose(c){ui.dlg.step='confirm';ui.dlg.yes=c==='yes';paintDlg()},
+ dlgBack(){ui.dlg.step='choose';paintDlg()},
+ dlgConfirm(){
+  const v=db.invoices.find(x=>x.id===ui.dlg.id),yes=ui.dlg.yes,note=($('dlgNote')||{}).value||'';if(!v||!canDecide(v)){closeDlg();return toast('This invoice has already been decided.')}
+  const from=v.requestedBy,nt=note.trim().slice(0,NOTE_MAX);applyDecision(v,yes,nt);
+  if(nt)(v.notes=v.notes||[]).push({by:nameOf(uid),text:nt,at:new Date().toISOString(),tag:yes?'With approval':'With rejection'});
+  const word=yes?'approved':'rejected',what=`${money(v.amount)} from ${v.supplier} at ${v.building}`;
+  db.notes.forEach(n=>{if(n.inv===v.id&&n.to===uid)n.read=true});
+  if(from&&from!==uid)notify(from,`${nameOf(uid)} ${word} ${what}.${nt?' Note: '+nt:''}`,v.id);
+  notify(uid,`You ${word} ${what}.${from&&from!==uid?' '+nameOf(from)+' has been told.':''}`,v.id);
+  closeDlg();save();render();toast(`Invoice ${word}. ${from&&from!==uid?nameOf(from)+' has been notified.':''}`);confirmFx('done',yes?'Approved':'Rejected');
+ },
+ dlgClose(){closeDlg()},
+ addNote(id,kind){
+  const x=kind==='task'?db.tasks.find(t=>t.id===id):kind==='my'?db.mytasks.find(t=>t.id===id):db.invoices.find(v=>v.id===id);if(!x||(kind==='my'?x.owner!==uid:!ok(x.building)))return;
+  const el=$('nf_'+id),text=(el&&el.value||'').trim();if(!text)return toast('Write a note first.');
+  if(text.length>NOTE_MAX)return toast(`Notes can be up to ${NOTE_MAX} characters.`);
+  if(kind==='task'&&x.visibility==='Residents'&&MONEY.test(text))return toast('Tenants can see this task, so the note cannot mention money. Change who sees it to Leaseholders only first.');
+  (x.notes=x.notes||[]).push({by:nameOf(uid),text,at:new Date().toISOString()});
+  if(kind==='inv')[x.requestedBy,x.approver].filter((p,i,a)=>p&&p!==uid&&a.indexOf(p)===i).forEach(p=>notify(p,`${nameOf(uid)} added a note on ${money(x.amount)} from ${x.supplier}: ${text}`,x.id));
+  ui.openNotes=kind==='task'?null:id;save();render();toast('Note added');
+ },
+ bell(){ui.bell=!ui.bell;paintBell();if(ui.bell)setTimeout(()=>{const f=$('bPanel').querySelector('button');if(f)f.focus()},30)},
+ noteOpen(id){
+  const n=db.notes.find(x=>x.id===id);if(!n||n.to!==uid)return;if(!n.read){n.read=true;save()}
+  const v=n.inv&&db.invoices.find(x=>x.id===n.inv);
+  if(v&&canDecide(v))return ACT.decide(v.id);
+  closeBell();if(v&&staff()&&canSee(v.building))ACT.openB(v.building,'Accounts');else{render()}
+ },
+ markAll(){db.notes.forEach(n=>{if(n.to===uid)n.read=true});save();paintBell()},
+ remind(unit){const x=B().unitsList.find(u=>u.unit===unit);if(!x||!ok(view.b))return;compose={box:'b:'+view.b,to:`Flat ${x.unit}, ${x.leaseholder}`,subject:fill(TPL['Arrears reminder'][0],view.b),body:fill(TPL['Arrears reminder'][1],view.b).replace('an outstanding service charge balance','an outstanding service charge balance of '+money(x.balance))};view.tab='Inbox';render();window.scrollTo(0,0)},
+ compTask(i){const c=B().compliance[+i];if(!c||!ok(view.b))return;ui.task=newTask(view.b,'Renew: '+c.item,'Compliance','High','Raised from the compliance register.','Raised from compliance register');save();view.tab='Works';render();toast('Task created here and in Asana');confirmFx('created')},
+ compRenew(i){const c=B().compliance[+i];if(!c||!ok(view.b))return;c.due=iso(365);sync('Blockman','Certificate recorded: '+c.item,view.b);save();render();toast('Renewal recorded')},
+ addLegal(){if(!ok(view.b))return;const title=$('lgTitle').value.trim();if(!title)return toast('Add a title');db.legal.unshift({id:newId('L'),building:view.b,type:$('lgType').value,title,stage:0,next:iso(14),note:$('lgNote').value.trim()||'No note yet'});ui.form=null;save();render()},
+ legalDraft(id){const l=db.legal.find(x=>x.id===id);if(!l||!ok(l.building))return;compose={box:'b:'+view.b,to:`All leaseholders (${B().units})`,subject:fill(TPL['Section 20 notice'][0],view.b)+': '+l.title,body:fill(TPL['Section 20 notice'][1],view.b)};view.tab='Inbox';render();window.scrollTo(0,0)},
+ addDoc(){if(!ok(view.b))return;const name=$('dcName').value.trim();if(!name)return toast('Add a name');db.docs.unshift({id:newId('D'),building:view.b,name,cat:$('dcCat').value,vis:$('dcVis').value,date:today()});ui.form=null;save();render()},
+ sendMail(){if(view.page==='inbox'||ok(view.b))mailOut('Sent')},
+ saveDraft(){if(view.page==='inbox'||ok(view.b))mailOut('Draft')},
+ sendDraft(id){const e=db.emails.find(x=>x.id===id);if(!canMail(e))return;e.status='Sent';if(e.building)sync('Outlook','Email to '+e.to+': '+e.subject,e.building);save();render();toast('Send recorded (simulated)');confirmFx('email')},
+ mailTask(id){
+  const e=db.emails.find(x=>x.id===id);if(!canMail(e))return;
+  if(e.building){newTask(e.building,e.subject,'Maintenance','Medium',e.body,'Raised from the '+e.building+' inbox, email from '+e.from);e.status='Done';save();render();toast('Added to '+e.building+' works');confirmFx('created')}
+  else{db.mytasks.unshift({id:newId('M'),owner:uid,title:e.subject,due:iso(7),done:false,source:'From email: '+e.from,body:e.body,notes:[],createdAt:new Date().toISOString()});e.status='Done';save();render();toast('Added to My tasks');confirmFx('created')}
+ },
+ mailReply(id){
+  const e=db.emails.find(x=>x.id===id);if(!canMail(e))return;
+  compose={box:e.mailbox,to:e.from,subject:'Re: '+e.subject,body:'Dear '+e.from+',\n\nThank you for your email. \n\nKind regards,\n'+(me().short||me().name)+'\nJFM'};
+  view=e.building?{page:'building',b:e.building,tab:'Inbox'}:{page:'inbox',b:view.b,tab:view.tab};render();window.scrollTo(0,0)
+ },
+ mailDone(id){const e=db.emails.find(x=>x.id===id);if(!canMail(e))return;e.status='Done';save();render();confirmFx('done','Marked done')},
+ inspStart(){if(!ok(view.b)||inspOpen(B()))return;db.inspections.unshift({id:newId('I'),building:view.b,sop:SOP_NAME,status:'In progress',startedBy:nameOf(uid),startedById:uid,startedAt:new Date().toISOString(),items:{}});save();render();window.scrollTo(0,0)},
+ inspSet(key,v){const i=inspOpen(B());if(!i||!ok(view.b)||!sopItem(key))return;const it=i.items[key]=i.items[key]||{media:[]};const el=$('in_'+key);if(el)it.note=el.value.trim().slice(0,NOTE_MAX);it.st=v;it.by=nameOf(uid);it.at=new Date().toISOString();save();render();if(v==='issue')setTimeout(()=>{const n=$('in_'+key);if(n&&!n.value)n.focus()},40)},
+ inspDelMedia(id,key){const i=inspOpen(B());if(!i||!ok(view.b))return;const it=i.items[key];if(!it)return;it.media=(it.media||[]).filter(m=>m.id!==id);save();render()},
+ inspCancel(){const i=inspOpen(B());if(!i||!ok(view.b))return;const b=$('content').querySelector('[data-act=inspCancel]');if(b.dataset.arm!=='1'){b.dataset.arm='1';b.textContent='Tap again to discard';return}db.inspections=db.inspections.filter(x=>x!==i);save();render();toast('Inspection discarded')},
+ inspFinish(){
+  const b=B(),i=inspOpen(b);if(!i||!ok(b.name))return;
+  document.querySelectorAll('[data-inote]').forEach(el=>{const it=i.items[el.dataset.inote];if(it)it.note=el.value.trim().slice(0,NOTE_MAX)});
+  const left=SOP_ITEMS.filter(x=>!(i.items[x.key]||{}).st);if(left.length)return toast(`${left.length} check${left.length===1?'':'s'} left, starting with ${left[0].label}.`);
+  const vague=SOP_ITEMS.filter(x=>i.items[x.key].st==='issue'&&!i.items[x.key].note);if(vague.length)return toast(`Describe the issue for ${vague[0].label} before finishing.`);
+  const now=new Date().toISOString(),day=fmtDate(today()),r={raised:[],updated:[],closed:[]};
+  /* Read the SOP results and update this building's works only */
+  SOP_ITEMS.forEach(x=>{
+   const it=i.items[x.key],open=db.tasks.find(t=>t.building===b.name&&t.inspKey===x.key&&t.stage<4),pics=(it.media||[]).length;
+   if(it.st==='issue'){
+    const note={by:nameOf(uid),text:it.note,at:now,tag:'From site inspection'};
+    if(open){(open.notes=open.notes||[]).push(note);open.history.push(day+': still an issue at site inspection');open.inspId=i.id;r.updated.push(open.id)}
+    else{const id=newTask(b.name,'Inspection: '+x.label,x.cat,HIGH_KEYS.includes(x.key)?'High':'Medium',it.note+(pics?` (${pics} photo${pics===1?'':'s'} or video${pics===1?'':'s'} in the inspection record)`:''),'Raised from site inspection by '+nameOf(uid));
+     const t=db.tasks.find(y=>y.id===id);Object.assign(t,{inspKey:x.key,inspId:i.id,notes:[note]});r.raised.push(id)}
+   }else if(it.st==='ok'&&open){open.stage=4;open.history.push(day+': resolved, passed site inspection');(open.notes=open.notes||[]).push({by:nameOf(uid),text:'Checked OK at site inspection.',at:now,tag:'From site inspection'});r.closed.push(open.id)}
+  });
+  Object.assign(i,{status:'Completed',completedBy:nameOf(uid),completedById:uid,completedAt:now,result:r});
+  sync('Site inspection',`Inspection completed by ${nameOf(uid)}: ${r.raised.length} tasks raised, ${r.updated.length} updated, ${r.closed.length} closed`,b.name);
+  users.filter(u=>u.role==='pm'&&u.id!==uid&&(u.buildings||[]).includes(b.name)).forEach(u=>notify(u.id,`${nameOf(uid)} completed a site inspection at ${b.name}: ${r.raised.length} new task${r.raised.length===1?'':'s'}, ${r.closed.length} closed.`));
+  save();render();window.scrollTo(0,0);toast(`Inspection saved. ${r.raised.length} raised, ${r.updated.length} updated, ${r.closed.length} closed in ${b.name} works.`);confirmFx('done','Inspection saved');
+ },
+ olConnect(){olSignIn()},
+ olDisconnect(){olStore.set('tok',null);ol.me=null;ol.msgs=null;ol.bodies={};ol.err='';render();toast('Outlook disconnected')},
+ olRefresh(){olLoad()},
+ async olRead(i){const m=ol.msgs&&ol.msgs[+i];if(!m)return;try{const j=await graph('/me/messages/'+encodeURIComponent(m.id)+'?$select=body',{Prefer:'outlook.body-content-type="text"'});ol.bodies[m.id]=((j.body&&j.body.content)||'').trim()}catch(e){ol.err=e.message==='signed-out'?'Your Outlook sign in has expired. Please connect again.':e.message}render()},
+ olTask(i){
+  const m=ol.msgs&&ol.msgs[+i],to=$('olB'+i)&&$('olB'+i).value;if(!m||!to)return;
+  const f=(m.from&&m.from.emailAddress)||{},who=f.name||f.address||'unknown',text=ol.bodies[m.id]||m.bodyPreview||'';
+  if(to==='__my'){db.mytasks.unshift({id:newId('M'),owner:uid,title:m.subject||'(no subject)',due:iso(7),done:false,source:'From Outlook email: '+who,body:text,notes:[],createdAt:new Date().toISOString()});toast('Added to My tasks')}
+  else{if(!ok(to))return;newTask(to,m.subject||'(no subject)','Maintenance','Medium',text,'Raised from Outlook email from '+who);toast('Added to '+to+' works')}
+  const d=olDone();d.push(m.id);olSaveDone(d);save();render();confirmFx('created');
+ },
+ myAdd(){const title=$('myTitle').value.trim();if(!title)return toast('Write the task first.');db.mytasks.unshift({id:newId('M'),owner:uid,title,due:$('myDue').value||iso(7),done:false,source:'Added by you',notes:[],createdAt:new Date().toISOString()});save();render();toast('Added to My tasks');confirmFx('created')},
+ myDone(id){const t=db.mytasks.find(x=>x.id===id);if(!t||t.owner!==uid)return;t.done=!t.done;t.doneAt=t.done?new Date().toISOString():null;save();render();if(t.done)confirmFx('done')},
+ submitIssue(){
+  if(staff())return;const body=$('rb').value.trim(),location=$('rl').value.trim();if(!body||!location)return toast('Describe the issue and its location');
+  db.requests.unshift({id:newId('R'),building:me().building,category:$('rc').value,location,body,by:uid,status:'Awaiting review'});save();render();toast('Report sent to your property manager');confirmFx('email','Report sent');
+ }
+};
+
+function render(){
+ if(!me())return showLogin(false);
+ pendingRender=false;paintLive();paintBell();if(ui.dlg)paintDlg();
+ const m=me(),st=staff();
+ if(view.page==='settings'){if(!canSee(view.b))view.b=myB()[0].name}
+ else if(!st){view.b=m.building;if(view.page!=='res'||!resTabs().includes(view.tab))view={page:'res',b:m.building,tab:'Home'}}
+ else{if(view.page==='res')view={page:'portfolio',b:myB()[0].name,tab:'Overview'};if(!canSee(view.b)){view.b=myB()[0].name;if(view.page==='building')view.page='portfolio'}}
+ const nb=(act,id,label,on,n,cls)=>`<button class="${on?'on':''} ${cls||''}" data-act="${act}" data-id="${esc(id)}"><span>${esc(label)}</span>${n?`<span class="badge">${n}</span>`:''}</button>`;
+ $('nav').innerHTML=st
+  ?nb('nav','portfolio','Portfolio',view.page==='portfolio')+nb('nav','inbox','Inbox',view.page==='inbox',myMailNew().length)+nb('nav','mytasks','My tasks',view.page==='mytasks',myOpen().length)+nb('nav','sync','Sync activity',view.page==='sync')+'<div class="navhead">BUILDINGS</div>'+myB().map(b=>nb('openB',b.name,b.name,view.page==='building'&&view.b===b.name,attention(b),'bld')).join('')
+  :resTabs().map(t=>nb('tab',t,t,view.page==='res'&&view.tab===t)).join('');
+ $('setBtn').hidden=false;$('setBtn').classList.toggle('on',view.page==='settings');
+ $('bWrap').style.display=st?'':'none';
+ $('bSel').innerHTML=`<option value="">Portfolio</option>`+myB().map(b=>`<option ${view.page==='building'&&view.b===b.name?'selected':''}>${esc(b.name)}</option>`).join('');
+ const titles={portfolio:'Portfolio',inbox:'Inbox',mytasks:'My tasks',sync:'Sync activity',settings:'User settings'};
+ applyPrefs();
+ $('heading').textContent=view.page==='building'||view.page==='res'?view.b:view.page==='settings'&&SETTINGS[ui.set]?SETTINGS[ui.set].title:titles[view.page];
+ $('identity').textContent=m.name+(st?' · '+myB().length+' buildings':'');
+ if(view.page==='portfolio'){const n=sum(myB(),attention),k=myB().length;
+  $('heading').textContent=hello();
+  $('identity').textContent=`${timeGreet()}. ${n?n+' thing'+(n===1?' needs':'s need')+' your attention':'Nothing needs your attention'} across ${k} building${k===1?'':'s'}.`}
+ else if(view.page==='res'&&view.tab==='Home'){$('heading').textContent=hello();$('identity').textContent=`${timeGreet()}. Here is the latest at ${view.b}.`}
+ let h;
+ if(view.page==='settings')h=pageSettings();
+ else if(view.page==='res')h=RES[view.tab](B());
+ else if(view.page==='building')h=`<div class="tabs" role="tablist">${TABS.map(t=>`<button class="${t===view.tab?'on':''}" data-act="tab" data-id="${t}">${t}</button>`).join('')}</div>`+TAB[view.tab](B());
+ else h=view.page==='inbox'?pageInbox():view.page==='mytasks'?pageMyTasks():view.page==='sync'?pageSync():pagePortfolio();
+ $('content').innerHTML=h;if(document.querySelector('[data-mid]:not([src])'))hydrateMedia();
+}
+document.addEventListener('click',e=>{
+ if(ui.bell&&!e.target.closest('#bPanel,#bell'))closeBell();
+ if(e.target.classList&&e.target.classList.contains('dlgback'))return closeDlg();
+ const b=e.target.closest('[data-act]');if(b&&b.dataset.act==='dlgOut')return;if(b&&ACT[b.dataset.act])ACT[b.dataset.act](b.dataset.id,b.dataset.x)});
+document.addEventListener('change',e=>{
+ const el=e.target;
+ if(el.id==='bSel'){if(el.value)ACT.openB(el.value);else ACT.nav('portfolio')}
+ else if(el.id==='sysSel'){ui.sys=el.value;render()}
+ else if(el.id==='mTpl'){const t=TPL[el.value];$('mSub').value=fill(t[0],view.b);$('mBody').value=fill(t[1],view.b)}
+ else if(el.dataset.legal){const l=db.legal.find(x=>x.id===el.dataset.legal);if(l&&ok(l.building)){l.stage=+el.value;l.next=iso(14);save();render();toast('Stage updated')}}
+});
+async function addMedia(key,files){
+ const i=inspOpen(B());if(!i||!ok(view.b))return;const it=i.items[key]=i.items[key]||{media:[]};it.media=it.media||[];
+ let added=0,skipped=0;toast('Saving '+files.length+' file'+(files.length===1?'':'s')+'…');
+ for(const f of files){
+  const type=f.type.startsWith('image/')?'image':f.type.startsWith('video/')?'video':null;
+  if(!type||(type==='video'&&f.size>100*1024*1024)){skipped++;continue}
+  const blob=type==='image'?await shrinkImage(f):f,id=newId('P');
+  try{await mediaPut(id,blob)}catch(e){}
+  mediaURL[id]=URL.createObjectURL(blob);
+  let url=null;
+  if(live&&sb){try{const path=`${i.building.replace(/[^A-Za-z0-9]+/g,'-')}/${i.id}/${id}.${type==='image'?'jpg':(f.name.split('.').pop()||'mp4')}`;
+   const up=await sb.storage.from('inspection-media').upload(path,blob,{contentType:blob.type||f.type});if(!up.error)url=sb.storage.from('inspection-media').getPublicUrl(path).data.publicUrl}catch(e){}}
+  it.media.push({id,type,name:f.name,url,by:nameOf(uid),at:new Date().toISOString()});added++;
+ }
+ if(!it.st){it.by=nameOf(uid);it.at=new Date().toISOString()}
+ save();render();toast(`${added} added${skipped?`, ${skipped} skipped (only photos, and videos up to 100 MB)`:''}.${live&&added&&!it.media.slice(-added).every(m=>m.url)?' Some files are on this device only.':''}`);
+}
+document.addEventListener('change',e=>{const el=e.target;
+ if(el.dataset&&el.dataset.ifile&&el.files&&el.files.length){addMedia(el.dataset.ifile,[...el.files]);el.value=''}
+ else if(el.dataset&&el.dataset.inote){const i=inspOpen(B());if(i&&ok(view.b)){const it=i.items[el.dataset.inote]=i.items[el.dataset.inote]||{media:[]};const v=el.value.trim().slice(0,NOTE_MAX);if(it.note!==v){it.note=v;save()}}}
+});
+document.addEventListener('input',e=>{const cn=e.target.dataset&&e.target.dataset.count;if(cn&&$(cn))$(cn).textContent=e.target.value.length+'/'+NOTE_MAX;if(e.target.id==='pf'){const q=e.target.value.toLowerCase();document.querySelectorAll('#pRows tr').forEach(r=>{r.style.display=r.dataset.s.includes(q)?'':'none'})}});
+
+/* ---------- sign in ---------- */
+let hv={},shownAt=Date.now(),fails=0,lockUntil=0;
+const lerr=(m,info)=>{const el=$('lErr');el.textContent=m||'';el.classList.toggle('info',!!info)};
+function showLogin(fresh){
+ ui.bell=false;ui.dlg=null;paintBell();paintDlg();
+ document.querySelector('.app').hidden=true;$('login').hidden=false;applyPrefs();
+ if(fresh){$('lUser').value='';$('lPass').value='';lerr('')}
+ resetHV();shownAt=Date.now();setTimeout(()=>{try{$('lUser').focus()}catch(e){}},60);
+}
+function enterApp(welcome){
+ $('login').hidden=true;document.querySelector('.app').hidden=false;
+ compose=null;ui={task:null,form:null,sys:'All',set:null};
+ view={page:staff()?'portfolio':'res',b:myB()[0].name,tab:staff()?'Overview':'Home'};
+ render();window.scrollTo(0,0);if(welcome)splash();
+}
+function splash(){
+ document.querySelectorAll('.welcome').forEach(x=>x.remove());
+ const el=document.createElement('div');el.className='welcome';el.setAttribute('aria-hidden','true');
+ el.innerHTML=`<div><p class="wsmall">${esc(timeGreet())}</p><p class="wbig">${esc(hello())}</p></div>`;
+ document.body.appendChild(el);setTimeout(()=>el.remove(),prefOn('motion')?900:1600);
+}
+/* Human check: drag the handle to the end. A person takes time and moves in many small steps;
+   a script tends to jump straight there, fill the hidden field, or act the instant the page loads. */
+const hvEl=()=>$('hv'),knob=()=>hvEl().querySelector('.knob');
+const hvMax=()=>Math.max(1,hvEl().clientWidth-knob().offsetWidth-6);
+function hvSet(p){
+ hv.pos=Math.max(0,Math.min(1,p));const px=hv.pos*hvMax();
+ knob().style.transform=`translateX(${px}px)`;hvEl().querySelector('.sfill').style.width=(px+knob().offsetWidth/2+3)+'px';
+ hvEl().setAttribute('aria-valuenow',Math.round(hv.pos*100));
+}
+function resetHV(){
+ hv={ok:false,start:0,moves:0,pos:0,drag:false};
+ const el=hvEl();el.classList.remove('ok','back');el.querySelector('.stext').textContent='Slide to verify';
+ el.setAttribute('aria-valuetext','Not verified');hvSet(0);
+}
+function hvBack(){const el=hvEl();el.classList.add('back');hvSet(0);hv.start=0;hv.moves=0;setTimeout(()=>el.classList.remove('back'),260)}
+function hvFinish(){
+ if(hv.ok)return;if(hv.pos<.96)return hvBack();
+ const human=Date.now()-hv.start>350&&hv.moves>=4&&Date.now()-shownAt>1200&&!$('lWeb').value;
+ if(!human){resetHV();return lerr('We could not verify you. Slide again, a little more slowly.')}
+ hv.ok=true;hvSet(1);const el=hvEl();el.classList.add('ok');el.querySelector('.stext').textContent='Verified ✓';
+ el.setAttribute('aria-valuetext','Verified');if(/verify|Slide/.test($('lErr').textContent))lerr('');
+}
+hvEl().addEventListener('pointerdown',e=>{
+ if(hv.ok||!e.target.closest('.knob'))return;e.preventDefault();
+ hv.drag=true;hv.start=Date.now();hv.moves=0;hv.grab=e.clientX-hv.pos*hvMax();hvEl().setPointerCapture(e.pointerId);
+});
+hvEl().addEventListener('pointermove',e=>{if(!hv.drag)return;hvSet((e.clientX-hv.grab)/hvMax());hv.moves++});
+['pointerup','pointercancel'].forEach(t=>hvEl().addEventListener(t,()=>{if(!hv.drag)return;hv.drag=false;hvFinish()}));
+hvEl().addEventListener('keydown',e=>{
+ if(hv.ok)return;const k=e.key;
+ if(k==='ArrowRight'||k==='ArrowUp'){e.preventDefault();if(!hv.start)hv.start=Date.now();hv.moves++;hvSet(hv.pos+.1);if(hv.pos>=1)hvFinish()}
+ else if(k==='ArrowLeft'||k==='ArrowDown'){e.preventDefault();hvSet(hv.pos-.1)}
+});
+window.addEventListener('resize',()=>{if(!$('login').hidden)hvSet(hv.pos||0)});
+$('pwT').addEventListener('click',()=>{const p=$('lPass'),show=p.type==='password';p.type=show?'text':'password';$('pwT').textContent=show?'Hide':'Show';$('pwT').setAttribute('aria-pressed',show)});
+$('forgot').addEventListener('click',()=>lerr('Ask your JFM administrator to reset it. The live version will email you a reset link.',true));
+$('lForm').addEventListener('submit',e=>{
+ e.preventDefault();
+ if(Date.now()<lockUntil)return lerr(`Too many attempts. Try again in ${Math.ceil((lockUntil-Date.now())/1000)} seconds.`);
+ const un=$('lUser').value.trim().toLowerCase(),pw=$('lPass').value;
+ if(!un||!pw)return lerr('Enter your username and password.');
+ if(!hv.ok)return lerr('Slide the handle to verify you are human first.');
+ if($('lWeb').value)return lerr('Sign in failed. Refresh the page and try again.');
+ const u=users.find(x=>x.username===un);
+ if(!u||pw!==(u.pw||DEMO_PW)){
+  fails++;$('lPass').value='';
+  if(fails>=5){fails=0;lockUntil=Date.now()+30000;resetHV();return lerr('Too many attempts. Try again in 30 seconds.')}
+  if(fails%3===0)resetHV();
+  return lerr("That username and password don't match. Check them and try again.");
+ }
+ fails=0;uid=u.id;writeSession(u.id,$('lKeep').checked);$('lPass').value='';lerr('');enterApp(true);
+});
+if(me())enterApp(false);else showLogin(true);
+function paintLive(){
+ const el=$('liveDot');if(!el)return;
+ const M={on:['on','Live.','Changes sync to everyone instantly.'],connecting:['off','Connecting.','Joining the live database.'],error:['err','Offline.','Changes are not reaching other people right now.'],local:['off','This device only.','Changes stay in this browser until the live database is connected.']}[liveState];
+ el.className='live '+M[0];el.textContent=M[1];el.title=M[2];
+ const rb=$('resetBtn');if(rb)rb.hidden=live&&!(me()&&isTop());
+}
+async function fetchAll(){
+ const out=[];
+ for(let from=0;;from+=1000){const {data,error}=await sb.from('records').select('id,kind,data').range(from,from+999);if(error)throw error;out.push(...data);if(data.length<1000)break}
+ return out;
+}
+function fromRows(rows){
+ const d=mkSeed();KINDS.forEach(k=>d[k]=[]);
+ rows.forEach(r=>{if(d[r.kind])d[r.kind].push(r.data)});
+ d.buildings.sort((a,b)=>NAMES.indexOf(a.name)-NAMES.indexOf(b.name));
+ d.sync.sort((a,b)=>b.at.localeCompare(a.at));
+ return d;
+}
+function applyRemote(p){
+ if(quiet)return;
+ const row=p.eventType==='DELETE'?p.old:p.new;if(!row||!row.id)return;
+ const kind=row.id.split(':')[0],arr=db[kind];if(!arr)return;
+ const i=arr.findIndex(x=>recKey(kind,x)===row.id);
+ if(p.eventType==='DELETE'){if(i>=0)arr.splice(i,1);snap.delete(row.id)}
+ else{
+  const s=JSON.stringify(row.data);if(snap.get(row.id)===s)return;
+  if(i>=0)arr[i]=row.data;else if(kind==='sync'||kind==='emails'||kind==='requests'||kind==='docs'||kind==='legal')arr.unshift(row.data);else arr.push(row.data);
+  snap.set(row.id,s);
+  if(kind==='notes'&&me()&&row.data.to===uid&&!row.data.read&&row.data.from!==uid)toast(row.data.text);
+  if(kind==='tasks'&&me()&&row.updated_by&&row.updated_by!==me().name&&canSee(row.data.building))toast(`${row.updated_by.split(',')[0]} updated ${row.data.title}`);
+ }
+ try{localStorage.setItem(KEY,JSON.stringify(db))}catch(e){}
+ refresh();
+}
+/* Redraw for remote changes, but never while someone is typing */
+let rt;function refresh(){clearTimeout(rt);rt=setTimeout(()=>{if(!me()||$('login').hidden===false)return;const a=document.activeElement;if(a&&a.closest&&a.closest('#content')&&/INPUT|TEXTAREA|SELECT/.test(a.tagName)){pendingRender=true;return}render()},120)}
+document.addEventListener('focusout',()=>setTimeout(()=>{if(pendingRender)refresh()},50));
+let quiet=false;
+async function resetLive(){
+ quiet=true;toast('Resetting shared data for everyone');
+ try{
+  const d=await sb.from('records').delete().neq('id','__none__');if(d.error)throw d.error;
+  db=mkSeed();snap=new Map();
+  const now=new Date().toISOString(),ups=allRecs().map(([id,kind,data])=>({id,kind,data,updated_at:now,updated_by:me().name}));
+  for(let i=0;i<ups.length;i+=200){const r=await sb.from('records').upsert(ups.slice(i,i+200));if(r.error)throw r.error}
+  db=fromRows(await fetchAll());takeSnap();compose=null;ui={task:null,form:null,sys:'All',set:null};render();toast('Demo data reset for everyone');
+ }catch(e){netErr(e)}
+ setTimeout(()=>{quiet=false},1500);
+}
+async function goLive(){
+ if(!LIVE.url||!LIVE.key||!window.supabase){liveState='local';return paintLive()}
+ liveState='connecting';paintLive();
+ try{
+  sb=window.supabase.createClient(LIVE.url,LIVE.key);
+  const rows=await fetchAll();
+  if(!rows.length){db=mkSeed();live=true;snap=new Map();save()}
+  else{db=fromRows(rows);live=true;takeSnap()}
+  liveState='on';
+  sb.channel('jfm-records').on('postgres_changes',{event:'*',schema:'public',table:'records'},applyRemote)
+   .subscribe(st=>{liveState=st==='SUBSCRIBED'?'on':(st==='CHANNEL_ERROR'||st==='TIMED_OUT'||st==='CLOSED')?'error':liveState;paintLive()});
+  if(me()&&$('login').hidden)render();else paintLive();
+ }catch(e){sb=null;live=false;liveState='error';paintLive();try{console.warn(e)}catch(x){}}
+}
+goLive();
+olHandleRedirect().then(back=>{if(back&&me()&&staff()){view={page:'inbox',b:view.b,tab:view.tab};render()}});
+document.addEventListener('toggle',e=>{const d=e.target;if(d.classList&&d.classList.contains('ntd'))ui.openNotes=d.open?d.dataset.nid:(ui.openNotes===d.dataset.nid?null:ui.openNotes)},true);
+document.addEventListener('keydown',e=>{if(e.key==='Escape'){if(ui.dlg)closeDlg();else if(ui.bell)closeBell()}});
+</script>
+</body>
+</html>
