@@ -293,6 +293,7 @@ pre{white-space:pre-wrap;font:inherit;margin:6px 0}
   .four{grid-template-columns:repeat(2,minmax(0,1fr))}
   .controls,.controls label{width:100%}
 }
+.recrow{display:flex;gap:10px;align-items:flex-start;justify-content:space-between}.recrow details{flex:1}.btn.dl{white-space:nowrap}.btn.dl:before{content:'\2193  '}
 </style>
 </head>
 <body>
@@ -365,7 +366,7 @@ pre{white-space:pre-wrap;font:inherit;margin:6px 0}
 <script>
 /* Live database. config.js sets window.JFM_LIVE={url:'...',key:'...'}; without it the app runs on this device only. */
 const LIVE=window.JFM_LIVE||{url:'',key:''};
-const APP_VERSION='10.5';
+const APP_VERSION='10.6';
 const KINDS=['buildings','tasks','docs','legal','invoices','emails','requests','sync','notes','mytasks','inspections'];
 const newId=p=>p+Date.now().toString(36).slice(-4).toUpperCase()+Math.random().toString(36).slice(2,4).toUpperCase();
 let sb=null,live=false,liveState='local',snap=new Map(),pendingRender=false;
@@ -568,7 +569,7 @@ function pagePortfolio(){
  return `<div class="grid four">${tile('Buildings',bs.length)}${tile('Units',sum(bs,b=>b.units))}${tile('Open works',sum(bs,b=>openT(b).length))}${tile('Arrears',money(sum(bs,arrears)))}</div>
  ${isTop()?`<div class="panel"><h3>Awaiting your decision</h3>${ceoInv.map(invRow).join('')||`<p class="muted">Nothing waiting. Invoices above ${money(LIMIT)} that are tagged to you come here.</p>`}</div>`:''}
  <div class="panel"><h3>Needs attention</h3>${attentionList(bs,8)}</div>
- <div class="panel"><h3>${isTop()?'All buildings':'My buildings'}</h3><div class="tablewrap"><table><thead><tr><th>Building</th><th>Manager</th><th class="num">Units</th><th class="num">Open works</th><th class="num">Arrears</th><th>Compliance</th><th class="num">To action</th></tr></thead><tbody>
+ <div class="panel"><div class="flex"><h3>${isTop()?'All buildings':'My buildings'}</h3><span class="tags">${dlBtn('xAccAll',null,'All accounts, Excel')}${dlBtn('pCompAll',null,'All compliance, PDF')}</span></div><div class="tablewrap"><table><thead><tr><th>Building</th><th>Manager</th><th class="num">Units</th><th class="num">Open works</th><th class="num">Arrears</th><th>Compliance</th><th class="num">To action</th></tr></thead><tbody>
  ${bs.map(b=>{const c=compBad(b).length;return `<tr><td><button class="btn link" data-act="openB" data-id="${esc(b.name)}">${esc(b.name)}</button></td><td>${esc(b.manager)}</td><td class="num">${b.units}</td><td class="num">${openT(b).length}</td><td class="num">${money(arrears(b))}</td><td>${c?pill(c+' to fix','crit'):pill('In date','good')}</td><td class="num">${attention(b)}</td></tr>`}).join('')}
  </tbody></table></div></div>`;
 }
@@ -920,13 +921,13 @@ const TAB={
 'Accounts'(b){
  const bud=sum(b.budget,x=>x.budget),act=sum(b.budget,x=>x.actual),inv=db.invoices.filter(v=>v.building===b.name),ar=b.unitsList.filter(x=>x.balance>0);
  return `<div class="grid four">${tile('Annual budget',money(bud))}${tile('Spent to date',money(act))}${tile('Reserve fund',money(b.reserve))}${tile('Arrears',money(arrears(b)))}</div>
- <div class="panel"><div class="flex"><h3>Service charge budget</h3>${pill('Source: Blockman')}</div><div class="tablewrap"><table><thead><tr><th>Heading</th><th class="num">Budget</th><th class="num">Actual</th><th>Used</th></tr></thead><tbody>
+ <div class="panel"><div class="flex"><h3>Service charge budget</h3><span class="tags">${pill('Source: Blockman')}${dlBtn('xAcc',null,'Download accounts, Excel')}</span></div><div class="tablewrap"><table><thead><tr><th>Heading</th><th class="num">Budget</th><th class="num">Actual</th><th>Used</th></tr></thead><tbody>
  ${b.budget.map(x=>{const p=Math.round(x.actual/x.budget*100);return `<tr><td>${esc(x.head)}</td><td class="num">${money(x.budget)}</td><td class="num">${money(x.actual)}</td><td><div class="bar"><span class="${p>100?'over':''}" style="width:${Math.min(100,p)}%"></span></div><span class="small ${p>100?'':'muted'}">${p}%${p>100?' over budget':''}</span></td></tr>`}).join('')}</tbody></table></div></div>
  <div class="grid"><div class="panel"><h3>Supplier invoices</h3><p class="muted small">Managers approve up to ${money(LIMIT)}. Anything above is sent to a named approver.</p>${inv.map(invRow).join('')||'<p class="muted">No invoices</p>'}</div>
  <div class="panel"><h3>Arrears</h3>${ar.map(x=>`<div class="row flex"><span><b>Flat ${esc(x.unit)}, ${esc(x.leaseholder)}</b><br><span class="muted small">${money(x.balance)} outstanding</span></span><button class="btn light" data-act="remind" data-id="${esc(x.unit)}">Draft reminder</button></div>`).join('')||'<p class="muted">No arrears</p>'}</div></div>`;
 },
 'Compliance'(b){
- return `<div class="panel"><h3>Compliance register</h3><div class="tablewrap"><table><thead><tr><th>Item</th><th>Next due</th><th>Status</th><th></th></tr></thead><tbody>
+ return `<div class="panel"><div class="flex"><h3>Compliance register</h3>${dlBtn('pComp',null,'Download PDF')}</div><div class="tablewrap"><table><thead><tr><th>Item</th><th>Next due</th><th>Status</th><th></th></tr></thead><tbody>
  ${b.compliance.map((c,i)=>{const s=compStatus(c);return `<tr><td>${esc(c.item)}${histBlock(c)}</td><td>${fmtDate(c.due)}</td><td>${pill(s,s==='Valid'?'good':s==='Due soon'?'warn':'crit')}</td><td><div class="acts" style="margin:0">${s!=='Valid'?`<button class="btn light" data-act="compTask" data-id="${i}">Create task</button>`:''}<button class="btn light" data-act="compRenew" data-id="${i}">Record renewal</button></div></td></tr>`}).join('')}</tbody></table></div></div>`;
 },
 'Legal'(b){
@@ -943,7 +944,7 @@ const TAB={
 },
 'Documents'(b){
  const list=db.docs.filter(d=>d.building===b.name);
- return `<div class="panel"><div class="flex"><h3>Documents</h3><button class="btn light" data-act="form" data-id="doc">${ui.form==='doc'?'Cancel':'Add record'}</button></div>
+ return `<div class="panel"><div class="flex"><h3>Documents</h3><span class="tags">${dlBtn('pDocs',null,'Download PDF')}<button class="btn light" data-act="form" data-id="doc">${ui.form==='doc'?'Cancel':'Add record'}</button></span></div>
  ${ui.form==='doc'?`<div class="note"><label for="dcName">Name</label><input id="dcName"><div class="form2"><div><label for="dcCat">Category</label><select id="dcCat">${opts(['Leases','Insurance','Certificates','Budgets','Minutes','Legal','General'])}</select></div><div><label for="dcVis">Who can see it</label><select id="dcVis">${opts(['Staff','Leaseholders','All residents'])}</select></div></div><button class="btn" data-act="addDoc">Save record</button> <span class="small muted">File upload needs the live build.</span></div>`:''}
  ${list.map(d=>`<div class="row flex"><span><b>${esc(d.name)}</b><br><span class="muted small">${esc(d.cat)} · ${fmtDate(d.date)}</span></span>${pill(d.vis,d.vis==='Staff'?'warn':'')}</div>`).join('')}</div>`;
 },
@@ -973,8 +974,8 @@ const TAB={
   return `<div class="row"><div class="flex"><b>${fmtDate(i.completedAt.slice(0,10))}</b><span class="tags">${pill(ok+' OK','good')}${iss?pill(iss+' issue'+(iss===1?'':'s'),'crit'):''}${na?pill(na+' N/A'):''}${med?pill(med+' photo'+(med===1?'':'s')+' or videos'):''}</span></div>
   <p class="small stamp">Completed by ${esc(i.completedBy)} ${esc(when(i.completedAt))}${i.startedBy!==i.completedBy?' · started by '+esc(i.startedBy):''}</p>
   <p class="muted small">Works updated: ${(r.raised||[]).length} raised, ${(r.updated||[]).length} updated, ${(r.closed||[]).length} closed</p>
-  <details><summary>Full record</summary>${SOP_ITEMS.map(x=>{const it=i.items[x.key]||{};return `<div class="ins ${it.st||''}"><div class="flex"><b>${esc(x.label)}</b>${pill(it.st==='ok'?'OK':it.st==='issue'?'Issue':'N/A',it.st==='ok'?'good':it.st==='issue'?'crit':'')}</div>${it.note?`<p class="small">${esc(it.note)}</p>`:''}${it.by?`<p class="small muted">${esc(it.by)} · ${esc(when(it.at))}</p>`:''}${mediaHtml(it.media,false)}</div>`}).join('')}</details></div>`}).join('');
- return main+`<div class="panel"><h3>Inspection records</h3>${hist||'<p class="muted">No inspections recorded yet.</p>'}</div>`;
+  <div class="recrow"><details><summary>Full record</summary>${SOP_ITEMS.map(x=>{const it=i.items[x.key]||{};return `<div class="ins ${it.st||''}"><div class="flex"><b>${esc(x.label)}</b>${pill(it.st==='ok'?'OK':it.st==='issue'?'Issue':'N/A',it.st==='ok'?'good':it.st==='issue'?'crit':'')}</div>${it.note?`<p class="small">${esc(it.note)}</p>`:''}${it.by?`<p class="small muted">${esc(it.by)} · ${esc(when(it.at))}</p>`:''}${mediaHtml(it.media,false)}</div>`}).join('')}</details>${dlBtn('xInsp',i.id,'Download Excel')}</div></div>`}).join('');
+ return main+`<div class="panel"><div class="flex"><h3>Inspection records</h3>${past.length?dlBtn('xInspAll',null,'All inspections, Excel'):''}</div>${hist||'<p class="muted">No inspections recorded yet.</p>'}</div>`;
 },
 'History'(b){
  const all=db.sync.filter(x=>x.building===b.name),areas=['All',...new Set(all.map(x=>x.system))],f=areas.includes(ui.hArea)?ui.hArea:'All',list=all.filter(x=>f==='All'||x.system===f);
@@ -1029,12 +1030,12 @@ const RES={
  const x=myUnit(),annual=Math.round(sum(b.budget,h=>h.budget)/b.units),half=Math.round(annual/2);
  const lines=[['1 Apr 2026','Service charge demand, first half',half,0],['14 Apr 2026','Payment received, thank you',0,half],['1 Oct 2026','Service charge demand, second half',half,0],['20 Oct 2026','Payment received, thank you',0,half-x.balance]];
  return `<div class="grid four">${tile('Balance due',money(x.balance))}${tile('Annual charge',money(annual))}${tile('Year end',esc(b.yearEnd))}${tile('Reserve fund',money(b.reserve))}</div>
- <div class="panel"><h3>Statement, Flat ${esc(x.unit)}</h3><div class="tablewrap"><table><thead><tr><th>Date</th><th>Detail</th><th class="num">Charge</th><th class="num">Paid</th></tr></thead><tbody>${lines.map(l=>`<tr><td>${l[0]}</td><td>${l[1]}</td><td class="num">${l[2]?money(l[2]):''}</td><td class="num">${l[3]?money(l[3]):''}</td></tr>`).join('')}</tbody></table></div></div>
+ <div class="panel"><div class="flex"><h3>Statement, Flat ${esc(x.unit)}</h3>${dlBtn('xMyAcc',null,'Download Excel')}</div><div class="tablewrap"><table><thead><tr><th>Date</th><th>Detail</th><th class="num">Charge</th><th class="num">Paid</th></tr></thead><tbody>${lines.map(l=>`<tr><td>${l[0]}</td><td>${l[1]}</td><td class="num">${l[2]?money(l[2]):''}</td><td class="num">${l[3]?money(l[3]):''}</td></tr>`).join('')}</tbody></table></div></div>
  <div class="panel"><h3>Where your service charge goes</h3><div class="tablewrap"><table><thead><tr><th>Heading</th><th class="num">Building budget</th><th class="num">Your share</th></tr></thead><tbody>${b.budget.map(h=>`<tr><td>${esc(h.head)}</td><td class="num">${money(h.budget)}</td><td class="num">${money(Math.round(h.budget/b.units))}</td></tr>`).join('')}</tbody></table></div></div>`;
 },
 'Documents'(b){
  const ok=me().role==='leaseholder'?['All residents','Leaseholders']:['All residents'];
- return `<div class="panel"><h3>Building documents</h3>${db.docs.filter(d=>d.building===b.name&&ok.includes(d.vis)).map(d=>`<div class="row flex"><span><b>${esc(d.name)}</b><br><span class="muted small">${esc(d.cat)} · ${fmtDate(d.date)}</span></span>${pill('Demo record')}</div>`).join('')}</div>`;
+ return `<div class="panel"><div class="flex"><h3>Building documents</h3>${dlBtn('pDocs',null,'Download PDF')}</div>${db.docs.filter(d=>d.building===b.name&&ok.includes(d.vis)).map(d=>`<div class="row flex"><span><b>${esc(d.name)}</b><br><span class="muted small">${esc(d.cat)} · ${fmtDate(d.date)}</span></span>${pill('Demo record')}</div>`).join('')}</div>`;
 },
 'Report issue'(b){
  const mine=db.requests.filter(r=>r.by===uid);
@@ -1284,6 +1285,73 @@ const ACT={
   db.requests.unshift({id:newId('R'),building:me().building,category:$('rc').value,location,body,by:uid,status:'Awaiting review'});save();render();toast('Report sent to your property manager');confirmFx('email','Report sent');
  }
 };
+/* ===== V10.6 Downloads: Excel and PDF ===== */
+const LIBS={xlsx:'https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js',pdf:'https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js',pdfT:'https://cdn.jsdelivr.net/npm/jspdf-autotable@3.8.2/dist/jspdf.plugin.autotable.min.js'};
+const _lib={};
+function loadLib(src){return _lib[src]||(_lib[src]=new Promise((res,rej)=>{const s=document.createElement('script');s.src=src;s.onload=res;s.onerror=()=>{delete _lib[src];rej(new Error('load'))};document.head.appendChild(s)}))}
+const fileSafe=s=>String(s).replace(/[^A-Za-z0-9]+/g,'_').replace(/^_|_$/g,'');
+const stampLine=()=>'Downloaded by '+nameOf(uid)+' on '+new Date().toLocaleString('en-GB',{day:'numeric',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'});
+async function saveBlob(blob,name){if(window.claude&&typeof window.claude.use==='function'){try{const d=await window.claude.use('downloads');if(d){await d.save({filename:name,data:blob});return true}}catch(e){if(e&&e.code==='declined')return false;if(e&&e.code&&e.code!=='unavailable'&&e.code!=='not_granted'){toast('Download not available here');return false}}}const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=name;document.body.appendChild(a);a.click();setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove()},1500);return true}
+window.JFM_LAST_EXPORT=null;
+/* sheets: [{name, rows:[[...]], widths?:[...]}] */
+async function toExcel(name,sheets){
+ window.JFM_LAST_EXPORT={type:'xlsx',name,sheets};
+ try{await loadLib(LIBS.xlsx);const wb=XLSX.utils.book_new();
+  sheets.forEach(s=>{const ws=XLSX.utils.aoa_to_sheet(s.rows);ws['!cols']=s.rows.reduce((w,r)=>{r.forEach((c,i)=>{w[i]=Math.min(60,Math.max(w[i]||8,String(c??'').length+2))});return w},[]).map(w=>({wch:w}));XLSX.utils.book_append_sheet(wb,ws,s.name.slice(0,31))});
+  if(await saveBlob(new Blob([XLSX.write(wb,{bookType:'xlsx',type:'array'})],{type:'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'}),name+'.xlsx'))toast('Excel file downloaded')}
+ catch(e){const csv=sheets.map(s=>[[s.name],...s.rows,[]].map(r=>r.map(c=>{c=String(c??'');return /[",\n]/.test(c)?'"'+c.replace(/"/g,'""')+'"':c}).join(',')).join('\r\n')).join('\r\n');
+  if(await saveBlob(new Blob(['﻿'+csv],{type:'text/csv'}),name+'.csv'))toast('Offline, so saved as a CSV file that opens in Excel')}
+}
+/* sections: [{title, head:[...], body:[[...]]}] */
+async function toPdf(name,title,sub,sections){
+ window.JFM_LAST_EXPORT={type:'pdf',name,title,sections};
+ try{await loadLib(LIBS.pdf);await loadLib(LIBS.pdfT);const doc=new window.jspdf.jsPDF({unit:'pt',format:'a4'});
+  doc.setFillColor(20,50,90);doc.rect(0,0,595,64,'F');doc.setTextColor(255);doc.setFontSize(16);doc.text('JFM Property Platform',40,30);doc.setFontSize(11);doc.text(title,40,48);
+  doc.setTextColor(60);doc.setFontSize(9);doc.text(sub,40,84);doc.text(stampLine(),40,97);let y=112;
+  sections.forEach(s=>{if(s.title){doc.setFontSize(11);doc.setTextColor(20,50,90);doc.text(s.title,40,y+8);y+=14}
+   doc.autoTable({startY:y,head:[s.head],body:s.body.length?s.body:[[{content:'Nothing recorded',colSpan:s.head.length}]],margin:{left:40,right:40},styles:{fontSize:8.5,cellPadding:4},headStyles:{fillColor:[20,50,90]},
+    didParseCell:d=>{if(d.section==='body'){const v=String(d.cell.raw);if(v==='Overdue'||v==='Missing')d.cell.styles.textColor=[180,20,20];else if(v==='Due soon')d.cell.styles.textColor=[170,100,0];else if(v==='Valid')d.cell.styles.textColor=[20,120,60]}}});
+   y=doc.lastAutoTable.finalY+22});
+  const n=doc.getNumberOfPages();for(let p=1;p<=n;p++){doc.setPage(p);doc.setFontSize(8);doc.setTextColor(120);doc.text('Page '+p+' of '+n,555,820,{align:'right'})}
+  if(await saveBlob(doc.output('blob'),name+'.pdf'))toast('PDF downloaded')}
+ catch(e){const w=window.open('','_blank');if(!w){toast('Could not create the PDF. Allow pop ups and try again.');return}
+  w.document.write(`<title>${esc(title)}</title><style>body{font:13px system-ui;margin:32px}table{border-collapse:collapse;width:100%;margin-bottom:20px}td,th{border:1px solid #ccc;padding:6px;text-align:left}th{background:#14325a;color:#fff}</style><h2>${esc(title)}</h2><p>${esc(sub)}<br>${esc(stampLine())}</p>${sections.map(s=>`${s.title?`<h3>${esc(s.title)}</h3>`:''}<table><tr>${s.head.map(h=>`<th>${esc(h)}</th>`).join('')}</tr>${s.body.map(r=>`<tr>${r.map(c=>`<td>${esc(c)}</td>`).join('')}</tr>`).join('')}</table>`).join('')}`);w.document.close();w.focus();w.print()}
+}
+const dlBtn=(act,id,label)=>`<button class="btn light dl" data-act="${act}" ${id!=null?`data-id="${esc(id)}"`:''}>${label}</button>`;
+const lastHist=x=>{const h=(x.history||[]).slice(-1)[0];return h?(typeof h==='string'?h:h.text+' ('+h.by+', '+when(h.at)+')'):''};
+function accSheets(bs){
+ const multi=bs.length>1,pre=b=>multi?[b.name]:[],ph=multi?['Building']:[];
+ const sumRows=[[...ph,'Annual budget','Spent to date','Remaining','Reserve fund','Arrears','Units'],...bs.map(b=>{const bud=sum(b.budget,x=>x.budget),act=sum(b.budget,x=>x.actual);return[...pre(b),bud,act,bud-act,b.reserve,arrears(b),b.units]})];
+ const budRows=[[...ph,'Heading','Budget','Actual','Remaining','Used %'],...bs.flatMap(b=>b.budget.map(x=>[...pre(b),x.head,x.budget,x.actual,x.budget-x.actual,Math.round(x.actual/x.budget*100)]))];
+ const inv=db.invoices.filter(v=>bs.some(b=>b.name===v.building));
+ const invRows=[[...ph,'Invoice','Supplier','Description','Budget heading','Amount','Status','Approver','Requested by','Notes'],...inv.map(v=>[...(multi?[v.building]:[]),v.id,v.supplier,v.desc,v.head||'',v.amount,v.status,v.approver?nameOf(v.approver):'',v.requestedBy?nameOf(v.requestedBy):'',(v.notes||[]).map(n=>n.by+': '+n.text).join(' | ')])];
+ const arRows=[[...ph,'Flat','Leaseholder','Tenant','Balance outstanding'],...bs.flatMap(b=>b.unitsList.filter(x=>x.balance>0).map(x=>[...pre(b),'Flat '+x.unit,x.leaseholder,x.tenant||'Owner occupied',x.balance]))];
+ return[{name:'Summary',rows:[['JFM accounts, '+(multi?bs.length+' buildings':bs[0].name)],[stampLine()],[],...sumRows]},{name:'Budget',rows:budRows},{name:'Invoices',rows:invRows},{name:'Arrears',rows:arRows}];
+}
+const compRows=bs=>bs.flatMap(b=>b.compliance.map(c=>[...(bs.length>1?[b.name]:[]),c.item,c.due?fmtDate(c.due):'Not recorded',compStatus(c),lastHist(c)||'']));
+Object.assign(ACT,{
+ xInsp(id){const i=db.inspections.find(x=>x.id===id);if(!i||!staff()||!canSee(i.building))return;const r=i.result||{};
+  const rows=[['Site inspection, '+i.building],['SOP: '+(i.sop||SOP_NAME)],['Started by '+(i.startedBy||'')+', '+when(i.startedAt)],['Completed by '+(i.completedBy||'')+', '+when(i.completedAt)],[stampLine()],[],
+   ['Section','Check','Status','Note','Checked by','Checked at','Photos and videos']];
+  SOP_ITEMS.forEach(x=>{const it=i.items[x.key]||{};rows.push([x.sec,x.label,it.st==='ok'?'OK':it.st==='issue'?'Issue':it.st==='na'?'N/A':'Not checked',it.note||'',it.by||'',it.at?new Date(it.at).toLocaleString('en-GB'):'',(it.media||[]).map(m=>m.url||m.name||m.type).join(', ')])});
+  const tk=id=>{const t=db.tasks.find(x=>x.id===id);return t?t.title:id};
+  const wr=[['Change','Work'],...(r.raised||[]).map(x=>['Raised',tk(x)]),...(r.updated||[]).map(x=>['Updated',tk(x)]),...(r.closed||[]).map(x=>['Closed',tk(x)])];
+  toExcel('Inspection_'+fileSafe(i.building)+'_'+(i.completedAt||'').slice(0,10),[{name:'Full record',rows},{name:'Works updated',rows:wr}])},
+ xInspAll(){const b=B();if(!staff())return;const past=inspDone(b);const rows=[['Section','Check',...past.map(i=>fmtDate(i.completedAt.slice(0,10))+' ('+i.completedBy+')')]];
+  SOP_ITEMS.forEach(x=>rows.push([x.sec,x.label,...past.map(i=>{const it=i.items[x.key]||{};return (it.st==='ok'?'OK':it.st==='issue'?'Issue':it.st==='na'?'N/A':'')+(it.note?': '+it.note:'')})]));
+  toExcel('Inspections_'+fileSafe(b.name),[{name:'All inspections',rows}])},
+ xAcc(){if(!staff())return;const b=B();toExcel('Accounts_'+fileSafe(b.name)+'_'+today(),accSheets([b]))},
+ xAccAll(){if(!staff())return;toExcel('Accounts_'+(isTop()?'All_buildings':fileSafe(me().name)+'_buildings')+'_'+today(),accSheets(myB()))},
+ xMyAcc(){if(me().role!=='leaseholder')return;const b=B(),x=myUnit(),annual=Math.round(sum(b.budget,h=>h.budget)/b.units),half=Math.round(annual/2);
+  toExcel('Statement_Flat_'+fileSafe(x.unit)+'_'+fileSafe(b.name),[{name:'Statement',rows:[['Statement, Flat '+x.unit+', '+b.name],[stampLine()],[],['Date','Detail','Charge','Paid'],['1 Apr 2026','Service charge demand, first half',half,''],['14 Apr 2026','Payment received','',half],['1 Oct 2026','Service charge demand, second half',half,''],['20 Oct 2026','Payment received','',half-x.balance],[],['','Balance due','',x.balance]]},
+   {name:'Your share',rows:[['Heading','Building budget','Your share'],...b.budget.map(h=>[h.head,h.budget,Math.round(h.budget/b.units)]),['Total',sum(b.budget,h=>h.budget),annual]]}])},
+ pComp(){if(!staff())return;const b=B();toPdf('Compliance_'+fileSafe(b.name)+'_'+today(),'Compliance register, '+b.name,b.name+' · '+b.units+' units · Manager '+b.manager,[{head:['Item','Next due','Status','Last change'],body:compRows([b])}])},
+ pCompAll(){if(!staff())return;const bs=myB();toPdf('Compliance_'+(isTop()?'All_buildings':'My_buildings')+'_'+today(),'Compliance register, '+(isTop()?'all buildings':'my buildings'),bs.length+' buildings',bs.map(b=>({title:b.name,head:['Item','Next due','Status','Last change'],body:compRows([b])})))},
+ pDocs(){const b=B();if(!canSee(b.name))return;const okV=staff()?null:me().role==='leaseholder'?['All residents','Leaseholders']:['All residents'];
+  const list=db.docs.filter(d=>d.building===b.name&&(!okV||okV.includes(d.vis)));
+  toPdf('Documents_'+fileSafe(b.name)+'_'+today(),'Documents, '+b.name,list.length+' documents'+(staff()?'':' you can see'),[{head:staff()?['Document','Category','Date','Who can see it']:['Document','Category','Date'],body:list.map(d=>staff()?[d.name,d.cat,fmtDate(d.date),d.vis]:[d.name,d.cat,fmtDate(d.date)])}])}
+});
+
 
 function render(){
  if(!me())return showLogin(false);
