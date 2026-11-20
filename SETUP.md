@@ -30,6 +30,15 @@ window.JFM_LIVE = {
 
 4. Commit the change. Vercel redeploys on its own within a minute.
 
+## 3b. Accounts files (V10.10)
+
+Version 10.10 keeps every uploaded accounts Excel file so it can be downloaded again from **Accounts history**.
+If you set up the database before version 10.10, run it once more:
+
+1. In Supabase, open **SQL Editor** and choose **New query**.
+2. Paste everything from `setup.sql` and press **Run**. It is safe to run again: nothing already there is changed or deleted.
+3. This adds the `accounts-files` store. Without it, accounts still update for everyone, but each uploaded file stays on the device that uploaded it.
+
 ## 4. Check it
 
 Open the site, sign in, and look at the yellow bar at the top. It should say **Live.**
