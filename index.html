@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>JFM Property Platform V10.7</title>
+<title>JFM Property Platform V10.8</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600;700&family=Public+Sans:wght@400;600&display=swap">
 <style>
 /* Layout idea: JFM charcoal rail with lime accents (jfm-management.co.uk colours), lists the buildings; each building opens one workspace with tabs for every part of the job. */
@@ -261,16 +261,7 @@ pre{white-space:pre-wrap;font:inherit;margin:6px 0}
 .pwtoggle{position:absolute;right:6px;top:10px;border:0;background:transparent;color:var(--accent);font:600 13px var(--body);padding:6px 8px;border-radius:6px;cursor:pointer}
 .pwtoggle:focus-visible{outline:2px solid var(--accent)}
 .hp{position:absolute;left:-9999px;width:1px;height:1px;opacity:0}
-.slider{position:relative;height:50px;border-radius:12px;background:var(--surface);border:1px solid var(--line);margin:5px 0 12px;user-select:none;-webkit-user-select:none;touch-action:none;overflow:hidden}
 .slider:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
-.sfill{position:absolute;top:0;bottom:0;left:0;width:0;background:var(--accent-soft)}
-.stext{position:absolute;inset:0;display:grid;place-items:center;padding-left:40px;color:var(--muted);font-weight:600;font-size:13px;pointer-events:none}
-.knob{position:absolute;top:3px;left:3px;width:44px;height:42px;border-radius:9px;background:var(--brand);color:var(--on-brand);display:grid;place-items:center;font-size:22px;cursor:grab;box-shadow:0 2px 6px rgba(0,0,0,.2)}
-.slider.back .knob,.slider.back .sfill{transition:transform .25s ease,width .25s ease}
-.slider.ok{border-color:var(--good);background:var(--good-bg)}
-.slider.ok .sfill{background:transparent}
-.slider.ok .stext{color:var(--good)}
-.slider.ok .knob{background:var(--good);color:#fff;cursor:default}
 .lrow{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin:-2px 0 12px}
 .lerr{min-height:20px;color:var(--crit);font-size:13px;margin:0 0 10px}
 .lerr.info{color:var(--muted)}
@@ -281,7 +272,7 @@ pre{white-space:pre-wrap;font:inherit;margin:6px 0}
 .welcome .wsmall{margin:0;color:var(--side-ink);font-size:15px}
 .welcome .wbig{margin:6px 0 0;font:700 34px/1.2 var(--display);text-wrap:balance}
 @keyframes wOut{0%{opacity:0}12%{opacity:1}75%{opacity:1}100%{opacity:0}}
-@media (prefers-reduced-motion:reduce){.welcome{animation:none}.slider.back .knob,.slider.back .sfill{transition:none}}
+@media (prefers-reduced-motion:reduce){.welcome{animation:none}}
 @media (max-width:860px){.login{grid-template-columns:1fr}.lside{padding:22px 20px;gap:0}.lside h2{font-size:26px;margin-top:16px}.lfeat,.lfoot,.lside p{display:none}}
 @media (max-width:860px){
   .app{display:block}
@@ -297,6 +288,203 @@ pre{white-space:pre-wrap;font:inherit;margin:6px 0}
   .controls,.controls label{width:100%}
 }
 .recrow{display:flex;gap:10px;align-items:flex-start;justify-content:space-between}.recrow details{flex:1}.btn.dl{white-space:nowrap}.btn.dl:before{content:'\2193  '}
+/* ===== V10.8 Interface polish: glow, sliding pills, hold-and-slide, sign-in slider, calendar, reminders ===== */
+:root{--glow:var(--brand)}
+/* Glow on hover (computer) or nearest the highlight line while scrolling (phone) */
+.tk,.grid.four>.panel,.row,.btn,nav button,.tabs button,.setitem,.setrow,.ins,.ni,.bell,.settingsbtn,.pick label{transition:box-shadow .45s ease,border-color .45s ease,background-color .35s ease,color .35s ease,transform .35s ease}
+.tk.near,.grid.four>.panel.near{border-color:color-mix(in srgb,var(--glow) 60%,var(--line));box-shadow:0 0 0 1px color-mix(in srgb,var(--glow) 35%,transparent),0 8px 24px color-mix(in srgb,var(--glow) 26%,transparent)}
+.row.near,.setitem.near,.setrow.near{background:color-mix(in srgb,var(--accent-soft) 65%,transparent);box-shadow:inset 3px 0 0 var(--glow)}
+@media (hover:hover){
+  .tk:hover,.grid.four>.panel:hover{border-color:color-mix(in srgb,var(--glow) 60%,var(--line));box-shadow:0 0 0 1px color-mix(in srgb,var(--glow) 35%,transparent),0 8px 24px color-mix(in srgb,var(--glow) 26%,transparent);transform:translateY(-2px)}
+  .row:hover,.setitem:hover,.setrow:hover,.ni:hover{background:color-mix(in srgb,var(--accent-soft) 65%,transparent);box-shadow:inset 3px 0 0 var(--glow)}
+  .ins:hover{background:color-mix(in srgb,var(--accent-soft) 45%,transparent)}
+  .btn:not([disabled]):hover{box-shadow:0 0 0 3px color-mix(in srgb,var(--glow) 30%,transparent),0 6px 18px color-mix(in srgb,var(--glow) 26%,transparent)}
+  .btn.no:hover{box-shadow:0 0 0 3px color-mix(in srgb,var(--crit) 25%,transparent),0 6px 18px color-mix(in srgb,var(--crit) 22%,transparent)}
+  .btn.link:hover{box-shadow:none;text-decoration:underline}
+  .tabs button:hover{color:var(--accent);background:color-mix(in srgb,var(--accent-soft) 70%,transparent);border-radius:8px 8px 0 0}
+  nav button:hover,.settingsbtn:hover{background:var(--side-on);box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--glow) 40%,transparent),0 0 18px color-mix(in srgb,var(--glow) 22%,transparent);color:#fff}
+  .bell:hover{border-color:color-mix(in srgb,var(--glow) 60%,var(--line));box-shadow:0 0 0 3px color-mix(in srgb,var(--glow) 25%,transparent),0 6px 18px color-mix(in srgb,var(--glow) 30%,transparent)}
+  .bell:hover svg{animation:ring .9s ease}
+  .pick label:hover{border-color:color-mix(in srgb,var(--glow) 60%,var(--line));box-shadow:0 6px 18px color-mix(in srgb,var(--glow) 18%,transparent)}
+  input:hover:not(:focus),select:hover:not(:focus),textarea:hover:not(:focus){border-color:color-mix(in srgb,var(--glow) 50%,var(--line))}
+}
+.tk.crit,.tk.crit:hover,.tk.crit.near{border-left-color:var(--crit)}
+.bell svg{transform-origin:50% 10%}
+input,select,textarea{transition:border-color .3s ease,box-shadow .3s ease}
+input:focus,select:focus,textarea:focus{border-color:var(--glow);box-shadow:0 0 0 4px color-mix(in srgb,var(--glow) 22%,transparent);outline:none}
+@keyframes ring{0%,100%{transform:rotate(0)}12%{transform:rotate(16deg)}26%{transform:rotate(-14deg)}40%{transform:rotate(10deg)}54%{transform:rotate(-7deg)}68%{transform:rotate(4deg)}82%{transform:rotate(-2deg)}}
+@keyframes shake{0%,100%{transform:translateX(0)}10%,50%,90%{transform:translateX(-2.5px) rotate(-5deg)}30%,70%{transform:translateX(2.5px) rotate(5deg)}}
+@keyframes popup{0%{transform:scale(1)}35%{transform:translateY(-5px) scale(1.22)}65%{transform:translateY(0) scale(.94)}100%{transform:scale(1)}}
+@keyframes bub{0%{transform:scale(1)}35%{transform:scale(1.16)}70%{transform:scale(.96)}100%{transform:scale(1)}}
+
+/* Sliding highlight ("glider") for option bars, building tabs and the main menu */
+.glider{position:absolute;top:0;left:0;z-index:0;pointer-events:none;opacity:0;transition:transform .5s cubic-bezier(.35,1.3,.5,1),width .5s cubic-bezier(.35,1.3,.5,1),height .5s cubic-bezier(.35,1.3,.5,1),opacity .25s ease,background-color .35s ease}
+.seg,.quick,nav,.tabs{position:relative}
+.seg>button,.quick>button,nav>button,.tabs>button{position:relative;z-index:1}
+.seg button,.quick button{transition:color .35s ease,background-color .35s ease}
+.seg>.glider,.quick>.glider{border-radius:7px;background:var(--brand);box-shadow:0 4px 14px color-mix(in srgb,var(--brand) 38%,transparent)}
+.seg button[aria-checked="true"],.ins .seg button.s_ok[aria-checked="true"],.ins .seg button.s_issue[aria-checked="true"]{background:transparent;box-shadow:none}
+.seg button[aria-checked="true"]{color:var(--on-brand)}
+.seg>.glider[data-v="ok"]{background:var(--good);box-shadow:0 4px 14px color-mix(in srgb,var(--good) 35%,transparent)}
+.seg>.glider[data-v="issue"]{background:var(--crit);box-shadow:0 4px 14px color-mix(in srgb,var(--crit) 35%,transparent)}
+.seg>.glider[data-v="na"]{background:var(--muted);box-shadow:none}
+.ins .seg button[aria-checked="true"]{color:var(--bg)}
+@media (hover:hover){.seg button:not([aria-checked="true"]):hover,.quick button:not([aria-checked="true"]):hover{color:var(--accent);background:color-mix(in srgb,var(--accent-soft) 70%,transparent)}}
+/* My tasks due-date bar: one row, a pill slides between the options */
+.quick{display:inline-grid;grid-auto-flow:column;grid-auto-columns:auto;gap:2px;background:var(--bg);border:1px solid var(--line);border-radius:999px;padding:3px;max-width:100%}
+.quick button,.quick button[aria-checked="true"]{border:0;background:transparent;border-radius:999px;padding:6px 14px;line-height:1.2;min-height:34px}
+.quick button[aria-checked="true"]{color:var(--on-brand)}
+.quick>.glider{border-radius:999px}
+.quick button small,.seg button small{display:block;font-size:10.5px;font-weight:600;line-height:1.15;opacity:.75}
+@media (max-width:560px){.quick{display:grid;grid-auto-columns:1fr;width:100%}.quick button{padding:6px 4px;font-size:12.5px}}
+/* Building tabs: the underline slides along */
+.tabs button.on{border-bottom-color:transparent}
+.tabs>.glider{border-radius:3px 3px 0 0;background:var(--accent)}
+/* Main menu: highlight slides up and down the side menu (computer) or along the menu row (phone) */
+nav button.on{background:transparent}
+nav>.glider{border-radius:8px;background:var(--side-on);box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--glow) 28%,transparent)}
+nav>.glider::before{content:"";position:absolute;top:9px;bottom:9px;left:0;width:3px;border-radius:0 3px 3px 0;background:var(--brand)}
+@media (max-width:860px){nav>.glider::before{top:auto;bottom:0;left:22%;right:22%;width:auto;height:3px;border-radius:3px 3px 0 0}}
+
+/* Hold-and-slide on option bars */
+.seg,.quick,.tseg{touch-action:pan-y;user-select:none;-webkit-user-select:none}
+.seg>button[aria-checked="true"],.quick>button[aria-checked="true"],.tseg>button[aria-checked="true"]{cursor:grab}
+.seg.held,.quick.held,.tseg.held{background:transparent!important;border-color:transparent!important;cursor:grabbing}
+.held>button{cursor:grabbing}
+.seg>.warp,.quick>.warp,.tseg>.warp{position:absolute;left:0;top:0;pointer-events:none;overflow:visible;z-index:0}
+.warp path{fill:var(--bg);stroke:var(--line);stroke-width:1.5}
+.held>button[aria-checked="true"],.ins .seg.held>button[aria-checked="true"]{color:var(--muted)}
+.seg.held>.glider,.quick.held>.glider,.tseg.held .thumb{overflow:hidden;z-index:2;pointer-events:none;box-shadow:0 8px 22px color-mix(in srgb,var(--brand) 50%,transparent)}
+.pcopy{position:absolute;left:0;top:0;pointer-events:none}
+.pcopy>button{position:absolute;margin:0;color:var(--on-brand)!important;background:transparent!important;box-shadow:none!important}
+.glider[data-v="ok"] .pcopy>button,.glider[data-v="issue"] .pcopy>button,.glider[data-v="na"] .pcopy>button{color:var(--bg)!important}
+.pcopy>button.bub,.seg>button.bub,.quick>button.bub,.tseg>button.bub{animation:bub .3s ease}
+.tseg .thumb .pcopy>button{padding:0 6px 0 30px}
+
+/* Sign-in slider */
+.slider{position:relative;height:50px;margin:16px 0 18px;border-radius:12px;background:transparent;user-select:none;-webkit-user-select:none;touch-action:pan-y;overflow:visible}
+.strack{position:absolute;left:0;top:-12px;overflow:visible;pointer-events:none}
+.tbg{fill:var(--surface);transition:fill .4s ease}
+.tlit{fill:var(--accent-soft);transition:fill .4s ease}
+.tline{fill:none;stroke:var(--line);stroke-width:1.5;transition:stroke .4s ease}
+.stclip{position:absolute;inset:0;border-radius:12px;overflow:hidden;pointer-events:none}
+.stext{position:absolute;top:0;bottom:0;left:0;height:100%;display:flex;align-items:center;white-space:nowrap;font-weight:600;font-size:13px;color:var(--muted);will-change:transform}
+.stext.s2{color:var(--accent)}
+.knob{position:absolute;top:4px;left:4px;width:46px;height:42px;cursor:grab;touch-action:none;z-index:2}
+.kface{position:absolute;inset:0;border-radius:9px;background:color-mix(in srgb,var(--brand) 45%,var(--surface));color:var(--surface);display:grid;place-items:center;font-size:22px;transition:transform .3s cubic-bezier(.3,1.6,.5,1),box-shadow .45s ease,background-color .4s ease,color .4s ease}
+@media (hover:hover){.slider:not(.ok):not(.drag) .knob:hover .kface{background:color-mix(in srgb,var(--brand) 72%,var(--surface));box-shadow:0 0 0 3px color-mix(in srgb,var(--brand) 35%,transparent),0 0 20px color-mix(in srgb,var(--brand) 55%,transparent)}}
+.slider.drag .knob{cursor:grabbing}
+/* Older browsers without color-mix (e.g. Safari before iOS 16.2): keep the handle visible */
+@supports not (color:color-mix(in srgb,red 50%,blue)){.kface{background:var(--brand);color:var(--on-brand);opacity:.8}.slider.drag .kface{opacity:1}.slider.ok .kface{opacity:1}}
+.slider.drag .kface{background:var(--brand);color:var(--on-brand);transform:scale(1.14);box-shadow:0 8px 20px color-mix(in srgb,var(--brand) 50%,transparent)}
+.slider.ok .tbg,.slider.ok .tlit{fill:var(--good-bg)}
+.slider.ok .tline{stroke:var(--good)}
+.slider.ok .stext.s2{color:var(--good)}
+.slider.ok .knob{cursor:default}
+.slider.ok .kface{background:var(--good);color:#fff}
+
+/* Settings: soft icon tiles that animate, a gear that turns, switches that bounce */
+.setrow{flex-wrap:nowrap}
+.setrow>.grow{flex:1;min-width:0}
+.setrow .grow b{display:block}.setrow .grow .muted{display:block;font-size:13px}
+.sico{flex:none;width:40px;height:40px;border-radius:11px;display:grid;place-items:center;background:var(--accent-soft);color:var(--accent)}
+.sico svg,.seticon svg{transform-origin:50% 50%}
+.sico svg{width:21px;height:21px}
+.sico.ic-bell svg,.seticon.ic-bell svg{transform-origin:50% 10%}
+.sico.ic-pal svg,.seticon.ic-sun svg{transition:transform .7s cubic-bezier(.3,1.4,.5,1)}
+.setrow.play .sico.ic-bell svg,.setrow.near .sico.ic-bell svg,.setitem.near .seticon.ic-bell svg{animation:ring .9s ease}
+.setrow.play .sico.ic-vib svg,.setrow.near .sico.ic-vib svg,.setitem.near .seticon.ic-sound svg,.sico.ic-vib.shake svg{animation:shake .6s ease}
+.sico.ic-vib.shake svg{animation-iteration-count:2}
+.setrow.play .sico.ic-popi svg,.setrow.near .sico.ic-popi svg,.setitem.near .seticon.ic-access svg,.setrow.play .sico.ic-access svg,.setrow.near .sico.ic-access svg{animation:popup .6s ease}
+.setrow.near .sico.ic-pal svg,.setitem.near .seticon.ic-sun svg{transform:rotate(180deg)}
+@media (hover:hover){
+  .setrow:hover .sico.ic-bell svg,.setitem:hover .seticon.ic-bell svg{animation:ring .9s ease}
+  .setrow:hover .sico.ic-vib svg,.setitem:hover .seticon.ic-sound svg{animation:shake .6s ease}
+  .setrow:hover .sico.ic-popi svg,.setrow:hover .sico.ic-access svg,.setitem:hover .seticon.ic-access svg{animation:popup .6s ease}
+  .setrow:hover .sico.ic-pal svg,.setitem:hover .seticon.ic-sun svg{transform:rotate(180deg)}
+}
+.switch{transition:background-color .3s ease,border-color .3s ease}
+.switch::after{transition:transform .35s cubic-bezier(.3,1.6,.5,1),background-color .3s ease}
+.switch[disabled]{opacity:.45;cursor:not-allowed}
+.shead{display:inline-flex;align-items:center;gap:10px}
+.shead .gear{display:inline-grid;place-items:center;transition:transform .9s cubic-bezier(.3,1.4,.5,1)}
+.shead .gear svg{width:22px;height:22px}
+.top:hover .shead .gear,main:has(.setpanel:hover) .shead .gear{transform:rotate(180deg)}
+/* Appearance picker: the pill carries a phone that rolls into a sun, then into a moon */
+.tseg{position:relative;display:grid;grid-template-columns:repeat(3,1fr);background:var(--bg);border:1px solid var(--line);border-radius:12px;padding:3px;width:100%;margin-top:10px}
+.tseg button{position:relative;z-index:1;min-height:42px;border:0;background:transparent;color:var(--muted);font:600 13px var(--body);cursor:pointer;padding:0 6px 0 30px;border-radius:9px;transition:color .4s ease}
+.tseg button[aria-checked="true"]{color:var(--on-brand)}
+.tseg button:focus-visible{outline:2px solid var(--accent);outline-offset:-2px}
+.tseg .thumb{position:absolute;top:3px;bottom:3px;left:3px;width:calc((100% - 6px)/3);border-radius:9px;background:var(--brand);box-shadow:0 4px 14px color-mix(in srgb,var(--brand) 38%,transparent);transition:transform .55s cubic-bezier(.35,1.35,.5,1)}
+.tseg[data-pos="1"] .thumb{transform:translateX(100%)}
+.tseg[data-pos="2"] .thumb{transform:translateX(200%)}
+.tseg .tic{position:absolute;left:11px;top:50%;width:19px;height:19px;margin-top:-9.5px;color:var(--on-brand);transition:transform .55s cubic-bezier(.35,1.35,.5,1)}
+.tseg[data-pos="1"] .tic{transform:rotate(360deg)}
+.tseg[data-pos="2"] .tic{transform:rotate(540deg)}
+.tseg .tic svg{position:absolute;inset:0;width:19px;height:19px;opacity:0;transform:scale(.4);transition:opacity .3s ease,transform .45s ease}
+.tseg[data-pos="0"] .tic .i0,.tseg[data-pos="1"] .tic .i1,.tseg[data-pos="2"] .tic .i2{opacity:1;transform:scale(1)}
+.tseg[data-pos="2"] .tic .i2{transform:scale(1) rotate(180deg)}
+.tseg .tic .i1 circle{fill:currentColor}
+.tseg .tic .i2 path{fill:currentColor}
+@media (hover:hover){.tseg button:not([aria-checked="true"]):hover{color:var(--accent)}}
+.setrow.wrap{flex-wrap:wrap}
+
+/* DEMO switch-user button (developers only, remove before going live) */
+.demoSw{display:inline-flex;align-items:center;gap:6px;height:36px;padding:0 12px;border-radius:999px;border:1px dashed var(--accent);background:transparent;color:var(--accent);font:700 12px var(--body);letter-spacing:.05em;text-transform:uppercase;cursor:pointer;transition:box-shadow .45s ease,background-color .35s ease}
+.demoSw svg{width:17px;height:17px}
+@media (hover:hover){.demoSw:hover{background:var(--accent-soft);box-shadow:0 0 0 1px color-mix(in srgb,var(--glow) 45%,transparent),0 0 16px color-mix(in srgb,var(--glow) 35%,transparent)}}
+.ulist{border:1px solid var(--line);border-radius:12px;overflow:hidden;margin-top:12px}
+.ulist .setitem .dot{flex:none;width:10px;height:10px;border-radius:50%;background:var(--accent)}.ulist .setitem .dot.cur{background:var(--good)}
+
+/* Personal tasks: clickable titles and the reminder bell */
+.tkt{cursor:pointer;border-radius:6px}
+@media (hover:hover){.tkt:hover{color:var(--accent)}}
+.tkt:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.rem{white-space:nowrap;color:var(--accent);font-weight:600}.rem svg{width:14px;height:14px;vertical-align:-2px}
+.dlgbox{max-height:calc(100vh - 32px);overflow:auto}
+.dlgbox .eyebrow{margin:0 0 4px;font:700 11px var(--body);letter-spacing:.08em;text-transform:uppercase;color:var(--warn)}
+.dlgbox .eyebrow.ok{color:var(--accent)}
+.dlgbox .btn.block{display:block;width:100%;margin-top:8px}
+.pick label .grow2{flex:1;min-width:0}
+#remAt{width:100%;margin:8px 0 0}
+/* Calendar with page flips */
+.calhead{display:flex;align-items:center;justify-content:space-between;gap:8px;margin:8px 0 4px}
+.calnav{flex:none;width:42px;height:42px;border-radius:50%;border:1px solid var(--line);background:var(--surface);color:var(--accent);font:700 22px/1 var(--display);cursor:pointer;transition:box-shadow .4s ease,border-color .4s ease}
+.calttl{flex:1;border:0;background:transparent;color:var(--ink);font:700 17px var(--display);padding:9px;border-radius:9px;cursor:pointer;transition:background-color .3s ease}
+.calttl .car{display:inline-block;font-size:12px;color:var(--accent);transition:transform .3s ease}
+.calttl[aria-expanded="true"] .car{transform:rotate(180deg)}
+.caljump{background:var(--bg);border-radius:12px;padding:10px;margin:6px 0 8px}
+.caljump[hidden]{display:none}
+.calyrs{display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;padding-bottom:6px}
+.calyrs::-webkit-scrollbar{display:none}
+.cy,.cm{border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:999px;min-height:36px;padding:6px 13px;font:600 13px var(--body);cursor:pointer;transition:box-shadow .4s ease,border-color .4s ease,background-color .3s ease}
+.cy{flex:none}
+.calmos{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-top:4px}
+.cm{border-radius:9px;padding:6px 4px}
+.cy.on,.cm.on{background:var(--brand);border-color:var(--brand);color:var(--on-brand)}
+.calbook{position:relative;height:300px;perspective:1400px;margin:6px 0 4px}
+.calpage{position:absolute;inset:0;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:8px;transform-origin:left center;backface-visibility:hidden;box-shadow:0 6px 18px rgba(0,0,0,.06)}
+.calwk,.calgrid{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;text-align:center}
+.calwk span{font:700 11px var(--body);letter-spacing:.06em;color:var(--muted);padding:4px 0 6px}
+.cd{height:39px;border:0;border-radius:9px;background:transparent;color:var(--ink);font:600 14px var(--body);cursor:pointer;padding:0;transition:box-shadow .35s ease,background-color .3s ease,color .3s ease}
+.cd.td{box-shadow:inset 0 0 0 2px var(--accent);color:var(--accent)}
+.cd.sel{background:var(--brand);color:var(--on-brand);box-shadow:0 4px 12px color-mix(in srgb,var(--brand) 40%,transparent)}
+.cd[disabled]{opacity:.3;cursor:default}
+@media (hover:hover){
+  .calnav:hover,.cy:hover,.cm:hover{border-color:color-mix(in srgb,var(--glow) 60%,var(--line));box-shadow:0 0 0 3px color-mix(in srgb,var(--glow) 20%,transparent)}
+  .calttl:hover{background:var(--accent-soft)}
+  .cd:not([disabled]):not(.sel):hover{background:var(--accent-soft);box-shadow:0 0 0 2px color-mix(in srgb,var(--glow) 40%,transparent)}
+}
+/* Duplicate protection on New task */
+.pwarn{background:var(--warn-bg);color:var(--warn);border-radius:10px;padding:10px 12px;margin:10px 0;font-size:13px}.pwarn.crit{background:var(--crit-bg);color:var(--crit)}
+.pwarn:empty{display:none}
+.perr{border-color:var(--crit)!important;box-shadow:0 0 0 3px var(--crit-bg)!important}
+.ntacts{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+@media (prefers-reduced-motion:reduce){
+  .tk,.grid.four>.panel,.row,.btn,nav button,.tabs button,.setitem,.setrow,.ins,.ni,.bell,.settingsbtn,.pick label,.glider,.seg button,.quick button,.switch,.switch::after,.tseg .thumb,.tseg .tic,.tseg .tic svg,.shead .gear,.sico svg,.seticon svg,.kface,input,select,textarea{transition:none!important;animation:none!important}
+  .tk:hover,.grid.four>.panel:hover{transform:none}
+}
+.reduce-motion .tk:hover,.reduce-motion .grid.four>.panel:hover{transform:none}
 </style>
 </head>
 <body>
@@ -308,7 +496,7 @@ pre{white-space:pre-wrap;font:inherit;margin:6px 0}
       <p>Works, accounts, compliance, legal and resident updates, all under the building name.</p>
       <ul class="lfeat"><li>Update once, and Asana, Outlook and residents all hear about it</li><li>Approvals and arrears in one view</li><li>Residents see what matters to them</li></ul>
     </div>
-    <p class="lfoot">Version 10.7 · Demo only. Fictional data and simulated sign in.</p>
+    <p class="lfoot">Version 10.8 · Demo only. Fictional data and simulated sign in.</p>
   </div>
   <div class="lmain">
     <div class="lcard">
@@ -321,7 +509,7 @@ pre{white-space:pre-wrap;font:inherit;margin:6px 0}
         <div class="pw"><input id="lPass" name="password" type="password" autocomplete="current-password"><button type="button" class="pwtoggle" id="pwT" aria-controls="lPass" aria-pressed="false">Show</button></div>
         <input id="lWeb" name="website" class="hp" tabindex="-1" autocomplete="off" aria-hidden="true">
         <label id="hvLabel">Verify you are human</label>
-        <div class="slider" id="hv" role="slider" tabindex="0" aria-labelledby="hvLabel" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-valuetext="Not verified"><div class="sfill"></div><span class="stext">Slide to verify</span><div class="knob" aria-hidden="true">›</div></div>
+        <div class="slider" id="hv" role="slider" tabindex="0" aria-labelledby="hvLabel" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-valuetext="Not verified"><svg class="strack" aria-hidden="true"><defs><clipPath id="hvClip"><path class="tp"/></clipPath></defs><path class="tp tbg"/><rect class="tlit" x="0" y="-12" height="80" clip-path="url(#hvClip)"/><path class="tp tline"/></svg><span class="stclip" aria-hidden="true"><span class="stext s1">Slide to verify</span><span class="stext s2">I am not a robot</span></span><div class="knob" aria-hidden="true"><span class="kface">›</span></div></div>
         <div class="lrow"><label class="check"><input type="checkbox" id="lKeep"> Keep me signed in on this device</label><button class="btn link small" id="forgot" type="button">Forgot password?</button></div>
         <p class="lerr" id="lErr" role="alert"></p>
         <button class="btn wide" id="lBtn" type="submit">Sign in</button>
@@ -343,7 +531,7 @@ pre{white-space:pre-wrap;font:inherit;margin:6px 0}
   <aside>
     <p class="brand">JFM <span>Platform</span></p>
     <nav id="nav" aria-label="Sections"></nav>
-    <p class="ver" id="ver">Version 10.7</p>
+    <p class="ver" id="ver">Version 10.8</p>
     <button class="settingsbtn" id="setBtn" data-act="settings" hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg><span>User settings</span></button>
   </aside>
   <main>
@@ -351,6 +539,8 @@ pre{white-space:pre-wrap;font:inherit;margin:6px 0}
       <div><h1 id="heading"></h1><span class="muted" id="identity"></span></div>
       <div class="controls">
         <label for="bSel" id="bWrap">Go to<select id="bSel"></select></label>
+        <!-- V10.8 DEMO switch-user button: developers only. Remove before going live. -->
+        <button class="demoSw" data-act="switchUser" aria-label="Switch demo user (developers only, remove before going live)" title="Developers only: switch user. Remove before going live."><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="8" r="3.2"/><path d="M3 20c0-3.3 2.7-6 6-6s6 2.7 6 6"/><path d="M16 4.6a3.2 3.2 0 0 1 0 6.2M21 20c0-2.8-1.8-5.1-4.3-5.8"/></svg><span>Demo</span></button>
         <button class="btn light" data-act="reset" id="resetBtn">Reset demo</button>
         <button class="btn light" data-act="signOut">Sign out</button>
       </div>
@@ -369,7 +559,7 @@ pre{white-space:pre-wrap;font:inherit;margin:6px 0}
 <script>
 /* Live database. config.js sets window.JFM_LIVE={url:'...',key:'...'}; without it the app runs on this device only. */
 const LIVE=window.JFM_LIVE||{url:'',key:''};
-const APP_VERSION='10.7';
+const APP_VERSION='10.8';
 const KINDS=['buildings','tasks','docs','legal','invoices','emails','requests','sync','notes','mytasks','inspections'];
 const newId=p=>p+Date.now().toString(36).slice(-4).toUpperCase()+Math.random().toString(36).slice(2,4).toUpperCase();
 let sb=null,live=false,liveState='local',snap=new Map(),pendingRender=false;
@@ -565,7 +755,7 @@ function attentionList(bs,max){
   invPend(b).forEach(v=>out.push([b.name,'Accounts',`Invoice ${money(v.amount)} from ${v.supplier}`,'']));
   mailNew(b).forEach(e=>out.push([b.name,'Inbox',`Email: ${e.subject}`,'']));
  });
- return out.slice(0,max).map(([b,tab,text,k])=>`<div class="row flex"><span>${pill(tab,k)} ${esc(text)}<br><span class="muted small">${esc(b)}</span></span><button class="btn light" data-act="openB" data-id="${esc(b)}" data-x="${tab}">Open</button></div>`).join('')||'<p class="muted">Nothing needs attention</p>';
+ return `<div class="attlist">${out.slice(0,ui.allAtt?out.length:max).map(([b,tab,text,k])=>`<div class="row flex"><span>${pill(tab,k)} ${esc(text)}<br><span class="muted small">${esc(b)}</span></span><button class="btn light" data-act="openB" data-id="${esc(b)}" data-x="${tab}">Open</button></div>`).join('')||'<p class="muted">Nothing needs attention</p>'}</div>${out.length>max&&!ui.allAtt?`<p><button class="btn light" data-act="allAtt" data-id="${max}">Show all ${out.length}</button></p>`:''}`;
 }
 function pagePortfolio(){
  const bs=myB(),ceoInv=db.invoices.filter(canDecide);
@@ -773,13 +963,13 @@ function pageInbox(){
 function pageMyTasks(){
  const mine=db.mytasks.filter(t=>t.owner===uid),open=mine.filter(t=>!t.done).sort((a,b)=>a.due.localeCompare(b.due)),done=mine.filter(t=>t.done).sort((a,b)=>(b.doneAt||'').localeCompare(a.doneAt||''));
  const wk=iso(7),groups=[['Overdue',t=>t.due<today()],['Today',t=>t.due===today()],['This week',t=>t.due>today()&&t.due<=wk],['Later',t=>t.due>wk]];
- const row=t=>{const n=(t.notes||[]).length;return card({id:t.id,title:t.title,done:t.done,due:t.due,act:'myDone',canTick:true,
-  meta:[t.source?esc(t.source):'',n?n+' note'+(n===1?'':'s'):''].filter(Boolean).join(' · '),
+ const row=t=>{const n=(t.notes||[]).length;return card({id:t.id,title:t.title,done:t.done,due:t.due,act:'myDone',canTick:true,open:'taskOpen',
+  meta:[t.remind&&!t.done?`<span class="rem">${ico('bell')} ${t.reminded?'Reminded':esc(fmtRem(t.remind))}</span>`:'',t.source?esc(t.source):'',n?n+' note'+(n===1?'':'s'):''].filter(Boolean).join(' · '),
   extra:`${t.body?`<details><summary>Email text</summary><pre>${esc(t.body)}</pre></details>`:''}<details class="ntd" data-nid="${t.id}" ${ui.openNotes===t.id?'open':''}><summary>${n?'Notes ('+n+')':'Add a note'}</summary>${notesHtml(t.notes)}${noteForm('my',t.id)}</details>${t.done&&t.doneAt?`<p class="small muted">Done ${esc(when(t.doneAt))}</p>`:''}`})};
- const quick=[['Today',0],['Tomorrow',1],['Next week',7]];
+ const quick=[['Today','0'],['Tomorrow','1'],['Next week','7'],['','pick']],dueLbl=d=>d!=='pick'?'':ui.myDue==='pick'&&ui.myDueDate?esc(shortDate(ui.myDueDate)):`Pick a date${ui.myDueLast?`<small>Last: ${esc(shortDate(ui.myDueLast))}</small>`:''}`;
  return `<div class="panel"><div class="flex"><h3>My tasks</h3>${pill(open.length?open.length+' to do':'All done','good')}</div><p class="muted small">Only you can see these. Tap the circle when a task is done.</p>
  <div class="addrow"><input id="myTitle" placeholder="Add a task, e.g. Call the lift engineer" aria-label="New task"><button class="btn" data-act="myAdd">Add</button></div>
- <div class="quick" role="radiogroup" aria-label="Due">${quick.map(([l,d])=>`<button role="radio" aria-checked="${(ui.myDue??7)===d}" data-act="myDueSet" data-id="${d}">${l}</button>`).join('')}</div></div>
+ <div class="quick" role="radiogroup" aria-label="Due">${quick.map(([l,d])=>`<button role="radio" aria-checked="${String(ui.myDue??7)===d}" data-act="myDueSet" data-id="${d}">${d==='pick'?dueLbl(d):l}</button>`).join('')}</div></div>
  ${open.length?groups.map(([g,f])=>{const l=open.filter(f);return l.length?`<div class="grp"><p class="grph ${g==='Overdue'?'late':''}">${g} <span>${l.length}</span></p>${l.map(row).join('')}</div>`:''}).join(''):'<div class="panel"><p class="muted">Nothing to do. Add a task above, or turn an email into one from your Inbox.</p></div>'}
  ${done.length?`<div class="grp"><details class="donegrp"><summary>Done (${done.length})</summary>${done.map(row).join('')}</details></div>`:''}`;
 }
@@ -799,11 +989,11 @@ function dueInfo(d,done){
 }
 const TICK='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>';
 /* One card style for building works and My tasks: tick on the left, title, one line of plain facts */
-function card({id,title,done,due,act,meta,extra,sel,flag,canTick}){
+function card({id,title,done,due,act,meta,extra,sel,flag,canTick,open}){
  const d=dueInfo(due,done);
  return `<div class="tk ${done?'done':''} ${sel?'sel':''} ${flag||''}">
   ${canTick?`<button class="tick ${done?'on':''}" data-act="${act}" data-id="${id}" aria-label="${done?'Mark '+esc(title)+' as not done':'Mark '+esc(title)+' as done'}" title="${done?'Mark as not done':'Mark as done'}">${TICK}</button>`:''}
-  <div class="tkb"><h4>${esc(title)}</h4>
+  <div class="tkb">${open?`<h4 class="tkt" data-act="${open}" data-id="${id}" role="button" tabindex="0">${esc(title)}</h4>`:`<h4>${esc(title)}</h4>`}
   <p class="tkm"><span class="due ${d.k}">${d.t}</span>${meta?' · '+meta:''}</p>${extra||''}</div></div>`;
 }
 function taskRow(t,sel){
@@ -918,7 +1108,7 @@ const TAB={
   <p><button class="btn" data-act="updateAll" data-id="${t.id}">Update everywhere</button></p>`;}
  return `${reqs.length?`<div class="panel"><h3>Reported by residents</h3>${reqs.map(r=>`<div class="row"><b>${esc(r.category)} · ${esc(r.location)}</b><p>${esc(r.body)}</p><div class="acts"><button class="btn" data-act="convertReq" data-id="${r.id}">Convert to task</button><button class="btn light" data-act="closeReq" data-id="${r.id}">Close</button></div></div>`).join('')}</div>`:''}
  <div class="grid"><div class="panel"><div class="flex"><h3>Works and tasks</h3><button class="btn light" data-act="form" data-id="task">${ui.form==='task'?'Cancel':'New task'}</button></div>
- ${ui.form==='task'?`<div class="note"><label for="ntTitle">Title</label><input id="ntTitle"><div class="form2"><div><label for="ntCat">Category</label><select id="ntCat">${opts(CATS)}</select></div><div><label for="ntPri">Priority</label><select id="ntPri">${opts(Object.keys(PRI),'Medium')}</select></div></div><label for="ntNote">Internal note</label><input id="ntNote"><button class="btn" data-act="createTask">Save and create in Asana</button></div>`:''}
+ ${ui.form==='task'?ntFormHtml(b):''}
  ${list.filter(x=>x.stage<4).map(x=>taskRow(x,t&&x.id===t.id)).join('')||'<p class="muted">No open works. Nice work.</p>'}${(c=>c.length?`<details class="donegrp"><summary>Completed (${c.length})</summary>${c.map(x=>taskRow(x,t&&x.id===t.id)).join('')}</details>`:'')(list.filter(x=>x.stage===4))}</div><div class="panel">${d}</div></div>`;
 },
 'Accounts'(b){
@@ -998,27 +1188,37 @@ const TAB={
 const LSTAGEOF=l=>LSTAGE[l.type]||LSTAGE.other;
 const fill=(s,b)=>s.replaceAll('{b}',b).replaceAll('{me}',me().short||me().name);
 
-const sw=(k,title,desc)=>`<div class="setrow"><span><b id="lb_${k}">${title}</b><span class="muted">${desc}</span></span><button class="switch" role="switch" aria-checked="${prefOn(k)}" aria-labelledby="lb_${k}" data-act="pref" data-id="${k}"></button></div>`;
+const canVibrate=()=>'vibrate' in navigator;
+const sw=(k,ic,title,desc,off)=>`<div class="setrow"><span class="sico ic-${ic}">${ico(ic)}</span><span class="grow"><b id="lb_${k}">${title}</b><span class="muted">${desc}</span></span><button class="switch" role="switch" aria-checked="${!off&&prefOn(k)}" aria-labelledby="lb_${k}" data-act="pref" data-id="${k}" ${off?'disabled':''}></button></div>`;
 const ICON={
  bell:'<path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.9 1.9 0 0 0 3.4 0"/>',
  sound:'<path d="M11 5 6 9H2v6h4l5 4V5z"/><path d="M15.5 8.5a5 5 0 0 1 0 7"/><path d="M19 5a10 10 0 0 1 0 14"/>',
  sun:'<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/>',
- access:'<circle cx="12" cy="4.5" r="1.5"/><path d="M5 8l7 1.5L19 8M12 9.5V15m0 0-3 6m3-6 3 6"/>'};
-const ico=n=>`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${ICON[n]}</svg>`;
+ access:'<circle cx="12" cy="4.5" r="1.5"/><path d="M5 8l7 1.5L19 8M12 9.5V15m0 0-3 6m3-6 3 6"/>',
+ popi:'<path d="M4 4.5h16a1 1 0 0 1 1 1V16a1 1 0 0 1-1 1h-8.5L7 20.5V17H4a1 1 0 0 1-1-1V5.5a1 1 0 0 1 1-1z"/><path d="M8.5 10.8l2.4 2.4 4.6-4.7"/>',
+ vib:'<rect x="8" y="3" width="8" height="18" rx="2"/><path d="M11 17.5h2"/><path d="M4.5 8.5v7M19.5 8.5v7M2 10.5v3M22 10.5v3"/>',
+ pal:'<circle cx="12" cy="12" r="9"/><path d="M12 3a9 9 0 0 1 0 18z" fill="currentColor"/>',
+ devp:'<rect x="6.5" y="2.5" width="11" height="19" rx="2.4"/><path d="M10.5 18.5h3"/>',
+ sunf:'<circle cx="12" cy="12" r="4.2"/><path d="M12 1.8v2.4M12 19.8v2.4M4.8 4.8l1.7 1.7M17.5 17.5l1.7 1.7M1.8 12h2.4M19.8 12h2.4M4.8 19.2l1.7-1.7M17.5 6.5l1.7-1.7"/>',
+ moon:'<path d="M20.5 14.2A8.6 8.6 0 0 1 9.8 3.5a8.6 8.6 0 1 0 10.7 10.7z"/>',
+ gear:'<circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/>',
+ cal:'<rect x="3.5" y="5" width="17" height="15.5" rx="2.5"/><path d="M3.5 10h17M8 3v4M16 3v4"/>'};
+const ico=(n,c)=>`<svg ${c?`class="${c}" `:''}viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${ICON[n]}</svg>`;
 const SETTINGS={
  notifications:{title:'Notifications',icon:'bell',color:'#e5484d',sum:()=>'Pop-ups '+(fxOn()?'on':'off'),
-  body:()=>`<p class="setgroup">IN-APP</p>${sw('fx','Confirmation animation pop-ups','A quick tick when an email is sent or a task is created or completed.')}`},
- sound:{title:'Sound & haptics',icon:'sound',color:'#d6409f',sum:()=>'Sound '+pref('sound')+' · Haptics '+pref('haptics'),
-  body:()=>`<p class="setgroup">CONFIRMATIONS</p>${sw('sound','Confirmation sound','A soft chime when an action is confirmed.')}${sw('haptics','Haptic feedback','A short vibration when an action is confirmed. Works on supported phones, mostly Android.')}`},
+  body:()=>`<p class="setgroup">IN-APP</p>${sw('fx','popi','Pop-ups','Show a quick tick when an email is sent or a task is created or completed.')}`},
+ sound:{title:'Sound & haptics',icon:'sound',color:'#d6409f',sum:()=>'Sound '+pref('sound')+' · Vibration '+(canVibrate()?pref('haptics'):'not supported'),
+  body:()=>`<p class="setgroup">FEEDBACK</p>${sw('sound','bell','Sound','Play a soft chime when an action is confirmed or a reminder is due.')}${sw('haptics','vib','Vibration',canVibrate()?'Vibrate when an action is confirmed, and tick between options as you slide.':'Not supported by this browser',!canVibrate())}`},
  appearance:{title:'Appearance',icon:'sun',color:'#3e63dd',sum:()=>({system:'Match device',light:'Light',dark:'Dark'})[pref('theme')],
-  body:()=>`<p class="setgroup">THEME</p><div class="setrow"><span><b>Theme</b><span class="muted">Choose light, dark or follow your device.</span></span><div class="seg" role="radiogroup" aria-label="Theme">${[['system','Device'],['light','Light'],['dark','Dark']].map(([v,l])=>`<button role="radio" aria-checked="${pref('theme')===v}" data-act="theme" data-id="${v}">${l}</button>`).join('')}</div></div>`},
+  body:()=>{const th=pref('theme'),pos=Math.max(0,['system','light','dark'].indexOf(th));return `<p class="setgroup">THEME</p><div class="setrow wrap"><span class="sico ic-pal">${ico('pal')}</span><span class="grow"><b id="lb_theme">Appearance</b><span class="muted">Match this device, or always light or dark.</span></span>
+  <div class="tseg" role="radiogroup" aria-labelledby="lb_theme" data-pos="${pos}"><span class="thumb" aria-hidden="true"><span class="tic">${ico('devp','i0')}${ico('sunf','i1')}${ico('moon','i2')}</span></span>${[['system','Device'],['light','Light'],['dark','Dark']].map(([v,l])=>`<button role="radio" aria-checked="${th===v}" data-act="theme" data-id="${v}">${l}</button>`).join('')}</div></div>`}},
  accessibility:{title:'Accessibility',icon:'access',color:'#30a46c',sum:()=>'Reduce motion '+pref('motion'),
-  body:()=>`<p class="setgroup">MOTION</p>${sw('motion','Reduce motion','Turns off sliding and pop animations across the platform. Pop-ups still show, without moving.')}`}};
+  body:()=>`<p class="setgroup">MOTION</p>${sw('motion','access','Reduce motion','Turns off sliding, glowing and pop animations across the platform. Pop-ups still show, without moving.')}`}};
 function pageSettings(){
  const s=SETTINGS[ui.set];
- if(s)return `<div class="panel setpanel"><button class="back" data-act="setSec" data-id=""><span aria-hidden="true">‹</span> Back to User settings</button><h3 class="sethead"><span class="seticon" style="--ic:${s.color}">${ico(s.icon)}</span>${s.title}</h3>${s.body()}</div>`;
+ if(s)return `<div class="panel setpanel"><button class="back" data-act="setSec" data-id=""><span aria-hidden="true">‹</span> Back to User settings</button><h3 class="sethead"><span class="seticon ic-${s.icon}" style="--ic:${s.color}">${ico(s.icon)}</span>${s.title}</h3>${s.body()}</div>`;
  return `<div class="panel setpanel"><h3>${esc(me().name)}</h3><p class="muted small">These settings apply to you only, on this device.</p>
- <div class="setlist">${Object.entries(SETTINGS).map(([k,x])=>`<button class="setitem" data-act="setSec" data-id="${k}"><span class="seticon" style="--ic:${x.color}">${ico(x.icon)}</span><span class="setitxt"><b>${x.title}</b><span class="muted">${esc(x.sum())}</span></span><span class="chev" aria-hidden="true">›</span></button>`).join('')}</div></div>`;
+ <div class="setlist">${Object.entries(SETTINGS).map(([k,x])=>`<button class="setitem" data-act="setSec" data-id="${k}"><span class="seticon ic-${x.icon}" style="--ic:${x.color}">${ico(x.icon)}</span><span class="setitxt"><b>${x.title}</b><span class="muted">${esc(x.sum())}</span></span><span class="chev" aria-hidden="true">›</span></button>`).join('')}</div></div>`;
 }
 
 /* ---------- resident pages ---------- */
@@ -1106,19 +1306,21 @@ function paintBell(){
  p.hidden=!ui.bell;if(!ui.bell)return;
  p.innerHTML=`<div class="bhead"><b>Notifications</b>${n?'<button class="btn link small" data-act="markAll">Mark all as read</button>':''}</div>`+
   (list.slice(0,40).map(x=>{const v=x.inv&&db.invoices.find(i=>i.id===x.inv),dec=v&&canDecide(v);
-   return `<button class="ni ${x.read?'':'unread'}" data-act="noteOpen" data-id="${x.id}">${esc(x.text)}<span class="muted">${esc(when(x.at))}</span>${dec?'<span class="go">Decide now ›</span>':''}</button>`}).join('')||'<p class="bempty">You have no notifications yet.</p>');
+   return `<button class="ni ${x.read?'':'unread'}" data-act="noteOpen" data-id="${x.id}">${esc(x.text)}<span class="muted">${esc(when(x.at))}</span>${dec?'<span class="go">Decide now ›</span>':''}${x.task?'<span class="go">Open task ›</span>':''}</button>`}).join('')||'<p class="bempty">You have no notifications yet.</p>');
 }
 function closeBell(){ui.bell=false;paintBell()}
 let cfRun=null,cfCancel=null;
 /* "Check your work" step before anything important happens */
 function askSure(o,run,cancel){cfRun=run;cfCancel=cancel||null;ui.cf=o;paintDlg()}
-function closeDlg(){const c=cfCancel;ui.dlg=null;ui.cf=null;cfRun=null;cfCancel=null;paintDlg();if(c)c();const b=$('bell');if(b&&!b.hidden)b.focus()}
+function closeDlg(){const c=cfCancel,d=ui.dlg;ui.dlg=null;ui.cf=null;cfRun=null;cfCancel=null;paintDlg();if(c)c();
+ if(d&&d.kind==='cal'&&d.mode==='due'&&!d.picked&&ui.myDue==='pick'){ui.myDue=ui.myDuePrev??7;ui.myDueDate=null;if(view.page==='mytasks')render()}if(!(d&&d.kind)){const b=$('bell');if(b&&!b.hidden)b.focus()}}
 function paintDlg(){
  const box=$('dlg');
  if(ui.cf){const o=ui.cf;
-  box.innerHTML=`<div class="dlgback"><div class="dlgbox" role="alertdialog" aria-modal="true" aria-labelledby="dlgT" aria-describedby="dlgD"><p class="cfeye">Check your work</p><h3 id="dlgT">${o.title}</h3><p class="muted" id="dlgD">Are you sure? Read the details below before you confirm.</p><dl class="cflist">${o.lines.map(([k,v])=>`<dt>${k}</dt><dd>${v}</dd>`).join('')}</dl><div class="choice"><button class="btn light big" data-act="cfNo">Go back</button><button class="btn ${o.tone||''} big" data-act="cfYes">${o.ok}</button></div></div></div>`;
+  box.innerHTML=`<div class="dlgback"><div class="dlgbox" role="alertdialog" aria-modal="true" aria-labelledby="dlgT" aria-describedby="dlgD"><p class="cfeye">${o.eyebrow||'Check your work'}</p><h3 id="dlgT">${o.title}</h3><p class="muted" id="dlgD">${o.desc||'Are you sure? Read the details below before you confirm.'}</p>${(o.warn||[]).map(w=>`<div class="pwarn crit">${w}</div>`).join('')}<dl class="cflist">${o.lines.map(([k,v])=>`<dt>${k}</dt><dd>${v}</dd>`).join('')}</dl><div class="choice"><button class="btn light big" data-act="cfNo">Go back</button><button class="btn ${o.tone||''} big" data-act="cfYes">${o.ok}</button></div></div></div>`;
   setTimeout(()=>{const f=box.querySelector('[data-act=cfYes]');if(f)f.focus()},30);return}
  const d=ui.dlg;if(!d){box.innerHTML='';return}
+ if(d.kind&&SHEETS[d.kind]){box.innerHTML=`<div class="dlgback"><div class="dlgbox" role="dialog" aria-modal="true" aria-labelledby="dlgT">${SHEETS[d.kind](d)}</div></div>`;return}
  const v=db.invoices.find(x=>x.id===d.id);if(!v){ui.dlg=null;box.innerHTML='';return}
  const sum=`<div class="amt">${money(v.amount)}</div><p><b>${esc(v.supplier)}</b> · ${esc(v.building)}</p><p class="muted small">${esc(v.desc)} · ${esc(v.head)}${v.requestedBy?' · Requested by '+esc(nameOf(v.requestedBy)):''}</p>`;
  let h;
@@ -1134,8 +1336,11 @@ const ACT={
  tab(t){if(view.page==='settings'&&!staff())view.page='res';view.tab=t;ui.form=null;render()},
  settings(){view.page='settings';ui.set=null;ui.form=null;render();window.scrollTo(0,0)},
  setSec(k){ui.set=k||null;render();window.scrollTo(0,0)},
- pref(k){const on=!prefOn(k);setPref(k,on?'on':'off');applyPrefs();render();if(on&&k==='fx')setTimeout(()=>confirmFx('done','Pop-ups on'),250);else if(on&&k==='sound')chime();else if(on&&k==='haptics')buzz()},
- theme(v){setPref('theme',v);applyPrefs();render()},
+ pref(k){if(k==='haptics'&&!canVibrate())return;const on=!prefOn(k);setPref(k,on?'on':'off');applyPrefs();
+  const b=document.querySelector(`.switch[data-id="${k}"]`);
+  if(b){b.setAttribute('aria-checked',on);const r=b.closest('.setrow');if(r){r.classList.remove('play');void r.offsetWidth;if(on)r.classList.add('play');setTimeout(()=>r.classList.remove('play'),1000)}}else render();
+  if(on&&k==='fx')setTimeout(()=>confirmFx('done','Pop-ups on'),250);else if(on&&k==='sound')chime();else if(on&&k==='haptics')buzz()},
+ theme(v){setPref('theme',v);applyPrefs();const g=document.querySelector('.tseg');if(!g)return render();g.dataset.pos=Math.max(0,['system','light','dark'].indexOf(v));g.querySelectorAll('button').forEach(b=>b.setAttribute('aria-checked',b.dataset.id===v))},
  signOut(){writeSession(null);uid=null;compose=null;showLogin(true)},
  reset(){
   if(live&&!isTop())return toast('Only a master admin or the CEO can reset shared data.');
@@ -1143,11 +1348,18 @@ const ACT={
   b.dataset.arm='';b.textContent='Reset demo';
   if(live)return resetLive();
   db=mkSeed();save();compose=null;ui={task:null,form:null,sys:'All',set:null};render();toast('Demo data reset')},
- form(k){ui.form=ui.form===k?null:k;render()},
+ form(k){ui.form=ui.form===k?null:k;if(ui.form!=='task')ui.nt=null;render();if(ui.form==='task')setTimeout(()=>{const t=$('ntTitle');if(t)t.focus()},60)},
  pickTask(id){ui.task=id;render()},
- createTask(){
-  if(!ok(view.b))return;const title=$('ntTitle').value.trim();if(!title)return toast('Add a title');
-  ui.task=newTask(view.b,title,$('ntCat').value,$('ntPri').value,$('ntNote').value.trim()||'No internal note','Created by '+me().name);ui.form=null;save();render();toast('Task created here and in Asana');confirmFx('created');
+ createTask(sure){
+  if(!ok(view.b))return;const f=ntRead(),bn=view.b;
+  if(!f.title)return ntBad('ntTitle','Add a title for the task.');
+  const warns=ntWarnings(bn,f);
+  if(warns.length&&sure!=='yes')return askSure({eyebrow:'Are you sure?',title:'Create this anyway?',desc:'Read the warning'+(warns.length===1?'':'s')+' below before you confirm, so a second task for the same job is not created.',warn:warns,ok:'Yes, create anyway',tone:'no',lines:[
+   ['Title',esc(f.title)],['Building',esc(bn)],['Category',esc(f.cat)],['Priority',esc(f.pri)],...(f.ref?[['Reference',esc(f.ref)]]:[]),['Internal note',esc(f.note||'No internal note')]]},()=>ACT.createTask('yes'));
+  const id=newTask(bn,f.title,f.cat,f.pri,f.note||'No internal note','Created by '+me().name);
+  if(f.ref){const t=db.tasks.find(x=>x.id===id);t.ref=f.ref}
+  if(warns.length)addHist(db.tasks.find(x=>x.id===id),'Created anyway after a possible duplicate warning');
+  ui.task=id;ui.form=null;ui.nt=null;save();render();toast('Task created here and in Asana');confirmFx('created');
  },
  updateAll(id){
   const t=db.tasks.find(x=>x.id===id);if(!t||!ok(t.building))return;
@@ -1207,6 +1419,7 @@ const ACT={
  bell(){ui.bell=!ui.bell;paintBell();if(ui.bell)setTimeout(()=>{const f=$('bPanel').querySelector('button');if(f)f.focus()},30)},
  noteOpen(id){
   const n=db.notes.find(x=>x.id===id);if(!n||n.to!==uid)return;if(!n.read){n.read=true;save()}
+  if(n.task){closeBell();return ACT.taskOpen(n.task,'reminder')}
   const v=n.inv&&db.invoices.find(x=>x.id===n.inv);
   if(v&&canDecide(v))return ACT.decide(v.id);
   closeBell();if(v&&staff()&&canSee(v.building))ACT.openB(v.building,'Accounts');else{render()}
@@ -1273,8 +1486,18 @@ const ACT={
   render();window.scrollTo(0,0);confirmFx('created',n>1?n+' tasks created':'Task created');
  },
 
- myDueSet(d){ui.myDue=+d;document.querySelectorAll('.quick button').forEach(b=>b.setAttribute('aria-checked',b.dataset.id===String(d)));const i=$('myTitle');if(i)i.focus()},
- myAdd(){const title=$('myTitle').value.trim();if(!title)return toast('Write the task first.');db.mytasks.unshift({id:newId('M'),owner:uid,title,due:iso(ui.myDue??7),done:false,source:'Added by you',notes:[],createdAt:new Date().toISOString()});save();render();toast('Added to My tasks');confirmFx('created')},
+ myDueSet(d){const prev=ui.myDue??7;
+  if(d==='pick'){if(prev!=='pick')ui.myDuePrev=prev;ui.myDue='pick'}else{ui.myDue=+d;
+   /* moving off a picked date (before adding the task) puts the option back to 'Pick a date', remembering it as the last date */
+   if(ui.myDueDate){ui.myDueDate=null;const pb=document.querySelector('[data-act=myDueSet][data-id=pick]');if(pb)pb.innerHTML=`Pick a date${ui.myDueLast?`<small>Last: ${esc(shortDate(ui.myDueLast))}</small>`:''}`}}
+  document.querySelectorAll('[data-act=myDueSet]').forEach(b=>b.setAttribute('aria-checked',b.dataset.id===String(ui.myDue)));syncGliders();
+  if(d==='pick'){const last=ui.myDueDate||(ui.myDueLast&&ui.myDueLast>=today()?ui.myDueLast:null),[y,m]=(last||today()).split('-').map(Number);setTimeout(()=>{ui.dlg={kind:'cal',mode:'due',y,m:m-1,sel:last,min:today()};paintDlg()},380)}
+  else{const i=$('myTitle');if(i&&matchMedia('(hover:hover)').matches)i.focus()}},
+ myAdd(){const title=$('myTitle').value.trim();if(!title)return toast('Write the task first.');
+  const due=ui.myDue==='pick'&&ui.myDueDate?ui.myDueDate:iso(ui.myDue==='pick'?7:+(ui.myDue??7)),id=newId('M');
+  if(ui.myDue==='pick'){ui.myDue=ui.myDuePrev??7;ui.myDueDate=null}
+  db.mytasks.unshift({id,owner:uid,title,due,done:false,source:'Added by you',notes:[],createdAt:new Date().toISOString()});save();render();toast('Added to My tasks');confirmFx('created');
+  setTimeout(()=>{if(ui.dlg||ui.cf)return;ui.dlg={kind:'remind',id,pick:due>iso(1)?'due':'tom'};paintDlg()},350)},
  myDone(id){const t=db.mytasks.find(x=>x.id===id);if(!t||t.owner!==uid)return;t.done=!t.done;t.doneAt=t.done?new Date().toISOString():null;save();render();if(t.done)confirmFx('done');else toast('Moved back to your list')},
  bDone(id){
   const t=db.tasks.find(x=>x.id===id);if(!t||!ok(t.building))return;const done=t.stage<4;
@@ -1358,7 +1581,7 @@ Object.assign(ACT,{
 
 function render(){
  if(!me())return showLogin(false);
- pendingRender=false;paintLive();paintBell(); if(ui.dlg||ui.cf)paintDlg();
+ pendingRender=false;paintLive();paintBell(); if(ui.cf||(ui.dlg&&!['cal','remind','users','hap'].includes(ui.dlg.kind)))paintDlg();
  const m=me(),st=staff();
  if(view.page==='settings'){if(!canSee(view.b))view.b=myB()[0].name}
  else if(!st){view.b=m.building;if(view.page!=='res'||!resTabs().includes(view.tab))view={page:'res',b:m.building,tab:'Home'}}
@@ -1384,6 +1607,7 @@ function render(){
  else if(view.page==='building')h=`<div class="tabs" role="tablist">${TABS.map(t=>`<button class="${t===view.tab?'on':''}" data-act="tab" data-id="${t}">${t}</button>`).join('')}</div>`+TAB[view.tab](B());
  else h=view.page==='inbox'?pageInbox():view.page==='mytasks'?pageMyTasks():view.page==='sync'?pageSync():pagePortfolio();
  $('content').innerHTML=h;if(document.querySelector('[data-mid]:not([src])'))hydrateMedia();
+ afterRender();
 }
 document.addEventListener('click',e=>{
  if(ui.bell&&!e.target.closest('#bPanel,#bell'))closeBell();
@@ -1420,6 +1644,339 @@ document.addEventListener('change',e=>{const el=e.target;
 });
 document.addEventListener('input',e=>{const cn=e.target.dataset&&e.target.dataset.count;if(cn&&$(cn))$(cn).textContent=e.target.value.length+'/'+NOTE_MAX;if(e.target.id==='pf'){const q=e.target.value.toLowerCase();document.querySelectorAll('#pRows tr').forEach(r=>{r.style.display=r.dataset.s.includes(q)?'':'none'})}});
 
+/* ===== V10.8 Interface polish ===== */
+const motionOff=()=>prefOn('motion')||matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+/* ---------- New task: duplicate protection and a kept draft ----------
+   The draft survives redraws (including live updates from other people), so nothing typed is lost. */
+const normT=s=>String(s||'').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'').replace(/[^a-z0-9]+/g,' ').trim();
+function ntWarnings(bn,f){
+ const out=[],t=normT(f.title),r=normT(f.ref);if(!t&&!r)return out;
+ const open=db.tasks.filter(x=>x.building===bn&&x.stage<4),byT=t&&open.find(x=>normT(x.title)===t),byR=r&&open.find(x=>x.ref&&normT(x.ref)===r);
+ if(byT)out.push(`<b>Possible duplicate.</b> “${esc(byT.title)}” is already an open task in ${esc(bn)} (${esc(byT.id)}, ${esc(STAGES[byT.stage])}). Creating this makes a second task for the same job.`);
+ if(byR&&byR!==byT)out.push(`<b>Possible duplicate.</b> Reference ${esc(f.ref)} is already on open task ${esc(byR.id)}, “${esc(byR.title)}”, in ${esc(bn)}.`);
+ return out;
+}
+function ntFormHtml(b){
+ const f=ui.nt=ui.nt||{title:'',cat:CATS[0],pri:'Medium',ref:'',note:'',err:null},w=ntWarnings(b.name,f).map(x=>`<div class="pwarn crit">${x}</div>`).join('');
+ return `<div class="note" id="ntForm"><div id="ntWarnTop">${w}</div>
+ <label for="ntTitle">Title</label><input id="ntTitle" data-nt="title" value="${esc(f.title)}" autocomplete="off" class="${f.err&&f.err.id==='ntTitle'?'perr':''}">
+ <div class="form2"><div><label for="ntCat">Category</label><select id="ntCat" data-nt="cat">${opts(CATS,f.cat)}</select></div><div><label for="ntPri">Priority</label><select id="ntPri" data-nt="pri">${opts(Object.keys(PRI),f.pri)}</select></div></div>
+ <div class="form2"><div><label for="ntRef">Reference (optional)</label><input id="ntRef" data-nt="ref" value="${esc(f.ref)}" placeholder="e.g. contractor job or claim number" autocomplete="off"></div><div><label for="ntNote">Internal note</label><input id="ntNote" data-nt="note" value="${esc(f.note)}" autocomplete="off"></div></div>
+ <div id="ntWarnBot">${w}</div><div id="ntErr">${f.err?`<div class="pwarn crit" role="alert"><b>Not saved yet.</b> ${esc(f.err.msg)}</div>`:''}</div>
+ <div class="ntacts"><button class="btn" id="ntSave" data-act="createTask">${w?'Create anyway':'Save and create in Asana'}</button></div></div>`;
+}
+const ntRead=()=>{const f=ui.nt||{};['title','cat','pri','ref','note'].forEach(k=>{const el=document.querySelector(`[data-nt="${k}"]`);if(el)f[k]=el.value});return{title:(f.title||'').trim(),cat:f.cat||CATS[0],pri:f.pri||'Medium',ref:(f.ref||'').trim(),note:(f.note||'').trim()}};
+function ntPaintWarn(){
+ if(!ui.nt||!$('ntForm'))return;const w=ntWarnings(view.b,ui.nt).map(x=>`<div class="pwarn crit">${x}</div>`).join('');
+ $('ntWarnTop').innerHTML=w;$('ntWarnBot').innerHTML=w;$('ntSave').textContent=w?'Create anyway':'Save and create in Asana';
+}
+function ntBad(id,msg){
+ ui.nt.err={id,msg};const el=$(id);$('ntErr').innerHTML=`<div class="pwarn crit" role="alert"><b>Not saved yet.</b> ${esc(msg)}</div>`;toast(msg);
+ if(el){el.classList.add('perr');el.scrollIntoView({behavior:motionOff()?'auto':'smooth',block:'center'});if(el.tagName!=='SELECT')setTimeout(()=>el.focus(),350)}
+}
+document.addEventListener('input',e=>{const el=e.target,k=el.dataset&&el.dataset.nt;if(!k||!ui.nt)return;ui.nt[k]=el.value;
+ if(ui.nt.err&&ui.nt.err.id===el.id){ui.nt.err=null;el.classList.remove('perr');$('ntErr').innerHTML=''}ntPaintWarn()});
+
+/* ---------- Sliding highlight ("glider"): remembers where it was and glides to the newly chosen option after each redraw ---------- */
+const glideMem={};
+const gkey=bar=>'g|'+view.page+'|'+(view.page==='building'?view.tab:'')+'|'+(ui.set||'')+'|'+(bar.getAttribute('aria-label')||'');
+function glide(g,on,key,line){
+ let t=g.querySelector(':scope>.glider');
+ if(!t){t=document.createElement('span');t.className='glider';t.setAttribute('aria-hidden','true');g.prepend(t)}
+ if(!on||!on.offsetWidth){t.style.opacity='0';delete glideMem[key];return}
+ const to={x:on.offsetLeft,y:line?on.offsetTop+on.offsetHeight-3:on.offsetTop,w:on.offsetWidth,h:line?3:on.offsetHeight},from=glideMem[key];glideMem[key]=to;
+ const put=p=>{t.style.transform=`translate(${p.x}px,${p.y}px)`;t.style.width=p.w+'px';t.style.height=p.h+'px'};
+ if(!t.dataset.ready){t.style.transition='none';put(from||to);t.style.opacity='1';t.getBoundingClientRect();t.style.transition='';t.dataset.ready='1'}
+ t.style.opacity='1';put(to);
+}
+function syncGliders(){
+ if(!me())return;
+ document.querySelectorAll('#content .seg,#content .quick').forEach(g=>{const on=g.querySelector(':scope>button[aria-checked="true"]');glide(g,on,gkey(g));
+  const t=g.querySelector(':scope>.glider'),v=on&&(on.className.match(/\bs_(\w+)/)||[])[1];if(t){if(v)t.dataset.v=v;else delete t.dataset.v}});
+ document.querySelectorAll('#content .tabs').forEach(g=>glide(g,g.querySelector(':scope>button.on'),'tabs',true));
+ const nv=$('nav');if(nv)glide(nv,nv.querySelector(':scope>button.on'),'nav|'+(innerWidth>860?'rail':'bar'));
+}
+addEventListener('load',()=>syncGliders());
+addEventListener('resize',()=>syncGliders());
+if(document.fonts&&document.fonts.ready)document.fonts.ready.then(()=>syncGliders());
+
+/* ---------- Phones have no mouse: while scrolling, the card nearest a highlight line glows, then fades ----------
+   Content items only. Rows holding choices (Device/Light/Dark, Today/Tomorrow, OK/Issue/N/A) are skipped:
+   lighting a choice while the user is only scrolling makes it look selected or about to change. */
+const NEAR_SEL='#content .tk,#content .grid.four>.panel,#content .row,#content .setitem,#content .setrow,#content .ins';
+let nearRaf=0,nearEl=null,nearT=0;
+function updateNear(){
+ nearRaf=0;document.querySelectorAll('.shead .gear svg').forEach(x=>x.style.transform=motionOff()?'':`rotate(${Math.round(scrollY*.6)}deg)`);
+ if(matchMedia('(hover:hover)').matches||motionOff()||!me())return;
+ /* The highlight line travels with the scroll: near the top of the screen at the top of the page, near the bottom at the end,
+    so the first and last items get their turn too. */
+ const maxS=document.documentElement.scrollHeight-innerHeight,top=70,bot=innerHeight-80,prog=maxS>0?Math.min(1,Math.max(0,scrollY/maxS)):.5,mid=top+(bot-top)*prog;let best=null,bd=1e9;
+ document.querySelectorAll(NEAR_SEL).forEach(el=>{if(el.querySelector('.seg,.tseg,.quick'))return;const r=el.getBoundingClientRect();if(!r.height||r.bottom<40||r.top>innerHeight-40)return;const d=Math.abs((r.top+r.bottom)/2-mid);if(d<bd){bd=d;best=el}});
+ if(nearEl&&!document.contains(nearEl))nearEl=null;
+ if(best!==nearEl){if(nearEl)nearEl.classList.remove('near');if(best)best.classList.add('near');nearEl=best}
+ clearTimeout(nearT);nearT=setTimeout(()=>{if(nearEl){nearEl.classList.remove('near');nearEl=null}},1100);
+}
+addEventListener('scroll',()=>{if(!nearRaf)nearRaf=requestAnimationFrame(updateNear)},{passive:true});
+
+/* ---------- Lists slide into place ----------
+   Runs only when the user moves to another page or sub-page, never on ordinary refreshes or live updates.
+   In each list the first item fades in; every other item starts tucked under it and slides out into place,
+   one after another (later items under earlier ones). Only on-screen items move; all settle within 2 seconds. */
+let animNext=false;
+const LIST_SEL='#content .tk,#content .row,#content .grid.four>.panel,#content .setitem,#content .setrow,#content .ins';
+function staggerItems(els,anchor){
+ if(!els.length||!Element.prototype.animate||motionOff())return;
+ const vh=innerHeight,list=els.map(el=>[el,el.getBoundingClientRect()]).filter(([el,r])=>r.height&&r.bottom>0&&r.top<vh+40);if(!list.length)return;
+ const START=anchor?60:110,DUR=520,done=[],lift=el=>{if(getComputedStyle(el).position==='static')el.style.position='relative';done.push(el)};
+ const solid=el=>{const bg=getComputedStyle(el).backgroundColor;if(bg==='transparent'||/rgba\(.*,\s*0\)$/.test(bg))el.style.backgroundColor='var(--surface)'};
+ let r0,rest=list;
+ if(anchor){r0=anchor.getBoundingClientRect();lift(anchor);anchor.style.zIndex=String(list.length+2);solid(anchor)}
+ else{const [first,rf]=list[0];r0=rf;rest=list.slice(1);lift(first);first.style.zIndex=String(rest.length+2);solid(first);
+  first.animate([{opacity:0,transform:'translateY(6px) scale(.985)'},{opacity:1,transform:'none'}],{duration:240,easing:'cubic-bezier(.2,.8,.2,1)'})}
+ const stagger=rest.length>1?Math.min(90,(2000-START-DUR)/(rest.length-1)):0;
+ rest.forEach(([el,r],i)=>{lift(el);el.style.zIndex=String(rest.length+1-i);solid(el);
+  el.animate([{transform:`translateY(${Math.round(r0.top-r.top)}px) scale(.97)`,opacity:0},{opacity:1,offset:.3},{transform:'none',opacity:1}],{duration:DUR,delay:START+i*stagger,easing:'cubic-bezier(.22,.9,.25,1)',fill:'backwards'})});
+ setTimeout(()=>done.forEach(el=>{el.style.position='';el.style.zIndex='';el.style.backgroundColor=''}),2100);
+}
+function staggerIn(){
+ const groups=new Map();
+ document.querySelectorAll(LIST_SEL).forEach(el=>{if(el.closest('details:not([open])'))return;const p=el.parentElement;if(!groups.has(p))groups.set(p,[]);groups.get(p).push(el)});
+ groups.forEach(list=>staggerItems(list));
+}
+/* Dropdowns that hold items (Done, Completed, Full record): items slide out when opened and fold back up into the heading before closing */
+const DROP_ITEMS=':scope>.tk,:scope>.row,:scope>.ins';
+document.addEventListener('toggle',e=>{const d=e.target;if(!(d instanceof HTMLDetailsElement)||!d.open||!d.closest('#content'))return;const items=[...d.querySelectorAll(DROP_ITEMS)];if(items.length)staggerItems(items)},true);
+document.addEventListener('click',e=>{
+ const sm=e.target.closest&&e.target.closest('#content details[open]>summary');if(!sm||!Element.prototype.animate||motionOff())return;
+ const d=sm.parentElement,items=[...d.querySelectorAll(DROP_ITEMS)];if(!items.length)return;e.preventDefault();if(d.dataset.closing)return;d.dataset.closing='1';
+ const rs=sm.getBoundingClientRect(),gap=Math.min(45,450/items.length);
+ items.forEach((el,i)=>{const r=el.getBoundingClientRect();el.animate([{transform:'none',opacity:1},{transform:`translateY(${Math.round(rs.top-r.top)}px) scale(.96)`,opacity:0}],{duration:280,delay:(items.length-1-i)*gap,easing:'cubic-bezier(.5,0,.75,0)',fill:'forwards'})});
+ setTimeout(()=>{d.open=false;delete d.dataset.closing;items.forEach(el=>el.getAnimations().forEach(a=>a.cancel()))},280+(items.length-1)*gap+20);
+},true);
+/* Moving to another page or sub-page slides its lists in */
+['nav','openB','tab','settings','setSec','mailReply','remind','legalDraft','compTask'].forEach(k=>{const f=ACT[k];ACT[k]=function(...a){animNext=true;ui.allAtt=false;const r=f.apply(this,a);animNext=false;
+ if(k==='tab'){const c=document.querySelector('#content .tabs>button.on');if(c)c.scrollIntoView({inline:'center',block:'nearest'})}return r}});
+document.addEventListener('change',e=>{if(e.target.id==='sysSel'||e.target.id==='hArea')animNext=true},true);
+function afterRender(){
+ if(view.page==='settings'&&!ui.set){const h=$('heading');h.innerHTML=`<span class="shead"><span class="gear">${ico('gear')}</span>${esc(h.textContent)}</span>`;updateNear()}
+ syncGliders();
+ if(animNext){animNext=false;requestAnimationFrame(staggerIn)}
+}
+
+/* ---------- Dates ---------- */
+const MONTHS=['January','February','March','April','May','June','July','August','September','October','November','December'];
+const shortDate=ds=>new Date(ds+'T00:00:00').toLocaleDateString('en-GB',{day:'numeric',month:'short'});
+const addDays=(ds,k)=>new Date(Date.parse(ds+'T00:00:00Z')+k*864e5).toISOString().slice(0,10);
+const extBase=t=>t.due>today()?t.due:today();
+const fmtRem=x=>{const d=new Date(x),tm=d.toLocaleTimeString('en-GB',{hour:'numeric',minute:'2-digit',hour12:true});const day=d.toDateString()===new Date().toDateString()?'today':d.toDateString()===new Date(Date.now()+864e5).toDateString()?'tomorrow':d.toLocaleDateString('en-GB',{weekday:'short',day:'numeric',month:'short'});return day+', '+tm};
+function setDue(t,ds){t.due=ds;t.done=false;t.doneAt=null;t.remind=null;t.reminded=false;save();render();toast('Due date moved to '+fmtDate(ds));ui.dlg={kind:'remind',id:t.id,pick:ds>iso(1)?'due':'tom',again:true};paintDlg()}
+
+/* ---------- Calendar with page flips ---------- */
+function calGrid(y,m,sel,min){
+ const start=(new Date(y,m,1).getDay()+6)%7,days=new Date(y,m+1,0).getDate(),td=today();
+ let h='<div class="calwk">'+['Mo','Tu','We','Th','Fr','Sa','Su'].map(x=>`<span>${x}</span>`).join('')+'</div><div class="calgrid">';
+ for(let i=0;i<42;i++){const dn=i-start+1;if(dn<1||dn>days){h+='<span></span>';continue}
+  const ds=`${y}-${String(m+1).padStart(2,'0')}-${String(dn).padStart(2,'0')}`;
+  h+=`<button class="cd ${ds===td?'td':''} ${ds===sel?'sel':''}" data-act="calPick" data-id="${ds}" ${min&&ds<min?'disabled':''} aria-label="${esc(fmtDate(ds))}">${dn}</button>`}
+ return h+'</div>';
+}
+function calHtml(d){
+ const y0=+today().slice(0,4),years=Array.from({length:11},(_,i)=>y0+i);
+ return `<p class="eyebrow ok">${d.mode==='extend'?'New due date':'Due date'}</p><h3 id="dlgT">Pick a date</h3>
+ <div class="calhead"><button class="calnav" data-act="calNav" data-id="-1" aria-label="Previous month">‹</button><button class="calttl" data-act="calJumpT" aria-expanded="${!!d.jump}" aria-label="Jump to a month or year"><span id="calTtl">${MONTHS[d.m]} ${d.y}</span> <span class="car">▾</span></button><button class="calnav" data-act="calNav" data-id="1" aria-label="Next month">›</button></div>
+ <div class="caljump" ${d.jump?'':'hidden'}><div class="calyrs">${years.map(y=>`<button class="cy ${y===d.y?'on':''}" data-act="calYear" data-id="${y}">${y}</button>`).join('')}</div>
+ <div class="calmos">${MONTHS.map((n,i)=>`<button class="cm ${i===d.m?'on':''}" data-act="calMonth" data-id="${i}">${n.slice(0,3)}</button>`).join('')}</div></div>
+ <div class="calbook"><div class="calpage">${calGrid(d.y,d.m,d.sel,d.min)}</div></div>
+ <div class="choice"><button class="btn light big" data-act="calCancel">Cancel</button><button class="btn light big" data-act="calToday">Today</button></div>`;
+}
+let calBusy=false;
+/* Flip one page: forwards the current page folds away to the left; backwards the earlier page folds back in on top */
+function flipPage(y,m,dir,dur){return new Promise(res=>{
+ const d=ui.dlg,book=document.querySelector('#dlg .calbook');if(!book||!d||d.kind!=='cal'){res();return}
+ d.y=y;d.m=m;const t=$('calTtl');if(t)t.textContent=MONTHS[m]+' '+y;
+ const old=book.querySelector('.calpage:last-child'),pg=document.createElement('div');pg.className='calpage';pg.innerHTML=calGrid(y,m,d.sel,d.min);
+ let ended=false;const end=()=>{if(ended)return;ended=true;book.querySelectorAll('.calpage').forEach(p=>{if(p!==pg)p.remove()});pg.style.zIndex='';res()};
+ if(!old||!pg.animate||motionOff()){book.innerHTML='';book.appendChild(pg);end();return}
+ const ease='cubic-bezier(.45,.05,.55,.95)';
+ if(dir>0){book.insertBefore(pg,old);old.style.zIndex='2';old.animate([{transform:'rotateY(0deg)',filter:'brightness(1)'},{transform:'rotateY(-104deg)',filter:'brightness(.7)'}],{duration:dur,easing:ease,fill:'forwards'}).onfinish=end}
+ else{pg.style.zIndex='2';book.appendChild(pg);pg.animate([{transform:'rotateY(-104deg)',filter:'brightness(.7)'},{transform:'rotateY(0deg)',filter:'brightness(1)'}],{duration:dur,easing:ease}).onfinish=end}
+ setTimeout(end,dur+150);
+})}
+/* Jump: flips through the pages in between (up to 24 of them) and always lands within 3 seconds */
+async function flipTo(ty,tm){
+ const d=ui.dlg;if(!d||d.kind!=='cal'||calBusy)return;
+ const from=d.y*12+d.m,to=ty*12+tm,n=to-from;if(!n)return;
+ calBusy=true;const k=Math.min(Math.abs(n),24),dur=Math.max(80,Math.min(380,2300/k));
+ for(let i=1;i<=k;i++){const idx=i===k?to:from+Math.round(n*i/k);await flipPage(Math.floor(idx/12),idx%12,Math.sign(n),dur)}
+ calBusy=false;
+ document.querySelectorAll('#dlg .cy').forEach(b=>b.classList.toggle('on',+b.dataset.id===d.y));
+ document.querySelectorAll('#dlg .cm').forEach(b=>b.classList.toggle('on',+b.dataset.id===d.m));
+}
+
+/* ---------- Task reminders ----------
+   The reminder time and the "reminded" mark are saved on the task, so they sync to the person's other devices
+   and a reminder only fires once. */
+function remindOpts(t){
+ const now=new Date(),at=(base,h)=>{const x=new Date(base);x.setHours(h,0,0,0);return x},o=[['h1','In 1 hour',new Date(Date.now()+36e5)]];
+ if(now.getHours()<17)o.push(['eve','This evening',at(now,18)]);
+ o.push(['tom','Tomorrow morning',at(new Date(Date.now()+864e5),9)]);
+ if(t.due>iso(1))o.push(['due','On the due date',at(new Date(t.due+'T00:00:00'),9)]);
+ return o;
+}
+const gone='<p class="muted">This task no longer exists.</p><div class="dlgfoot"><button class="btn light big" data-act="dlgClose">Close</button></div>';
+function remHtml(d){
+ const t=db.mytasks.find(x=>x.id===d.id);if(!t)return gone;
+ const perm='Notification' in window?Notification.permission:'unsupported';
+ return `<p class="eyebrow ok">${d.again?'Due date moved':d.change?'Reminder':'Task added'}</p><h3 id="dlgT">${d.change?'Change the reminder':'Set a reminder?'}</h3><p class="muted">${esc(t.title)} · due ${esc(fmtDate(t.due))}</p>
+ <div class="pick" role="radiogroup" aria-labelledby="dlgT">${remindOpts(t).map(([k,l,dt])=>`<label><input type="radio" name="rem" data-act="remPick" data-id="${k}" ${d.pick===k?'checked':''}> <span class="grow2"><b>${l}</b><br><span class="muted small">${esc(fmtRem(dt))}</span></span></label>`).join('')}
+ <label><input type="radio" name="rem" data-act="remPick" data-id="custom" ${d.pick==='custom'?'checked':''}> <span class="grow2"><b>Choose a time</b><input type="datetime-local" id="remAt" value="${esc(d.custom||'')}"></span></label></div>
+ <p class="muted small" style="margin-top:10px">${perm==='granted'?'You will get a notification on this device and a note in the app.':perm==='denied'?'Notifications are blocked for this site on this device, so the reminder shows inside the app only.':perm==='unsupported'?'This browser cannot show notifications, so the reminder shows inside the app.':'You will be asked to allow notifications. The reminder also shows inside the app.'}</p>
+ <div class="choice"><button class="btn light big" data-act="remSkip">${d.change?'Remove reminder':'No reminder'}</button><button class="btn big" data-act="remSet">Set reminder</button></div>`;
+}
+function taskHtml(d){
+ const t=db.mytasks.find(x=>x.id===d.id);if(!t)return gone;
+ const di=dueInfo(t.due,t.done);
+ if(d.step==='extend'){const b=extBase(t);return `<p class="eyebrow ok">Extend</p><h3 id="dlgT">New due date</h3><p class="muted">${esc(t.title)} · ${esc(di.t)}</p>
+  <div class="pick">${[['1','1 day'],['3','3 days'],['7','1 week']].map(([k,l])=>`<button class="btn light block" data-act="taskExt" data-id="${k}">${l} later · ${esc(fmtDate(addDays(b,+k)))}</button>`).join('')}<button class="btn light block" data-act="taskExtPick">Pick a date</button></div>
+  <div class="dlgfoot"><button class="btn link" data-act="taskBack">‹ Back</button></div>`}
+ return `<p class="eyebrow ok">${d.reminder?'Reminder':'My task'}</p><h3 id="dlgT">${esc(t.title)}</h3><p><span class="due ${di.k}">${di.t}</span>${t.remind?` · <span class="muted">${t.reminded?'Reminded':'Reminder'} ${esc(fmtRem(t.remind))}</span>`:''}</p>
+ ${t.done?`<div class="choice"><button class="btn light big" data-act="dlgClose">Close</button><button class="btn big" data-act="taskReopen">Reopen</button></div>`
+ :`<div class="choice"><button class="btn light big" data-act="taskExtend">Extend due date</button><button class="btn yes big" data-act="taskComplete">Mark completed</button></div>
+ <button class="btn light block" data-act="taskRemind">${t.remind&&!t.reminded?'Change reminder':'Set a reminder'}</button>
+ <div class="dlgfoot"><button class="btn link small" data-act="dlgClose">Close</button></div>`}`;
+}
+/* Checks every 15 seconds (and whenever the app comes back to the screen) for reminders that are due */
+function checkReminders(){
+ if(!me()||!$('login').hidden)return;const now=Date.now();let fired=null;
+ db.mytasks.forEach(t=>{if(t.owner!==uid||t.done||!t.remind||t.reminded||new Date(t.remind).getTime()>now)return;t.reminded=true;fired=t;
+  db.notes.unshift({id:newId('N'),to:uid,from:uid,text:'Reminder: '+t.title,at:new Date().toISOString(),read:false,inv:null,task:t.id});
+  try{if('Notification' in window&&Notification.permission==='granted'){const n=new Notification('JFM Platform · Task reminder',{body:t.title+' · '+dueInfo(t.due).t,tag:t.id});n.onclick=()=>{try{window.focus()}catch(e){}ACT.taskOpen(t.id,'reminder');n.close()}}}catch(e){}});
+ if(!fired)return;save();if(prefOn('sound'))chime();if(prefOn('haptics'))buzz();
+ const a=document.activeElement;if(!ui.dlg&&!ui.cf&&!(a&&a.closest&&a.closest('#content')&&/INPUT|TEXTAREA|SELECT/.test(a.tagName)))render();else paintBell();
+ toast('Reminder: '+fired.title);
+}
+setInterval(checkReminders,15000);
+document.addEventListener('visibilitychange',()=>{if(!document.hidden)checkReminders()});
+
+/* ---------- DEMO switch-user sheet (developers only, remove before going live) ---------- */
+const scopeOf=u=>u.role==='admin'||u.role==='ceo'?'All buildings':u.role==='pm'?u.buildings.length+' buildings':'Flat '+u.unit+', '+u.building;
+function usersHtml(){
+ return `<p class="eyebrow">Developers only · Remove before going live</p><h3 id="dlgT">Switch demo user</h3><p class="muted small">See the platform as each person sees it. Switching only changes who is signed in on this device.</p>
+ <div class="ulist">${users.map(u=>`<button class="setitem" data-act="asUser" data-id="${u.id}"><span class="dot ${u.id===uid?'cur':''}"></span><span class="setitxt"><b>${esc(u.name.split(',')[0])}</b><span class="muted">${esc(ROLE[u.role])} · ${esc(scopeOf(u))} · ${esc(u.username)}</span></span>${u.id===uid?pill('Current','good'):'<span class="chev" aria-hidden="true">›</span>'}</button>`).join('')}</div>
+ <div class="dlgfoot"><button class="btn light big" data-act="dlgClose">Close</button></div>`;
+}
+/* ---------- Allow vibration (asked once per person on this device, after signing in) ---------- */
+function hapHtml(){
+ return `<div style="text-align:center"><span class="sico ic-vib shake" style="margin:6px auto 12px;width:58px;height:58px;border-radius:16px">${ico('vib')}</span>
+ <h3 id="dlgT">Allow vibration?</h3><p class="muted">A short buzz when something is saved, and a light tick as you slide between options.</p></div>
+ <div class="choice"><button class="btn light big" data-act="hapNo">Not now</button><button class="btn big" data-act="hapYes">Allow</button></div>
+ <p class="muted small" style="text-align:center;margin-top:12px">You can turn vibration on or off any time in User settings → Sound &amp; haptics.</p>`;
+}
+const SHEETS={cal:calHtml,remind:remHtml,task:taskHtml,users:usersHtml,hap:hapHtml};
+const myT=()=>{const t=db.mytasks.find(x=>x.id===(ui.dlg||{}).id);return t&&t.owner===uid?t:null};
+Object.assign(ACT,{
+ allAtt(max){ui.allAtt=true;render();const n=+max||8,l=[...document.querySelectorAll('#content .attlist>.row')];if(l.length>n)requestAnimationFrame(()=>staggerItems(l.slice(n),l[n-1]))},
+ switchUser(){ui.dlg={kind:'users'};paintDlg()},
+ asUser(id){if(!users.some(u=>u.id===id))return;if(id===uid)return closeDlg();closeDlg();let keep=false;try{keep=!!localStorage.getItem(SKEY)}catch(e){}
+  uid=id;writeSession(id,keep);enterApp(false);toast('Now viewing as '+nameOf(id))},
+ hapYes(){setPref('haptics','on');setPref('hapAsked','1');closeDlg();try{navigator.vibrate&&navigator.vibrate([30,60,30])}catch(e){}toast('Vibration on')},
+ hapNo(){setPref('haptics','off');setPref('hapAsked','1');closeDlg();toast('Vibration off. You can turn it on in User settings → Sound & haptics.')},
+ taskOpen(id,why){const t=db.mytasks.find(x=>x.id===id);if(!t||t.owner!==uid)return;ui.dlg={kind:'task',id,reminder:why==='reminder'};paintDlg()},
+ taskComplete(){const t=myT();if(!t)return;t.done=true;t.doneAt=new Date().toISOString();save();closeDlg();render();confirmFx('done')},
+ taskReopen(){const t=myT();if(!t)return;t.done=false;t.doneAt=null;save();closeDlg();render();toast('Moved back to your list')},
+ taskExtend(){if(!ui.dlg)return;ui.dlg.step='extend';paintDlg()},
+ taskBack(){if(!ui.dlg)return;ui.dlg.step=null;paintDlg()},
+ taskExt(k){const t=myT();if(t)setDue(t,addDays(extBase(t),+k))},
+ taskExtPick(){const t=myT();if(!t)return;const [y,m]=extBase(t).split('-').map(Number);ui.dlg={kind:'cal',mode:'extend',taskId:t.id,y,m:m-1,sel:null,min:today()};paintDlg()},
+ taskRemind(){const t=myT();if(!t)return;ui.dlg={kind:'remind',id:t.id,pick:t.due>iso(1)?'due':'tom',change:true};paintDlg()},
+ remPick(k){if(ui.dlg)ui.dlg.pick=k},
+ remSkip(){const d=ui.dlg,t=myT();if(t&&d.change){t.remind=null;t.reminded=false;save();render();toast('Reminder removed')}closeDlg()},
+ remSet(){const d=ui.dlg,t=myT();if(!t)return closeDlg();let at;
+  if(d.pick==='custom'){const v=($('remAt')||{}).value||d.custom;if(!v)return toast('Choose a date and time.');at=new Date(v)}
+  else{const o=remindOpts(t).find(x=>x[0]===d.pick);if(!o)return toast('Choose when to be reminded.');at=o[2]}
+  if(!(at.getTime()>Date.now()+20000))return toast('Pick a time in the future.');
+  t.remind=at.toISOString();t.reminded=false;save();closeDlg();render();toast('Reminder set for '+fmtRem(t.remind));
+  try{if('Notification' in window&&Notification.permission==='default')Notification.requestPermission().then(p=>{if(p!=='granted')toast('Notifications not allowed. The reminder will still show in the app.')})}catch(e){}},
+ calNav(dir){const d=ui.dlg;if(!d)return;const i=d.y*12+d.m+(+dir);flipTo(Math.floor(i/12),i%12)},
+ calJumpT(){const d=ui.dlg;if(!d)return;d.jump=!d.jump;const j=document.querySelector('#dlg .caljump'),b=document.querySelector('#dlg .calttl');if(j)j.hidden=!d.jump;if(b)b.setAttribute('aria-expanded',d.jump);if(d.jump){const on=document.querySelector('#dlg .cy.on');if(on)on.scrollIntoView({inline:'center',block:'nearest'})}},
+ calYear(y){const d=ui.dlg;if(!d)return;document.querySelectorAll('#dlg .cy').forEach(b=>b.classList.toggle('on',b.dataset.id===String(y)));flipTo(+y,d.m)},
+ calMonth(m){const d=ui.dlg;if(!d)return;document.querySelectorAll('#dlg .cm').forEach(b=>b.classList.toggle('on',b.dataset.id===String(m)));flipTo(d.y,+m)},
+ calToday(){const [y,m]=today().split('-').map(Number);flipTo(y,m-1)},
+ calPick(ds){const d=ui.dlg;if(!d||d.kind!=='cal'||calBusy)return;d.sel=ds;document.querySelectorAll('#dlg .cd').forEach(b=>b.classList.toggle('sel',b.dataset.id===ds));
+  setTimeout(()=>{if(ui.dlg!==d)return;if(d.mode==='due'){d.picked=true;ui.myDue='pick';ui.myDueDate=ds;ui.myDueLast=ds;closeDlg();render();toast('Due '+fmtDate(ds))}else{const t=db.mytasks.find(x=>x.id===d.taskId);if(t)setDue(t,ds)}},260)},
+ calCancel(){const d=ui.dlg;if(d&&d.mode==='extend'){ui.dlg={kind:'task',id:d.taskId,step:'extend'};return paintDlg()}closeDlg()}
+});
+document.addEventListener('input',e=>{const el=e.target;if(el.id==='remAt'&&ui.dlg){ui.dlg.custom=el.value;ui.dlg.pick='custom';const r=document.querySelector('#dlg input[data-id=custom]');if(r)r.checked=true}});
+
+/* ---------- Hold-and-slide option bars ----------
+   Tapping still works as before. Press on the selected option and slide: the pill swells, the track bulges around it,
+   the labels turn white exactly where the pill covers them, each option crossed gives a bubble and a short tick,
+   and on release it snaps to the nearest option. Vertical swipes still scroll the page. */
+function warpPath(W,H,r,cx,hw,b){
+ const f=n=>n.toFixed(1),L=Math.max(r,cx-hw*1.7),R=Math.min(W-r,cx+hw*1.7);
+ const top=b>.05?`L${f(L)},0 C${f((L+cx)/2)},0 ${f(cx-hw*.55)},${f(-b)} ${f(cx)},${f(-b)} C${f(cx+hw*.55)},${f(-b)} ${f((R+cx)/2)},0 ${f(R)},0 `:'';
+ const bot=b>.05?`L${f(R)},${H} C${f((R+cx)/2)},${H} ${f(cx+hw*.55)},${f(H+b)} ${f(cx)},${f(H+b)} C${f(cx-hw*.55)},${f(H+b)} ${f((L+cx)/2)},${H} ${f(L)},${H} `:'';
+ return `M${r},0 ${top}L${W-r},0 A${r},${r} 0 0 1 ${W},${r} L${W},${H-r} A${r},${r} 0 0 1 ${W-r},${H} ${bot}L${r},${H} A${r},${r} 0 0 1 0,${H-r} L0,${r} A${r},${r} 0 0 1 ${r},0 Z`;
+}
+let pd=null,hold=null,holdRaf=0,noClick=0;
+const tick=()=>{try{if(prefOn('haptics')&&navigator.vibrate)navigator.vibrate(12)}catch(e){}};
+function holdDraw(){
+ const h=hold;if(!h)return;const bar=h.bar,W=bar.offsetWidth,H=bar.offsetHeight,P=12,s=h.b/7,w=h.w,ht=h.h;
+ const dw=w*.08*s,dh=ht*.16*s,x=h.x;
+ if(h.done){}/* after release only the track eases back; the pill glides on its own */
+ else if(h.isT){h.pill.style.transform=`translateX(${(x-3-dw/2).toFixed(1)}px)`;h.pill.style.width=(w+dw)+'px';h.pill.style.top=h.pill.style.bottom=(3-dh/2).toFixed(1)+'px';
+  if(h.copy)h.copy.style.transform=`translate(${(-(x-dw/2)).toFixed(1)}px,${(-(3-dh/2)).toFixed(1)}px)`;
+  const p=(x-h.minX)/Math.max(1,(h.maxX-h.minX))*(h.btns.length-1),deg=p<=1?p*360:360+(p-1)*180;if(h.tic)h.tic.style.transform=`rotate(${deg.toFixed(1)}deg)`}
+ else{h.pill.style.transform=`translate(${(x-dw/2).toFixed(1)}px,${(h.y-dh/2).toFixed(1)}px)`;h.pill.style.width=(w+dw)+'px';h.pill.style.height=(ht+dh)+'px';
+  if(h.copy)h.copy.style.transform=`translate(${(-(x-dw/2)).toFixed(1)}px,${(-(h.y-dh/2)).toFixed(1)}px)`}
+ if(h.svg){h.svg.setAttribute('width',W);h.svg.setAttribute('height',H+2*P);h.svg.setAttribute('viewBox',`0 ${-P} ${W} ${H+2*P}`);h.svg.style.left='-1px';h.svg.style.top=(-1-P)+'px';
+  h.svg.firstChild.setAttribute('d',warpPath(W,H,Math.min(H/2,h.r),x+1+w/2,w*.55,h.b))}
+}
+function holdTick(){holdRaf=0;const h=hold;if(!h)return;h.b+=(h.bT-h.b)*.28;if(Math.abs(h.bT-h.b)<.05)h.b=h.bT;holdDraw();
+ if(h.b!==h.bT)holdRaf=requestAnimationFrame(holdTick);else if(h.done){h.svg&&h.svg.remove();h.bar.classList.remove('held');hold=null}}
+function startHold(){
+ const {bar,isT,btns,pill}=pd,b0=btns[pd.idx];pd.on=true;try{bar.setPointerCapture(pd.id)}catch(x){}
+ if(hold&&hold.svg)hold.svg.remove();cancelAnimationFrame(holdRaf);holdRaf=0;
+ const svg=document.createElementNS('http://www.w3.org/2000/svg','svg');svg.setAttribute('class','warp');svg.setAttribute('aria-hidden','true');svg.appendChild(document.createElementNS('http://www.w3.org/2000/svg','path'));bar.prepend(svg);
+ hold={bar,isT,btns,pill,svg,r:bar.classList.contains('quick')?999:isT?12:10,tic:isT?bar.querySelector('.tic'):null,w:b0.offsetWidth,h:b0.offsetHeight,y:b0.offsetTop,minX:btns[0].offsetLeft,maxX:btns[btns.length-1].offsetLeft,x:b0.offsetLeft,grab:pd.start-b0.offsetLeft,b:0,bT:motionOff()?0:7,done:false};
+ const cp=document.createElement('div');cp.className='pcopy';cp.setAttribute('aria-hidden','true');
+ btns.forEach(x=>{const c=x.cloneNode(true);['data-act','data-id','data-x','role','aria-checked'].forEach(a=>c.removeAttribute(a));c.tabIndex=-1;c.classList.remove('bub');Object.assign(c.style,{left:x.offsetLeft+'px',top:x.offsetTop+'px',width:x.offsetWidth+'px',height:x.offsetHeight+'px'});cp.appendChild(c)});
+ pill.appendChild(cp);hold.copy=cp;
+ pill.style.transition='none';if(hold.tic)hold.tic.style.transition='none';bar.classList.add('held');
+ if(!holdRaf)holdRaf=requestAnimationFrame(holdTick);
+}
+function moveHold(e){
+ const h=hold;if(!h)return;h.x=Math.max(h.minX,Math.min(h.maxX,e.clientX-h.grab));
+ let best=0,bd=1e9;h.btns.forEach((b,i)=>{const d=Math.abs(b.offsetLeft-h.x);if(d<bd){bd=d;best=i}});
+ if(best!==pd.cur){pd.cur=best;const nb=h.btns[best];[nb,h.copy&&h.copy.children[best]].forEach(z=>{if(!z)return;z.classList.remove('bub');void z.offsetWidth;z.classList.add('bub')});tick();
+  if(h.isT)h.bar.dataset.pos=best;else{const v=(nb.className.match(/\bs_(\w+)/)||[])[1];if(v)h.pill.dataset.v=v}}
+ holdDraw();
+}
+function endHold(cancel){
+ const h=hold,p=pd;if(!h)return;const idx=cancel?p.idx:p.cur,nb=h.btns[idx];
+ if(h.copy){h.copy.remove();h.copy=null}h.done=true;h.bT=0;if(!holdRaf)holdRaf=requestAnimationFrame(holdTick);
+ noClick=Date.now();
+ if(h.isT){h.pill.style.width=h.pill.style.top=h.pill.style.bottom='';h.pill.style.transition='';if(h.tic)h.tic.style.transition='';void h.pill.offsetWidth;h.pill.style.transform='';if(h.tic)h.tic.style.transform='';
+  if(idx!==p.idx)ACT.theme(nb.dataset.id);else h.bar.dataset.pos=p.idx;return}
+ /* the option bar glides on from where it was let go */
+ glideMem[gkey(h.bar)]={x:h.x,y:h.y,w:h.w,h:h.h};
+ h.pill.style.transition='';
+ if(idx!==p.idx&&ACT[nb.dataset.act])ACT[nb.dataset.act](nb.dataset.id,nb.dataset.x);else syncGliders();
+}
+const HOLD_SEL='.seg>button[aria-checked="true"],.quick>button[aria-checked="true"],.tseg>button[aria-checked="true"]';
+document.addEventListener('pointerdown',e=>{
+ if(e.button>0)return;const b=e.target.closest&&e.target.closest(HOLD_SEL);if(!b)return;
+ const bar=b.parentElement,isT=bar.classList.contains('tseg'),btns=[...bar.querySelectorAll(':scope>button')],pill=isT?bar.querySelector('.thumb'):bar.querySelector(':scope>.glider');
+ if(!pill||btns.length<2)return;pd={bar,isT,btns,pill,start:e.clientX,id:e.pointerId,on:false,idx:btns.indexOf(b),cur:btns.indexOf(b)};
+},true);
+document.addEventListener('pointermove',e=>{if(!pd||e.pointerId!==pd.id)return;if(!pd.on){if(Math.abs(e.clientX-pd.start)<6)return;startHold()}e.preventDefault();moveHold(e)},true);
+document.addEventListener('pointerup',e=>{if(!pd||e.pointerId!==pd.id)return;if(pd.on)endHold(false);pd=null},true);
+document.addEventListener('pointercancel',e=>{if(!pd)return;if(pd.on)endHold(true);pd=null},true);
+/* a slide must not also count as a tap on the option it started from */
+document.addEventListener('click',e=>{if(noClick&&Date.now()-noClick<450&&e.target.closest&&e.target.closest('.seg,.quick,.tseg')){noClick=0;e.stopPropagation();e.preventDefault()}},true);
+/* ===== end of V10.8 ===== */
+
 /* ---------- sign in ---------- */
 let hv={},shownAt=Date.now(),fails=0,lockUntil=0;
 const lerr=(m,info)=>{const el=$('lErr');el.textContent=m||'';el.classList.toggle('info',!!info)};
@@ -1433,7 +1990,8 @@ function enterApp(welcome){
  $('login').hidden=true;document.querySelector('.app').hidden=false;
  compose=null;ui={task:null,form:null,sys:'All',set:null};
  view={page:staff()?'portfolio':'res',b:myB()[0].name,tab:staff()?'Overview':'Home'};
- render();window.scrollTo(0,0);if(welcome)splash();
+ animNext=true;render();window.scrollTo(0,0);setTimeout(checkReminders,1800);
+ if(welcome){splash();setTimeout(()=>{if(me()&&!pref('hapAsked')&&canVibrate()&&!ui.dlg&&!ui.cf){ui.dlg={kind:'hap'};paintDlg()}},prefOn('motion')?1000:1750)}
 }
 function splash(){
  document.querySelectorAll('.welcome').forEach(x=>x.remove());
@@ -1444,36 +2002,53 @@ function splash(){
 /* Human check: drag the handle to the end. A person takes time and moves in many small steps;
    a script tends to jump straight there, fill the hidden field, or act the instant the page loads. */
 const hvEl=()=>$('hv'),knob=()=>hvEl().querySelector('.knob');
-const hvMax=()=>Math.max(1,hvEl().clientWidth-knob().offsetWidth-6);
-function hvSet(p){
- hv.pos=Math.max(0,Math.min(1,p));const px=hv.pos*hvMax();
- knob().style.transform=`translateX(${px}px)`;hvEl().querySelector('.sfill').style.width=(px+knob().offsetWidth/2+3)+'px';
- hvEl().setAttribute('aria-valuenow',Math.round(hv.pos*100));
+const hvMax=()=>Math.max(1,hvEl().clientWidth-knob().offsetWidth-8);
+/* V10.8: draws the track. While the handle is held, the top and bottom edges swell around it,
+   like a cartoon snake that swallowed something big. */
+function hvDraw(){
+ const el=hvEl(),svg=el.querySelector('.strack');if(!svg)return;
+ const W=el.clientWidth,H=el.clientHeight,r=12,P=12,kw=knob().offsetWidth,px=hv.pos*hvMax(),kL=4+px,kR=kL+kw,cx=kL+kw/2,bl=hv.b||0,hw=kw*.85;
+ svg.setAttribute('width',W);svg.setAttribute('height',H+2*P);svg.setAttribute('viewBox',`0 ${-P} ${W} ${H+2*P}`);
+ svg.querySelectorAll('.tp').forEach(p=>p.setAttribute('d',warpPath(W,H,r,cx,hw,bl)));
+ const f=n=>n.toFixed(1);svg.querySelector('.tlit').setAttribute('width',f(Math.max(0,hv.ok?W:cx)));
+ /* 'Slide to verify' waits in the middle, then is pushed right (and out) once the handle reaches it.
+    'I am not a robot' trails behind the handle, coming in from the left, and settles in the lit part. */
+ const s1=el.querySelector('.s1'),s2=el.querySelector('.s2'),gap=14,t1=s1.offsetWidth,t2=s2.offsetWidth;
+ const base1=kw+4+(W-kw-4-t1)/2;s1.style.transform=`translateX(${f(Math.max(base1,kR+gap))}px)`;
+ const endKL=4+hvMax(),final2=Math.max(10,(endKL-t2)/2);s2.style.transform=`translateX(${f(Math.min(final2,kL-gap-t2))}px)`;
 }
+let hvRaf=0,hvAnim=0;
+function hvTick(){hvRaf=0;const t=hv.bT||0,c=hv.b||0;hv.b=c+(t-c)*.28;if(Math.abs(t-hv.b)<.05)hv.b=t;hvDraw();if(hv.b!==t)hvRaf=requestAnimationFrame(hvTick)}
+function hvBulge(t){hv.bT=motionOff()?0:t;if(!hvRaf)hvRaf=requestAnimationFrame(hvTick)}
+function hvSet(p){hv.pos=Math.max(0,Math.min(1,p));knob().style.transform=`translateX(${hv.pos*hvMax()}px)`;hvEl().setAttribute('aria-valuenow',Math.round(hv.pos*100));hvDraw()}
 function resetHV(){
- hv={ok:false,start:0,moves:0,pos:0,drag:false};
- const el=hvEl();el.classList.remove('ok','back');el.querySelector('.stext').textContent='Slide to verify';
+ cancelAnimationFrame(hvAnim);hv={ok:false,start:0,moves:0,pos:0,drag:false,b:0,bT:0};
+ const el=hvEl();el.classList.remove('ok','drag');el.querySelector('.s1').textContent='Slide to verify';el.querySelector('.s2').textContent='I am not a robot';
  el.setAttribute('aria-valuetext','Not verified');hvSet(0);
 }
-function hvBack(){const el=hvEl();el.classList.add('back');hvSet(0);hv.start=0;hv.moves=0;setTimeout(()=>el.classList.remove('back'),260)}
+/* An incomplete slide eases back; both texts ride back with the handle to where they started */
+function hvBack(){cancelAnimationFrame(hvAnim);const from=hv.pos,t0=performance.now(),D=motionOff()?1:Math.max(180,from*420);hv.start=0;hv.moves=0;
+ const step=now=>{const k=Math.min(1,(now-t0)/D),e=1-Math.pow(1-k,3);hvSet(from*(1-e));if(k<1)hvAnim=requestAnimationFrame(step)};hvAnim=requestAnimationFrame(step)}
 function hvFinish(){
  if(hv.ok)return;if(hv.pos<.96)return hvBack();
  const human=Date.now()-hv.start>350&&hv.moves>=4&&Date.now()-shownAt>1200&&!$('lWeb').value;
  if(!human){resetHV();return lerr('We could not verify you. Slide again, a little more slowly.')}
- hv.ok=true;hvSet(1);const el=hvEl();el.classList.add('ok');el.querySelector('.stext').textContent='Verified ✓';
+ hv.ok=true;const el=hvEl();el.classList.add('ok');el.querySelector('.s2').textContent='I am not a robot ✓';hvSet(1);
  el.setAttribute('aria-valuetext','Verified');if(/verify|Slide/.test($('lErr').textContent))lerr('');
 }
+/* The handle only moves when it is grabbed and held. Tapping or dragging the track does nothing; on phones a swipe there scrolls. */
 hvEl().addEventListener('pointerdown',e=>{
- if(hv.ok||!e.target.closest('.knob'))return;e.preventDefault();
- hv.drag=true;hv.start=Date.now();hv.moves=0;hv.grab=e.clientX-hv.pos*hvMax();hvEl().setPointerCapture(e.pointerId);
+ if(hv.ok||!e.target.closest('.knob'))return;e.preventDefault();cancelAnimationFrame(hvAnim);
+ hv.drag=true;hv.start=Date.now();hv.moves=0;hv.grab=e.clientX-hv.pos*hvMax();hvEl().classList.add('drag');hvBulge(7);try{hvEl().setPointerCapture(e.pointerId)}catch(x){}
 });
 hvEl().addEventListener('pointermove',e=>{if(!hv.drag)return;hvSet((e.clientX-hv.grab)/hvMax());hv.moves++});
-['pointerup','pointercancel'].forEach(t=>hvEl().addEventListener(t,()=>{if(!hv.drag)return;hv.drag=false;hvFinish()}));
+['pointerup','pointercancel'].forEach(t=>hvEl().addEventListener(t,()=>{if(!hv.drag)return;hv.drag=false;hvEl().classList.remove('drag');hvBulge(0);hvFinish()}));
 hvEl().addEventListener('keydown',e=>{
  if(hv.ok)return;const k=e.key;
  if(k==='ArrowRight'||k==='ArrowUp'){e.preventDefault();if(!hv.start)hv.start=Date.now();hv.moves++;hvSet(hv.pos+.1);if(hv.pos>=1)hvFinish()}
  else if(k==='ArrowLeft'||k==='ArrowDown'){e.preventDefault();hvSet(hv.pos-.1)}
 });
+if(document.fonts&&document.fonts.ready)document.fonts.ready.then(()=>{if(!$('login').hidden)hvDraw()});
 window.addEventListener('resize',()=>{if(!$('login').hidden)hvSet(hv.pos||0)});
 $('pwT').addEventListener('click',()=>{const p=$('lPass'),show=p.type==='password';p.type=show?'text':'password';$('pwT').textContent=show?'Hide':'Show';$('pwT').setAttribute('aria-pressed',show)});
 $('forgot').addEventListener('click',()=>lerr('Ask your JFM administrator to reset it. The live version will email you a reset link.',true));
@@ -1561,7 +2136,7 @@ async function goLive(){
 goLive();
 olHandleRedirect().then(back=>{if(back&&me()&&staff()){view={page:'inbox',b:view.b,tab:view.tab};render()}});
 document.addEventListener('toggle',e=>{const d=e.target;if(d.classList&&d.classList.contains('ntd'))ui.openNotes=d.open?d.dataset.nid:(ui.openNotes===d.dataset.nid?null:ui.openNotes)},true);
-document.addEventListener('keydown',e=>{if(e.key==='Enter'&&e.target.id==='myTitle'){e.preventDefault();return ACT.myAdd()}if(e.key==='Escape'&&draft){draft=null;renderDraft();return}if(e.key==='Escape'){if(ui.dlg||ui.cf)closeDlg();else if(ui.bell)closeBell()}});
+document.addEventListener('keydown',e=>{if(e.key==='Enter'&&e.target.id==='myTitle'){e.preventDefault();return ACT.myAdd()}if((e.key==='Enter'||e.key===' ')&&e.target.getAttribute&&e.target.getAttribute('role')==='button'&&e.target.dataset.act&&ACT[e.target.dataset.act]){e.preventDefault();return ACT[e.target.dataset.act](e.target.dataset.id,e.target.dataset.x)}if(e.key==='Escape'&&draft){draft=null;renderDraft();return}if(e.key==='Escape'){if(ui.dlg||ui.cf)closeDlg();else if(ui.bell)closeBell()}});
 </script>
 </body>
 </html>
