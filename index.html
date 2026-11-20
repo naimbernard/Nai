@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>JFM Property Platform V10.8</title>
+<title>JFM Property Platform V10.9</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600;700&family=Public+Sans:wght@400;600&display=swap">
 <style>
 /* Layout idea: JFM charcoal rail with lime accents (jfm-management.co.uk colours), lists the buildings; each building opens one workspace with tabs for every part of the job. */
@@ -408,6 +408,11 @@ nav>.glider::before{content:"";position:absolute;top:9px;bottom:9px;left:0;width
 .switch[disabled]{opacity:.45;cursor:not-allowed}
 .shead{display:inline-flex;align-items:center;gap:10px}
 .shead .gear{display:inline-grid;place-items:center;transition:transform .9s cubic-bezier(.3,1.4,.5,1)}
+/* V10.9: the gear on the User settings button turns on hover, and stays turned while settings are open */
+.settingsbtn svg{transition:transform .9s cubic-bezier(.3,1.4,.5,1)}
+@media (hover:hover){.settingsbtn:hover svg{transform:rotate(180deg)}}
+.settingsbtn.on svg{transform:rotate(90deg)}
+.settingsbtn.on:hover svg{transform:rotate(270deg)}
 .shead .gear svg{width:22px;height:22px}
 .top:hover .shead .gear,main:has(.setpanel:hover) .shead .gear{transform:rotate(180deg)}
 /* Appearance picker: the pill carries a phone that rolls into a sun, then into a moon */
@@ -496,7 +501,7 @@ nav>.glider::before{content:"";position:absolute;top:9px;bottom:9px;left:0;width
       <p>Works, accounts, compliance, legal and resident updates, all under the building name.</p>
       <ul class="lfeat"><li>Update once, and Asana, Outlook and residents all hear about it</li><li>Approvals and arrears in one view</li><li>Residents see what matters to them</li></ul>
     </div>
-    <p class="lfoot">Version 10.8 · Demo only. Fictional data and simulated sign in.</p>
+    <p class="lfoot">Version 10.9 · Demo only. Fictional data and simulated sign in.</p>
   </div>
   <div class="lmain">
     <div class="lcard">
@@ -531,7 +536,7 @@ nav>.glider::before{content:"";position:absolute;top:9px;bottom:9px;left:0;width
   <aside>
     <p class="brand">JFM <span>Platform</span></p>
     <nav id="nav" aria-label="Sections"></nav>
-    <p class="ver" id="ver">Version 10.8</p>
+    <p class="ver" id="ver">Version 10.9</p>
     <button class="settingsbtn" id="setBtn" data-act="settings" hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg><span>User settings</span></button>
   </aside>
   <main>
@@ -559,7 +564,7 @@ nav>.glider::before{content:"";position:absolute;top:9px;bottom:9px;left:0;width
 <script>
 /* Live database. config.js sets window.JFM_LIVE={url:'...',key:'...'}; without it the app runs on this device only. */
 const LIVE=window.JFM_LIVE||{url:'',key:''};
-const APP_VERSION='10.8';
+const APP_VERSION='10.9';
 const KINDS=['buildings','tasks','docs','legal','invoices','emails','requests','sync','notes','mytasks','inspections'];
 const newId=p=>p+Date.now().toString(36).slice(-4).toUpperCase()+Math.random().toString(36).slice(2,4).toUpperCase();
 let sb=null,live=false,liveState='local',snap=new Map(),pendingRender=false;
@@ -1554,6 +1559,127 @@ function accSheets(bs){
  const arRows=[[...ph,'Flat','Leaseholder','Tenant','Balance outstanding'],...bs.flatMap(b=>b.unitsList.filter(x=>x.balance>0).map(x=>[...pre(b),'Flat '+x.unit,x.leaseholder,x.tenant||'Owner occupied',x.balance]))];
  return[{name:'Summary',rows:[['JFM accounts, '+(multi?bs.length+' buildings':bs[0].name)],[stampLine()],[],...sumRows]},{name:'Budget',rows:budRows},{name:'Invoices',rows:invRows},{name:'Arrears',rows:arRows}];
 }
+/* ===== V10.9 Accounts Excel: a presentation-ready workbook in JFM colours, laid out like the Accounts page =====
+   Header band, the same four figures as the page, then Service charge budget, Supplier invoices and Arrears.
+   Over budget is red, totals are live formulas, and it prints landscape on one page width.
+   If the styling library can't load (offline), the plain workbook is downloaded instead. */
+LIBS.exceljs='https://cdn.jsdelivr.net/npm/exceljs@4.4.0/dist/exceljs.min.js';
+const XC={char:'FF3A3E42',lime:'FF9DC33C',olive:'FF4F7312',soft:'FFEEF5DE',line:'FFE0E3DC',zebra:'FFF7F8F5',ink:'FF2C3034',muted:'FF5F6569',white:'FFFFFFFF',pale:'FFC9CEC6',crit:'FFA12835',critBg:'FFFFE6E8',warn:'FF7A4E00',warnBg:'FFFFF0D4',good:'FF13663E',goodBg:'FFDEF4E9'};
+const XF={head:'Century Gothic',body:'Calibri'},GBP='"£"#,##0;[Red]-"£"#,##0';
+const xFill=c=>({type:'pattern',pattern:'solid',fgColor:{argb:c}}),xLine=(c,st)=>({style:st||'thin',color:{argb:c}});
+function xSet(ws,r,c,v,o){
+ o=o||{};const cell=ws.getCell(r,c);if(v!==undefined)cell.value=v;const num=typeof v==='number'||!!(v&&v.formula);
+ cell.font={name:o.fn||XF.body,size:o.sz||11,bold:!!o.b,italic:!!o.i,underline:!!o.u,color:{argb:o.col||XC.ink}};
+ if(o.bg)cell.fill=xFill(o.bg);
+ cell.alignment={vertical:'middle',horizontal:o.al||(num?'right':'left'),indent:o.al==='center'?0:1,wrapText:!!o.wrap};
+ if(o.fmt)cell.numFmt=o.fmt;return cell;
+}
+function xBand(ws,r,c1,c2,v,o){if(c2>c1)ws.mergeCells(r,c1,r,c2);const cell=xSet(ws,r,c1,v,o);if(o&&o.bg)for(let c=c1+1;c<=c2;c++)ws.getCell(r,c).fill=xFill(o.bg);return cell}
+const xEdge=(ws,r,side,line)=>{for(let c=2;c<=9;c++){const x=ws.getCell(r,c);x.border=Object.assign({},x.border,{[side]:line})}};
+function xSheet(wb,name){
+ const ws=wb.addWorksheet(name.slice(0,31),{views:[{showGridLines:false}],properties:{tabColor:{argb:XC.lime}},
+  pageSetup:{paperSize:9,orientation:'landscape',fitToPage:true,fitToWidth:1,fitToHeight:0,horizontalCentered:true,margins:{left:.4,right:.4,top:.5,bottom:.6,header:.2,footer:.3}}});
+ ws.headerFooter={oddFooter:'&L&8JFM Property Platform&C&8&A&R&8Page &P of &N'};
+ [2.5,30,22,30,22,16,18,24,36].forEach((w,i)=>ws.getColumn(i+1).width=w);return ws;
+}
+function xHeader(ws,title,sub){
+ ws.getRow(1).height=8;
+ xBand(ws,2,2,9,'JFM PROPERTY PLATFORM',{fn:XF.head,sz:10,b:true,col:XC.lime,bg:XC.char});ws.getRow(2).height=22;
+ xBand(ws,3,2,9,title,{fn:XF.head,sz:20,b:true,col:XC.white,bg:XC.char});ws.getRow(3).height=36;
+ xBand(ws,4,2,9,sub,{sz:11,col:XC.pale,bg:XC.char});ws.getRow(4).height=22;
+ xBand(ws,5,2,9,'',{bg:XC.lime});ws.getRow(5).height=5;
+ xBand(ws,6,2,9,stampLine()+'  ·  Figures from Blockman',{sz:9,i:true,col:XC.muted});ws.getRow(6).height=20;
+ return 8;
+}
+/* The same four figures, in the same order, as the tiles at the top of the Accounts page */
+function xTiles(ws,r,tiles){
+ const gap=xLine(XC.white,'thick');
+ tiles.forEach(([k,v,note,alert],i)=>{const c=2+i*2,side={left:gap,right:gap};
+  xBand(ws,r,c,c+1,k.toUpperCase(),{sz:9,b:true,col:XC.muted,bg:XC.soft});
+  xBand(ws,r+1,c,c+1,v,{fn:XF.head,sz:20,b:true,col:alert?XC.crit:XC.ink,bg:XC.soft,fmt:GBP,al:'left'});
+  xBand(ws,r+2,c,c+1,note||'',{sz:9,b:!!alert,col:alert?XC.crit:XC.muted,bg:XC.soft});
+  [r,r+1,r+2].forEach(y=>[c,c+1].forEach(x=>ws.getCell(y,x).border=Object.assign({},side,y===r?{top:xLine(XC.lime,'thick')}:{})))});
+ ws.getRow(r).height=20;ws.getRow(r+1).height=34;ws.getRow(r+2).height=18;return r+4;
+}
+function xSection(ws,r,title,right){
+ xBand(ws,r,2,right?7:9,title.toUpperCase(),{fn:XF.head,sz:12,b:true,col:XC.olive});
+ if(right)xBand(ws,r,8,9,right,{sz:9,i:true,col:XC.muted,al:'right'});
+ xEdge(ws,r,'bottom',xLine(XC.lime,'medium'));ws.getRow(r).height=26;return r+1;
+}
+function xNote(ws,r,text){xBand(ws,r,2,9,text,{sz:9,i:true,col:XC.muted});ws.getRow(r).height=18;return r+1}
+function xThead(ws,r,cols){cols.forEach(([c1,c2,l,al])=>xBand(ws,r,c1,c2,l,{b:true,sz:10,col:XC.white,bg:XC.char,al}));ws.getRow(r).height=22;return r+1}
+function xRow(ws,r,cells,i,tone){
+ const bg=tone==='crit'?XC.critBg:i%2?XC.zebra:XC.white;
+ cells.forEach(([c1,c2,v,o])=>xBand(ws,r,c1,c2,v,Object.assign({bg,col:tone==='crit'?XC.crit:XC.ink,b:tone==='crit'},o||{})));
+ xEdge(ws,r,'bottom',xLine(XC.line,'thin'));ws.getRow(r).height=21;return r+1;
+}
+function xTotal(ws,r,cells){
+ cells.forEach(([c1,c2,v,o])=>xBand(ws,r,c1,c2,v,Object.assign({bg:XC.soft,b:true},o||{})));
+ xEdge(ws,r,'top',xLine(XC.char,'medium'));xEdge(ws,r,'bottom',xLine(XC.char,'double'));ws.getRow(r).height=23;return r+1;
+}
+const xEmpty=(ws,r,text)=>xRow(ws,r,[[2,9,text,{i:true,col:XC.muted}]],0);
+const xPct=p=>Math.round(p*100)+'%';
+function xBuildingSheet(wb,b){
+ const ws=xSheet(wb,b.name),bud=sum(b.budget,x=>x.budget),act=sum(b.budget,x=>x.actual),ar=b.unitsList.filter(x=>x.balance>0),inv=db.invoices.filter(v=>v.building===b.name);
+ let r=xHeader(ws,'Accounts  ·  '+b.name,`${b.units} units  ·  Manager ${b.manager}  ·  Service charge year end ${b.yearEnd}`);
+ r=xTiles(ws,r,[['Annual budget',bud,b.budget.length+' budget headings'],['Spent to date',act,xPct(act/bud)+' of budget used'+(act>bud?', over budget':''),act>bud],
+  ['Reserve fund',b.reserve,'Held for major works'],['Arrears',arrears(b),ar.length?ar.length+' flat'+(ar.length===1?'':'s')+' owing':'No arrears',ar.length>0]]);
+ /* Service charge budget: over budget headings are red */
+ r=xSection(ws,r,'Service charge budget','Source: Blockman');
+ r=xThead(ws,r,[[2,2,'Heading'],[3,3,'Budget','right'],[4,4,'Actual','right'],[5,5,'Remaining','right'],[6,6,'Used','right'],[7,9,'Used against budget']]);
+ const r0=r;
+ b.budget.forEach((x,i)=>{const p=x.actual/x.budget,over=p>1,bar='█'.repeat(Math.max(1,Math.round(Math.min(p,1)*22)));
+  r=xRow(ws,r,[[2,2,(over?'▲ ':'')+x.head],[3,3,x.budget,{fmt:GBP}],[4,4,x.actual,{fmt:GBP}],[5,5,{formula:`C${r}-D${r}`,result:x.budget-x.actual},{fmt:GBP}],
+   [6,6,{formula:`IF(C${r}=0,0,D${r}/C${r})`,result:p},{fmt:'0%'}],[7,9,bar+(over?'  Over by '+money(x.actual-x.budget):''),{col:over?XC.crit:XC.lime,sz:10}]],i,over?'crit':'')});
+ const tp=act/bud;
+ r=xTotal(ws,r,[[2,2,'Total'],[3,3,{formula:`SUM(C${r0}:C${r-1})`,result:bud},{fmt:GBP}],[4,4,{formula:`SUM(D${r0}:D${r-1})`,result:act},{fmt:GBP}],[5,5,{formula:`C${r}-D${r}`,result:bud-act},{fmt:GBP}],
+  [6,6,{formula:`IF(C${r}=0,0,D${r}/C${r})`,result:tp},{fmt:'0%'}],[7,9,tp>1?'Over budget overall':'Within budget overall',{col:tp>1?XC.crit:XC.good}]]);
+ const overN=b.budget.filter(x=>x.actual>x.budget).length;
+ r=xNote(ws,r,overN?`${overN} heading${overN===1?' is':'s are'} over budget, shown in red.`:'Every heading is within budget.');r++;
+ /* Supplier invoices */
+ r=xSection(ws,r,'Supplier invoices');r=xNote(ws,r,`Managers approve up to ${money(LIMIT)}. Anything above is sent to a named approver.`);
+ r=xThead(ws,r,[[2,2,'Supplier'],[3,3,'Invoice'],[4,4,'Description'],[5,5,'Budget heading'],[6,6,'Amount','right'],[7,7,'Status','center'],[8,8,'Approver'],[9,9,'Notes']]);
+ if(!inv.length)r=xEmpty(ws,r,'No invoices');
+ inv.forEach((v,i)=>{const st=v.status==='Awaiting decision'?'Awaiting decision':v.status,k=v.status==='Approved'?[XC.good,XC.goodBg]:v.status==='Rejected'?[XC.crit,XC.critBg]:[XC.warn,XC.warnBg];
+  r=xRow(ws,r,[[2,2,v.supplier,{b:true}],[3,3,v.id],[4,4,v.desc,{wrap:true}],[5,5,v.head||''],[6,6,v.amount,{fmt:GBP,b:v.amount>LIMIT}],[7,7,st,{bg:k[1],col:k[0],b:true,al:'center',sz:10}],
+   [8,8,v.approver?nameOf(v.approver):v.decidedBy||''],[9,9,(v.notes||[]).map(n=>n.by+': '+n.text).join('\n'),{wrap:true,sz:10}]],i);
+  const h=Math.max(1,(v.notes||[]).length,Math.ceil((v.desc||'').length/32));if(h>1)ws.getRow(r-1).height=16*h+6});
+ if(inv.length){const s=r-inv.length;r=xTotal(ws,r,[[2,5,'Total invoices'],[6,6,{formula:`SUM(F${s}:F${r-1})`,result:sum(inv,v=>v.amount)},{fmt:GBP}],[7,9,inv.filter(v=>v.status.startsWith('Awaiting')).length+' awaiting a decision',{col:XC.warn}]])}
+ r++;
+ /* Arrears */
+ r=xSection(ws,r,'Arrears');
+ r=xThead(ws,r,[[2,2,'Flat'],[3,3,'Leaseholder'],[4,4,'Tenant'],[5,5,'Balance outstanding','right']]);
+ if(!ar.length)r=xEmpty(ws,r,'No arrears');
+ ar.forEach((x,i)=>{r=xRow(ws,r,[[2,2,'Flat '+x.unit,{b:true}],[3,3,x.leaseholder],[4,4,x.tenant||'Owner occupied',{col:x.tenant?XC.ink:XC.muted}],[5,5,x.balance,{fmt:GBP,col:XC.crit,b:true}]],i)});
+ if(ar.length){const s=r-ar.length;r=xTotal(ws,r,[[2,4,'Total arrears'],[5,5,{formula:`SUM(E${s}:E${r-1})`,result:arrears(b)},{fmt:GBP,col:XC.crit}]])}
+ ws.pageSetup.printArea=`A1:I${r}`;if(r<=60)ws.pageSetup.fitToHeight=1;return ws;
+}
+/* All buildings: a portfolio sheet first, then one sheet per building laid out like its Accounts page */
+function xPortfolioSheet(wb,bs){
+ const ws=xSheet(wb,isTop()?'All buildings':'My buildings'),bud=sum(bs,b=>sum(b.budget,x=>x.budget)),act=sum(bs,b=>sum(b.budget,x=>x.actual)),nOver=bs.filter(b=>sum(b.budget,x=>x.actual)>sum(b.budget,x=>x.budget)).length;
+ let r=xHeader(ws,'Accounts  ·  '+(isTop()?'All buildings':'My buildings'),`${bs.length} buildings  ·  ${sum(bs,b=>b.units)} units`);
+ r=xTiles(ws,r,[['Annual budget',bud,bs.length+' buildings'],['Spent to date',act,xPct(act/bud)+' of budget used'+(nOver?`, ${nOver} over budget`:''),nOver>0],['Reserve fund',sum(bs,b=>b.reserve),'Across all buildings'],['Arrears',sum(bs,arrears),sum(bs,b=>b.unitsList.filter(x=>x.balance>0).length)+' flats owing',sum(bs,arrears)>0]]);
+ r=xSection(ws,r,'Buildings','Click a building to open its sheet');
+ r=xThead(ws,r,[[2,2,'Building'],[3,3,'Manager'],[4,4,'Units','right'],[5,5,'Annual budget','right'],[6,6,'Spent to date','right'],[7,7,'Used','right'],[8,8,'Reserve fund','right'],[9,9,'Arrears','right']]);
+ const r0=r;
+ bs.forEach((b,i)=>{const bb=sum(b.budget,x=>x.budget),ba=sum(b.budget,x=>x.actual),over=ba>bb;
+  r=xRow(ws,r,[[2,2,{text:(over?'▲ ':'')+b.name,hyperlink:`#'${b.name.slice(0,31)}'!A1`},{u:true,b:true,col:over?XC.crit:XC.olive}],[3,3,b.manager],[4,4,b.units,{fmt:'0'}],[5,5,bb,{fmt:GBP}],[6,6,ba,{fmt:GBP}],
+   [7,7,{formula:`IF(E${r}=0,0,F${r}/E${r})`,result:ba/bb},{fmt:'0%'}],[8,8,b.reserve,{fmt:GBP}],[9,9,arrears(b),{fmt:GBP,col:arrears(b)?XC.crit:XC.ink}]],i,over?'crit':'')});
+ const S=c=>({formula:`SUM(${c}${r0}:${c}${r-1})`});
+ r=xTotal(ws,r,[[2,3,'Total'],[4,4,Object.assign(S('D'),{result:sum(bs,b=>b.units)}),{fmt:'0'}],[5,5,Object.assign(S('E'),{result:bud}),{fmt:GBP}],[6,6,Object.assign(S('F'),{result:act}),{fmt:GBP}],
+  [7,7,{formula:`IF(E${r}=0,0,F${r}/E${r})`,result:act/bud},{fmt:'0%'}],[8,8,Object.assign(S('H'),{result:sum(bs,b=>b.reserve)}),{fmt:GBP}],[9,9,Object.assign(S('I'),{result:sum(bs,arrears)}),{fmt:GBP,col:XC.crit}]]);
+ r=xNote(ws,r,nOver?`${nOver} building${nOver===1?' is':'s are'} over budget, shown in red.`:'Every building is within budget.');
+ ws.pageSetup.printArea=`A1:I${r}`;return ws;
+}
+async function accExcel(name,bs){
+ try{
+  await loadLib(LIBS.exceljs);const wb=new ExcelJS.Workbook();wb.creator='JFM Property Platform';wb.created=new Date();
+  if(bs.length>1)xPortfolioSheet(wb,bs);bs.forEach(b=>xBuildingSheet(wb,b));
+  window.JFM_LAST_EXPORT={type:'xlsx',styled:true,name,sheets:wb.worksheets.map(w=>w.name)};
+  const buf=await wb.xlsx.writeBuffer();
+  if(await saveBlob(new Blob([buf],{type:'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'}),name+'.xlsx'))toast('Excel file downloaded');
+ }catch(e){try{console.warn(e)}catch(x){}toExcel(name,accSheets(bs))}
+}
 const compRows=bs=>bs.flatMap(b=>b.compliance.map(c=>[...(bs.length>1?[b.name]:[]),c.item,c.due?fmtDate(c.due):'Not recorded',compStatus(c),lastHist(c)||'']));
 Object.assign(ACT,{
  xInsp(id){const i=db.inspections.find(x=>x.id===id);if(!i||!staff()||!canSee(i.building))return;const r=i.result||{};
@@ -1566,8 +1692,8 @@ Object.assign(ACT,{
  xInspAll(){const b=B();if(!staff())return;const past=inspDone(b);const rows=[['Section','Check',...past.map(i=>fmtDate(i.completedAt.slice(0,10))+' ('+i.completedBy+')')]];
   SOP_ITEMS.forEach(x=>rows.push([x.sec,x.label,...past.map(i=>{const it=i.items[x.key]||{};return (it.st==='ok'?'OK':it.st==='issue'?'Issue':it.st==='na'?'N/A':'')+(it.note?': '+it.note:'')})]));
   toExcel('Inspections_'+fileSafe(b.name),[{name:'All inspections',rows}])},
- xAcc(){if(!staff())return;const b=B();toExcel('Accounts_'+fileSafe(b.name)+'_'+today(),accSheets([b]))},
- xAccAll(){if(!staff())return;toExcel('Accounts_'+(isTop()?'All_buildings':fileSafe(me().name)+'_buildings')+'_'+today(),accSheets(myB()))},
+ xAcc(){if(!staff())return;const b=B();accExcel('Accounts_'+fileSafe(b.name)+'_'+today(),[b])},
+ xAccAll(){if(!staff())return;accExcel('Accounts_'+(isTop()?'All_buildings':fileSafe(me().name)+'_buildings')+'_'+today(),myB())},
  xMyAcc(){if(me().role!=='leaseholder')return;const b=B(),x=myUnit(),annual=Math.round(sum(b.budget,h=>h.budget)/b.units),half=Math.round(annual/2);
   toExcel('Statement_Flat_'+fileSafe(x.unit)+'_'+fileSafe(b.name),[{name:'Statement',rows:[['Statement, Flat '+x.unit+', '+b.name],[stampLine()],[],['Date','Detail','Charge','Paid'],['1 Apr 2026','Service charge demand, first half',half,''],['14 Apr 2026','Payment received','',half],['1 Oct 2026','Service charge demand, second half',half,''],['20 Oct 2026','Payment received','',half-x.balance],[],['','Balance due','',x.balance]]},
    {name:'Your share',rows:[['Heading','Building budget','Your share'],...b.budget.map(h=>[h.head,h.budget,Math.round(h.budget/b.units)]),['Total',sum(b.budget,h=>h.budget),annual]]}])},
