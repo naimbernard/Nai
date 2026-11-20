@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>JFM Property Platform V10.10</title>
+<title>JFM Property Platform V12</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600;700&family=Public+Sans:wght@400;600&display=swap">
 <style>
 /* Layout idea: JFM charcoal rail with lime accents (jfm-management.co.uk colours), lists the buildings; each building opens one workspace with tabs for every part of the job. */
@@ -288,6 +288,22 @@ pre{white-space:pre-wrap;font:inherit;margin:6px 0}
   .controls,.controls label{width:100%}
 }
 .recrow{display:flex;gap:10px;align-items:flex-start;justify-content:space-between}.recrow details{flex:1}.btn.dl{white-space:nowrap}.btn.dl:before{content:'\2193  '}
+.perbar{display:flex;flex-wrap:wrap;align-items:center;gap:8px 12px;background:var(--surface);border:1px solid var(--line);border-left:4px solid var(--brand);border-radius:10px;padding:10px 14px;margin:0 0 14px}.perbar label{margin:0;font-weight:700}.perbar select{width:auto;min-width:170px;margin:0}.perbar .muted{flex:1;min-width:200px}
+.asg{border:1px solid var(--line);border-radius:10px;padding:10px 12px;margin:6px 0 8px;background:var(--bg)}.asg.Escalated,.asg.Declined{border-color:var(--crit)}.asg .hist{margin:8px 0}
+.stack{display:grid;gap:8px;margin-top:14px}.stack .btn{width:100%}
+.ni.urgent{background:var(--crit-bg)}.urg{display:inline-block;background:var(--crit);color:#fff;font-size:11px;font-weight:700;border-radius:20px;padding:2px 8px;margin-right:6px}
+.pops{position:fixed;right:18px;bottom:18px;z-index:9990;display:flex;flex-direction:column;gap:10px;width:min(340px,calc(100vw - 36px))}
+.pop{background:var(--surface);color:var(--ink);border:1px solid var(--line);border-top:4px solid var(--brand);border-radius:12px;box-shadow:0 10px 30px rgba(20,22,24,.25);padding:12px 14px;animation:popIn .35s ease}
+.pop.urgent{border-top-color:var(--crit)}.pophead{display:flex;align-items:center;gap:8px;font-size:13px}.pophead b{flex:1}.popdot{width:9px;height:9px;border-radius:50%;background:var(--brand)}.pop.urgent .popdot{background:var(--crit)}
+.popx{border:0;background:none;font-size:20px;line-height:1;color:var(--muted);cursor:pointer;padding:0 4px}.poptitle{font-weight:700;margin:8px 0 2px}.popnote{background:var(--bg);border-radius:8px;padding:6px 8px;margin:6px 0 0}
+.popacts{display:flex;gap:6px;margin-top:10px;flex-wrap:wrap}
+@keyframes popIn{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
+@media (prefers-reduced-motion:reduce){.pop{animation:none}}
+.pick.team .pgrp{grid-column:1/-1;margin:8px 0 0;font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}.pick label.off{opacity:.55}.warnt{color:var(--warn);font-weight:700}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:12px}.chip{border:1px solid var(--line);background:var(--bg);color:var(--ink);border-radius:999px;padding:6px 12px;font:600 12px var(--body);cursor:pointer}.chip:hover{border-color:var(--brand)}
+.dlgbox.wide{max-width:560px}.dlgbox textarea{width:100%}.row.po{border-left:4px solid var(--brand)}
+.cinfo{display:grid;grid-template-columns:max-content 1fr;gap:6px 18px;margin:8px 0}.cinfo dt{color:var(--muted);font-size:13px}.cinfo dd{margin:0}
+.asbar{display:flex;flex-wrap:wrap;align-items:center;gap:8px 12px;background:var(--charcoal);color:#fff;border-left:4px solid var(--brand);border-radius:10px;padding:8px 12px;margin:0 0 12px}.asbar select{width:auto;min-width:230px;margin:0;padding:6px 8px}.asbar .aslab{font-size:13px}.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
 /* ===== V10.8 Interface polish: glow, sliding pills, hold-and-slide, sign-in slider, calendar, reminders ===== */
 :root{--glow:var(--brand)}
 /* Glow on hover (computer) or nearest the highlight line while scrolling (phone) */
@@ -513,6 +529,7 @@ nav>.glider::before{content:"";position:absolute;top:9px;bottom:9px;left:0;width
 .tl-item.near{border-color:color-mix(in srgb,var(--glow) 60%,var(--line));box-shadow:0 0 0 1px color-mix(in srgb,var(--glow) 35%,transparent),0 8px 24px color-mix(in srgb,var(--glow) 22%,transparent)}
 .tl-item{transition:box-shadow .45s ease,border-color .45s ease}
 @media (max-width:1150px){.acclay{grid-template-columns:1fr}.acchist{position:static;max-height:none}}
+.demoSw[hidden]{display:none!important}
 </style>
 </head>
 <body>
@@ -524,7 +541,7 @@ nav>.glider::before{content:"";position:absolute;top:9px;bottom:9px;left:0;width
       <p>Works, accounts, compliance, legal and resident updates, all under the building name.</p>
       <ul class="lfeat"><li>Update once, and Asana, Outlook and residents all hear about it</li><li>Approvals and arrears in one view</li><li>Residents see what matters to them</li></ul>
     </div>
-    <p class="lfoot">Version 10.10 · Demo only. Fictional data and simulated sign in.</p>
+    <p class="lfoot">Version 12 · Demo only. Fictional data and simulated sign in.</p>
   </div>
   <div class="lmain">
     <div class="lcard">
@@ -532,7 +549,7 @@ nav>.glider::before{content:"";position:absolute;top:9px;bottom:9px;left:0;width
       <p class="muted">Use your JFM account to continue.</p>
       <form id="lForm" novalidate>
         <label for="lUser">Username</label>
-        <input id="lUser" name="username" autocomplete="username" autocapitalize="none" spellcheck="false" placeholder="e.g. morgan">
+        <input id="lUser" name="username" autocomplete="username" autocapitalize="none" spellcheck="false" placeholder="e.g. kadri">
         <label for="lPass">Password</label>
         <div class="pw"><input id="lPass" name="password" type="password" autocomplete="current-password"><button type="button" class="pwtoggle" id="pwT" aria-controls="lPass" aria-pressed="false">Show</button></div>
         <input id="lWeb" name="website" class="hp" tabindex="-1" autocomplete="off" aria-hidden="true">
@@ -546,8 +563,8 @@ nav>.glider::before{content:"";position:absolute;top:9px;bottom:9px;left:0;width
         <p class="small muted">Every demo account uses the password <b>jfm2026</b>.</p>
         <table><thead><tr><th>Username</th><th>Who</th></tr></thead><tbody>
           <tr><td>dana</td><td>CEO, all buildings</td></tr>
-          <tr><td>morgan</td><td>Property manager, 5 buildings</td></tr>
-          <tr><td>jamie</td><td>Property manager, 4 buildings</td></tr>
+          <tr><td>alex</td><td>Senior manager, everything the CEO sees</td></tr>
+          <tr><td>kadri</td><td>Key client manager, assigned buildings</td></tr>
           <tr><td>flat42.patel</td><td>Leaseholder, Saffron Square</td></tr>
           <tr><td>flat18.reed</td><td>Tenant, Saffron Square</td></tr>
         </tbody></table>
@@ -559,7 +576,7 @@ nav>.glider::before{content:"";position:absolute;top:9px;bottom:9px;left:0;width
   <aside>
     <p class="brand">JFM <span>Platform</span></p>
     <nav id="nav" aria-label="Sections"></nav>
-    <p class="ver" id="ver">Version 10.10</p>
+    <p class="ver" id="ver">Version 12</p>
     <button class="settingsbtn" id="setBtn" data-act="settings" hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg><span>User settings</span></button>
   </aside>
   <main>
@@ -573,6 +590,7 @@ nav>.glider::before{content:"";position:absolute;top:9px;bottom:9px;left:0;width
         <button class="btn light" data-act="signOut">Sign out</button>
       </div>
     </div>
+    <div class="asbar" id="asBar" hidden></div>
     <div class="livebar" id="liveBar" hidden></div>
     <div class="notice"><span id="liveDot"></span> Demo only. Fictional people, suppliers and figures. Asana, Outlook, Blockman and the resident portal are simulated, so nothing is really sent.</div>
     <div id="content"><div class="panel" id="noRun"><h3>This page needs to open in a web browser</h3><p>It looks like this file was opened in a preview (email, WhatsApp, Google Drive or the Files app), which doesn't run the platform.</p><p><b>To open it:</b> save the file to your computer, then open it with Chrome, Edge or Safari. On a computer you can right-click the file and choose <i>Open with</i> → your browser.</p></div></div>
@@ -587,8 +605,15 @@ nav>.glider::before{content:"";position:absolute;top:9px;bottom:9px;left:0;width
 <script>
 /* Live database. config.js sets window.JFM_LIVE={url:'...',key:'...'}; without it the app runs on this device only. */
 const LIVE=window.JFM_LIVE||{url:'',key:''};
-const APP_VERSION='10.10';
-const KINDS=['buildings','tasks','docs','legal','invoices','emails','requests','sync','notes','mytasks','inspections','accver'];
+const APP_VERSION='12';
+const KINDS=['buildings','tasks','docs','legal','invoices','emails','requests','sync','notes','mytasks','inspections','pos','contractors','people','clients','accver'];
+const seedClients=()=>[
+ {id:'CL1',name:'Saffron Square RMC Ltd',type:'Residents management company',contact:'Helen Ward',contactRole:'Chair of directors',email:'directors@saffronsquarermc.example',phone:'020 7946 0211',address:'Saffron Square, London',companyNo:'09876543',since:'2019-04-01',renewal:iso(140),fee:280,buildings:['Saffron Square'],rm:'p1',notes:'Board meets quarterly. Prefers updates by email.'},
+ {id:'CL2',name:'Hartwell Estates Ltd',type:'Freeholder',contact:'James Hartwell',contactRole:'Director',email:'james@hartwellestates.example',phone:'020 7946 0388',address:'14 Kings Road, London',companyNo:'04561234',since:'2017-06-01',renewal:iso(45),fee:250,buildings:['Spline Place','Beta Road','Blue Lion Place'],rm:'p1',notes:'Freeholder approves major works over £20,000.'},
+ {id:'CL3',name:'Kirby Homes Housing Association',type:'Housing association',contact:'Amira Khan',contactRole:'Asset manager',email:'assets@kirbyhomes.example',phone:'020 7946 0457',address:'2 Station Approach, Kent',companyNo:'IP31245R',since:'2021-01-01',renewal:iso(300),fee:230,buildings:['Horton Kirby','Garrick Hendon'],rm:'p1',notes:'Monthly KPI report expected by the 5th.'},
+ {id:'CL4',name:'Glen Eagle Freehold Ltd',type:'Right to manage company',contact:'Peter Osei',contactRole:'Company secretary',email:'secretary@gleneagle.example',phone:'020 7946 0532',address:'Glen Eagle Heights, London',companyNo:'11223344',since:'2022-09-01',renewal:iso(20),fee:265,buildings:['Glen Eagle Heights','Hamilton Court'],rm:'p1',notes:'Tribunal case open on service charges.'},
+ {id:'CL5',name:'Park View Estate Management Co',type:'Residents management company',contact:'Laura Mendes',contactRole:'Director',email:'board@parkviewestate.example',phone:'020 7946 0619',address:'Park View Estate, London',companyNo:'07654321',since:'2020-02-01',renewal:iso(210),fee:240,buildings:['Park View Estate'],rm:'p1',notes:''}];
+const seedCons=()=>[['C1','Northway Lifts','Lifts','jobs@northwaylifts.example',200],['C2','ClearFlow Drainage','Drainage','office@clearflow.example',90],['C3','BrightLine Electrical','Electrical','hello@brightline.example',-10],['C4','Greenleaf Grounds','Grounds','team@greenleaf.example',300],['C5','Citywide Cleaning','Cleaning','ops@citywide.example',150],['C6','Apex Roofing','Roofing','quotes@apexroofing.example',25],['C7','SafeGuard Fire','Fire safety','service@safeguardfire.example',400]].map(([id,name,trade,email,d])=>({id,name,trade,email,phone:'020 7946 0'+(100+parseInt(id.slice(1))*7),insurance:iso(d)}));
 const newId=p=>p+Date.now().toString(36).slice(-4).toUpperCase()+Math.random().toString(36).slice(2,4).toUpperCase();
 let sb=null,live=false,liveState='local',snap=new Map(),pendingRender=false;
 const KEY='jfm_v10',LIMIT=5000,DEMO_PW='jfm2026';
@@ -615,8 +640,8 @@ const users=[
  {id:'a1',username:'marc',pw:'123',name:'Marc, Master Admin',short:'Marc',role:'admin'},
  {id:'a2',username:'naim',pw:'123',name:'Naim, Master Admin',short:'Naim',role:'admin'},
  {id:'c1',username:'dana',name:'Dana, CEO',short:'Dana',role:'ceo'},
- {id:'p1',username:'morgan',name:'Morgan, Property Manager',short:'Morgan',role:'pm',buildings:NAMES.slice(0,5)},
- {id:'p2',username:'jamie',name:'Jamie, Property Manager',short:'Jamie',role:'pm',buildings:NAMES.slice(5)},
+ {id:'p2',username:'alex',name:'Alex, Senior Manager',short:'Alex',role:'senior'},
+ {id:'p1',username:'kadri',name:'Kadri, Key Client Manager',short:'Kadri',role:'kcm'},
  {id:'l1',username:'flat42.patel',name:'Priya Patel, Flat 42, Leaseholder',short:'Priya',role:'leaseholder',building:'Saffron Square',unit:'42'},
  {id:'t1',username:'flat18.reed',name:'Sam Reed, Flat 18, Tenant',short:'Sam',role:'tenant',building:'Saffron Square',unit:'18'}];
 
@@ -629,7 +654,7 @@ function mkSeed(){
   const budget=HEADS.map(([head,p],k)=>{const b=Math.round(total*p/100)*100;return{head,budget:b,actual:Math.round(b*(.6+((i+k*3)%6)*.1)/10)*10}});
   const unitsList=[];
   for(let n=1;n<=units;n++)unitsList.push({unit:String(n),leaseholder:SUR[(n*7+i*3)%SUR.length],tenant:(n+i)%4===0?SUR[(n*3+i+5)%SUR.length]:'',balance:(n*5+i)%11===0?300+((n*97+i*41)%14)*85:0});
-  return{name,units,manager:i<5?'Morgan':'Jamie',yearEnd:'31 March',reserve:units*(900+i*60),budget,unitsList,compliance:COMP.map((item,k)=>({item,due:iso(((i*37+k*53)%300)-35)}))};
+  return{name,units,manager:'Kadri',yearEnd:'31 March',reserve:units*(900+i*60),budget,unitsList,compliance:COMP.map((item,k)=>({item,due:iso(((i*37+k*53)%300)-35)}))};
  });
  const s=buildings[0];
  Object.assign(s.unitsList[41],{leaseholder:'Patel',tenant:'',balance:612});
@@ -646,7 +671,8 @@ function mkSeed(){
  NAMES.slice(2).forEach((b,k)=>tasks.push(T('T'+(106+k),b,extra[k],'Maintenance',k%3===0?'High':'Medium',k%4,iso(k*6-8),'Residents','Being arranged with the contractor.','Generated demo task.',400+k*350,['Report received'])));
  const docs=[];
  NAMES.forEach(b=>[['Buildings insurance schedule','Insurance','Leaseholders'],['Service charge budget 2026/27','Budgets','Leaseholders'],['Fire risk assessment','Certificates','All residents'],['Head lease','Leases','Staff'],['AGM minutes','Minutes','Leaseholders'],['Resident handbook','General','All residents']].forEach(([name,cat,vis],k)=>docs.push({id:'D'+(docs.length+1),building:b,name,cat,vis,date:iso(-30-k*40)})));
- return{v:6,seq:120,buildings,tasks,docs,
+ tasks.filter(t=>t.id==='T106').forEach(t=>{const at=new Date(Date.now()-30*36e5).toISOString();t.assign={to:'p2',from:'p1',status:'Pending',note:'Can you cover this? I am on leave next week.',at,log:[{by:'Kadri (Key Client Manager)',text:'Sent to Alex (Senior Manager): Can you cover this? I am on leave next week.',at}]}});
+ return{v:6,seq:120,buildings,tasks,docs,pos:[],people:[],contractors:seedCons(),clients:seedClients(),
   legal:[
    {id:'L1',building:'Saffron Square',type:'Section 20',title:'Lift replacement major works',stage:1,next:iso(21),note:'Two estimates received. Observation period running.'},
    {id:'L2',building:'Saffron Square',type:'Arrears recovery',title:'Flat 11 service charge arrears',stage:1,next:iso(10),note:'Letter before action sent.'},
@@ -654,28 +680,31 @@ function mkSeed(){
    {id:'L4',building:'Beta Road',type:'Lease query',title:'Flat 4 subletting consent',stage:0,next:iso(7),note:'Lease terms to be checked.'},
    {id:'L5',building:'Glen Eagle Heights',type:'Dispute',title:'Service charge challenge at tribunal',stage:1,next:iso(35),note:'Bundle due before hearing.'}],
   invoices:[
-   {id:'INV301',building:'Saffron Square',supplier:'Northway Lifts',desc:'Lift repair, parts and labour',amount:8400,head:'Lifts',status:'Awaiting decision',approver:'a2',requestedBy:'p1',requestedAt:new Date(Date.now()-2*36e5).toISOString(),notes:[{by:'Morgan (Property Manager)',text:'Lowest of three quotes. Engineer can start next week.',at:new Date(Date.now()-2*36e5).toISOString(),tag:'With request'}]},
-   {id:'INV302',building:'Saffron Square',supplier:'ClearFlow Drainage',desc:'Drain survey, communal corridor',amount:1150,head:'Repairs and maintenance',status:'Awaiting approval'},
-   {id:'INV303',building:'Spline Place',supplier:'BrightLine Electrical',desc:'Communal lighting parts',amount:950,head:'Repairs and maintenance',status:'Awaiting approval'},
-   {id:'INV304',building:'Hamilton Court',supplier:'Greenleaf Grounds',desc:'Quarterly grounds contract',amount:2300,head:'Cleaning and grounds',status:'Awaiting approval'}],
+   {id:'INV301',building:'Saffron Square',supplier:'Northway Lifts',desc:'Lift repair, parts and labour',amount:8400,head:'Lifts',status:'Awaiting decision',approver:'c1',requestedBy:'p1',requestedAt:new Date(Date.now()-2*36e5).toISOString(),notes:[{by:'Kadri (Key Client Manager)',text:'Lowest of three quotes. Engineer can start next week.',at:new Date(Date.now()-2*36e5).toISOString(),tag:'With request'}]},
+   {id:'INV302',building:'Saffron Square',supplier:'ClearFlow Drainage',desc:'Drain survey, communal corridor',amount:1150,head:'Repairs and maintenance',status:'Awaiting approval',date:iso(-4)},
+   {id:'INV303',building:'Spline Place',supplier:'BrightLine Electrical',desc:'Communal lighting parts',amount:950,head:'Repairs and maintenance',status:'Awaiting approval',date:iso(-9)},
+   {id:'INV304',building:'Hamilton Court',supplier:'Greenleaf Grounds',desc:'Quarterly grounds contract',amount:2300,head:'Cleaning and grounds',status:'Awaiting approval',date:iso(-20)},
+   {id:'INV295',building:'Saffron Square',supplier:'Citywide Cleaning',desc:'Communal cleaning, September',amount:1480,head:'Cleaning and grounds',status:'Paid',date:iso(-52)},
+   {id:'INV288',building:'Saffron Square',supplier:'Thames Water',desc:'Landlord supply, quarter',amount:2210,head:'Utilities',status:'Paid',date:iso(-118)},
+   {id:'INV271',building:'Spline Place',supplier:'Citywide Cleaning',desc:'Communal cleaning, June',amount:1120,head:'Cleaning and grounds',status:'Paid',date:iso(-150)}],
   emails:[
    {id:'E1',mailbox:'b:Saffron Square',building:'Saffron Square',dir:'in',from:'Flat 7, Hughes',to:'Saffron Square inbox',subject:'Water coming through corridor ceiling again',body:'The leak outside flat 7 is back after last night. There is water near the light fitting.',date:iso(-1),status:'New'},
    {id:'E2',mailbox:'b:Saffron Square',building:'Saffron Square',dir:'in',from:'Northway Lifts',to:'Saffron Square inbox',subject:'Quotation for lift repair',body:'Please find our quotation for the repair. We can attend within ten working days of approval.',date:iso(-2),status:'New'},
    {id:'E3',mailbox:'b:Spline Place',building:'Spline Place',dir:'in',from:'Flat 3, Barros',to:'Spline Place inbox',subject:'Query on service charge demand',body:'Could you explain the increase in the insurance line on my latest demand?',date:iso(-3),status:'New'},
    {id:'E4',mailbox:'b:Park View Estate',building:'Park View Estate',dir:'in',from:'Flat 20, Thorne',to:'Park View Estate inbox',subject:'Car park gate stuck open',body:'The gate has been open since Friday and non residents are parking.',date:iso(-1),status:'New'},
    {id:'E5',mailbox:'b:Beta Road',building:'Beta Road',dir:'in',from:'BrightClean Services',to:'Beta Road inbox',subject:'Cleaning rota change from next week',body:'Our team will now attend on Tuesdays and Fridays instead of Mondays and Thursdays.',date:iso(-2),status:'New'},
-   {id:'E6',mailbox:'u:p1',building:null,dir:'in',from:'Dana (CEO)',to:'Morgan',subject:'Monthly portfolio review',body:'Can you bring a short update on your five buildings to Thursday\'s review? Focus on overdue works and compliance.',date:iso(-1),status:'New'},
-   {id:'E7',mailbox:'u:p1',building:null,dir:'in',from:'JFM Training',to:'Morgan',subject:'Fire safety refresher booking',body:'Please book your annual fire safety refresher before the end of the month.',date:iso(-4),status:'New'},
-   {id:'E8',mailbox:'u:p2',building:null,dir:'in',from:'Dana (CEO)',to:'Jamie',subject:'Hamilton Court handover notes',body:'Please send me your handover notes for Hamilton Court by Friday.',date:iso(-2),status:'New'},
+   {id:'E6',mailbox:'u:p1',building:null,dir:'in',from:'Dana (CEO)',to:'Kadri',subject:'Monthly portfolio review',body:'Can you bring a short update on your five buildings to Thursday\'s review? Focus on overdue works and compliance.',date:iso(-1),status:'New'},
+   {id:'E7',mailbox:'u:p1',building:null,dir:'in',from:'JFM Training',to:'Kadri',subject:'Fire safety refresher booking',body:'Please book your annual fire safety refresher before the end of the month.',date:iso(-4),status:'New'},
+   {id:'E8',mailbox:'u:p2',building:null,dir:'in',from:'Dana (CEO)',to:'Alex',subject:'Hamilton Court handover notes',body:'Please send me your handover notes for Hamilton Court by Friday.',date:iso(-2),status:'New'},
    {id:'E9',mailbox:'u:c1',building:null,dir:'in',from:'PHM Group',to:'Dana',subject:'Quarterly figures due',body:'Quarterly figures for the UK companies are due on the 30th.',date:iso(-3),status:'New'},
-   {id:'E10',mailbox:'u:a1',building:null,dir:'in',from:'Dana (CEO)',to:'Marc',subject:'Platform access for new starters',body:'Two new property managers start next month. Please set up their access.',date:iso(-1),status:'New'},
+   {id:'E10',mailbox:'u:a1',building:null,dir:'in',from:'Dana (CEO)',to:'Marc',subject:'Platform access for new starters',body:'Two new key client managers start next month. Please set up their access.',date:iso(-1),status:'New'},
    {id:'E11',mailbox:'u:a2',building:null,dir:'in',from:'Dana (CEO)',to:'Naim',subject:'Demo for the PHM board',body:'Can we show the platform to the PHM board next week? Please pick a time.',date:iso(-1),status:'New'}],
   mytasks:[{id:'M1',owner:'p1',title:'Prepare monthly portfolio update for Dana',due:iso(3),done:false,source:'From email: Monthly portfolio review',notes:[],createdAt:new Date(Date.now()-864e5).toISOString()}],
   inspections:[],
-  notes:[{id:'N1',to:'a2',from:'p1',text:'Morgan (Property Manager) asked you to approve £8,400 from Northway Lifts at Saffron Square.',at:new Date(Date.now()-2*36e5).toISOString(),read:false,inv:'INV301'}],
+  notes:[{id:'N1',to:'c1',from:'p1',text:'Kadri (Key Client Manager) asked you to approve £8,400 from Northway Lifts at Saffron Square.',at:new Date(Date.now()-2*36e5).toISOString(),read:false,inv:'INV301'}],
   requests:[],sync:[],accver:[]};
 }
-function load(){try{const s=JSON.parse(localStorage.getItem(KEY));if(s&&s.v===6){KINDS.forEach(k=>s[k]=s[k]||[]);return s}}catch(e){}return mkSeed()}
+function load(){try{const s=JSON.parse(localStorage.getItem(KEY));if(s&&s.v===6){KINDS.forEach(k=>s[k]=s[k]||[]);if(!s.contractors.length)s.contractors=seedCons();if(!s.clients.length)s.clients=seedClients();return s}}catch(e){}return mkSeed()}
 const recKey=(k,x)=>k+':'+(k==='buildings'?x.name:x.id);
 const allRecs=()=>KINDS.flatMap(k=>(db[k]||[]).map(x=>[recKey(k,x),k,x]));
 function takeSnap(){snap=new Map(allRecs().map(([key,,x])=>[key,JSON.stringify(x)]))}
@@ -707,18 +736,27 @@ let db=load(),uid=readSession(),view={page:'portfolio',b:NAMES[0],tab:'Overview'
 const $=id=>document.getElementById(id);
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const me=()=>users.find(x=>x.id===uid);
-const isTop=()=>me().role==='ceo'||me().role==='admin';
-const staff=()=>isTop()||me().role==='pm';
+const isTop=()=>['ceo','senior','admin'].includes(me().role);
+const staff=()=>isTop()||me().role==='kcm';
 const timeGreet=()=>{const h=new Date().getHours();return h<12?'Good morning':h<18?'Good afternoon':'Good evening'};
 const hello=()=>staff()?`Hello ${me().short}! Ready to work?`:`Hello ${me().short}! Welcome home.`;
 /* What a resident may see: tenants only "All residents"; leaseholders also "Leaseholders only" */
 const resVis=t=>t.visibility==='Residents'||(t.visibility==='Leaseholders'&&me().role==='leaseholder');
-const myB=()=>isTop()?db.buildings:db.buildings.filter(b=>me().role==='pm'?me().buildings.includes(b.name):b.name===me().building);
+const myB=()=>isTop()?db.buildings:db.buildings.filter(b=>me().role==='kcm'?b.manager===me().short:b.name===me().building);
 const canSee=n=>myB().some(b=>b.name===n);
 const B=()=>db.buildings.find(b=>b.name===view.b);
 const fmtDate=d=>d?new Date(d+'T00:00:00').toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'}):'Not recorded';
+const PERS=[['7','Last 7 days'],['30','Last 30 days'],['90','Last 90 days'],['365','Last 12 months'],['all','All time']];
+const perNow=()=>{let v=ui.per;if(!v){try{v=sessionStorage.getItem('jfm_per')}catch(e){}}return PERS.some(x=>x[0]===v)?v:'30'};
+const perName=()=>PERS.find(x=>x[0]===perNow())[1];
+const perFrom=()=>perNow()==='all'?null:iso(-Number(perNow()));
+const inPer=d=>{const f=perFrom();return !f||!d||String(d).slice(0,10)>=f};
+const invDate=v=>v.date||(v.requestedAt||'').slice(0,10)||(v.decidedAt||'').slice(0,10)||'';
+const perBar=note=>`<div class="perbar"><label for="perSel">Period</label><select id="perSel">${PERS.map(([v,l])=>`<option value="${v}" ${v===perNow()?'selected':''}>${l}</option>`).join('')}</select><span class="muted small">${note}</span></div>`;
+const perEmpty=what=>`<p class="muted">No ${what} in the ${perName().toLowerCase()}. Choose a longer period to see more.</p>`;
 const money=n=>new Intl.NumberFormat('en-GB',{style:'currency',currency:'GBP',maximumFractionDigits:0}).format(n);
 const sum=(a,f)=>a.reduce((s,x)=>s+f(x),0);
+const compIn=c=>{const s=compStatus(c);return perNow()==='all'||s==='Overdue'||s==='Missing'||c.due<=iso(Number(perNow()))};
 const compStatus=c=>!c.due?'Missing':c.due<today()?'Overdue':c.due<=iso(30)?'Due soon':'Valid';
 const late=t=>t.stage<4&&t.due<today();
 const tasksOf=b=>db.tasks.filter(t=>t.building===b.name);
@@ -790,7 +828,7 @@ function pagePortfolio(){
  return `<div class="grid four">${tile('Buildings',bs.length)}${tile('Units',sum(bs,b=>b.units))}${tile('Open works',sum(bs,b=>openT(b).length))}${tile('Arrears',money(sum(bs,arrears)))}</div>
  ${isTop()?`<div class="panel"><h3>Awaiting your decision</h3>${ceoInv.map(invRow).join('')||`<p class="muted">Nothing waiting. Invoices above ${money(LIMIT)} that are tagged to you come here.</p>`}</div>`:''}
  <div class="panel"><h3>Needs attention</h3>${attentionList(bs,8)}</div>
- <div class="panel"><div class="flex"><h3>${isTop()?'All buildings':'My buildings'}</h3><span class="tags">${dlBtn('xAccAll',null,'All accounts, Excel')}${dlBtn('pCompAll',null,'All compliance, PDF')}</span></div><div class="tablewrap"><table><thead><tr><th>Building</th><th>Manager</th><th class="num">Units</th><th class="num">Open works</th><th class="num">Arrears</th><th>Compliance</th><th class="num">To action</th></tr></thead><tbody>
+ ${perBar('Applies to the account and compliance downloads below.')}<div class="panel"><div class="flex"><h3>${isTop()?'All buildings':'My buildings'}</h3><span class="tags">${dlBtn('xTasksAll',null,'All tasks, Excel')}${dlBtn('xAccAll',null,'All accounts, Excel')}${dlBtn('pCompAll',null,'All compliance, PDF')}</span></div><div class="tablewrap"><table><thead><tr><th>Building</th><th>Key client manager</th><th class="num">Units</th><th class="num">Open works</th><th class="num">Arrears</th><th>Compliance</th><th class="num">To action</th></tr></thead><tbody>
  ${bs.map(b=>{const c=compBad(b).length;return `<tr><td><button class="btn link" data-act="openB" data-id="${esc(b.name)}">${esc(b.name)}</button></td><td>${esc(b.manager)}</td><td class="num">${b.units}</td><td class="num">${openT(b).length}</td><td class="num">${money(arrears(b))}</td><td>${c?pill(c+' to fix','crit'):pill('In date','good')}</td><td class="num">${attention(b)}</td></tr>`}).join('')}
  </tbody></table></div></div>`;
 }
@@ -800,8 +838,9 @@ function mailRow(e){
  <div class="acts">${e.dir==='in'&&e.status==='New'?`<button class="btn" data-act="mailTask" data-id="${e.id}">${e.building?'Create building task':'Add to my tasks'}</button><button class="btn light" data-act="mailReply" data-id="${e.id}">Reply</button><button class="btn light" data-act="mailDone" data-id="${e.id}">Mark done</button>`:''}${e.status==='Draft'?`<button class="btn" data-act="sendDraft" data-id="${e.id}">Send</button>`:''}</div></div>`;
 }
 function inboxLayout(box,title,addr,sub,composeHtml){
- const recv=db.emails.filter(e=>e.mailbox===box&&e.dir==='in').sort((a,b)=>(a.status==='New'?0:1)-(b.status==='New'?0:1)||b.date.localeCompare(a.date));
- const sent=db.emails.filter(e=>e.mailbox===box&&e.dir==='out').sort((a,z)=>z.date.localeCompare(a.date)||z.id.localeCompare(a.id));
+ const pf=box.startsWith('b:')?(e=>e.status==='New'||inPer(e.date)):(()=>true);
+ const recv=db.emails.filter(e=>e.mailbox===box&&e.dir==='in'&&pf(e)).sort((a,b)=>(a.status==='New'?0:1)-(b.status==='New'?0:1)||b.date.localeCompare(a.date));
+ const sent=db.emails.filter(e=>e.mailbox===box&&e.dir==='out'&&pf(e)).sort((a,z)=>z.date.localeCompare(a.date)||z.id.localeCompare(a.id));
  const n=recv.filter(e=>e.status==='New').length;
  return `<div class="panel mailhead"><div class="flex"><span><span class="muted small">${esc(title)}</span><br><b class="addr">${esc(addr)}</b></span>${pill(n?n+' new':'All read',n?'warn':'good')}</div><p class="muted small" style="margin:6px 0 0">${sub}</p></div>
  <div class="grid"><div class="panel"><h3>Received</h3>${recv.map(mailRow).join('')||'<p class="muted">Inbox clear</p>'}</div>
@@ -995,7 +1034,9 @@ function pageMyTasks(){
   meta:[t.remind&&!t.done?`<span class="rem">${ico('bell')} ${t.reminded?'Reminded':esc(fmtRem(t.remind))}</span>`:'',t.source?esc(t.source):'',n?n+' note'+(n===1?'':'s'):''].filter(Boolean).join(' · '),
   extra:`${t.body?`<details><summary>Email text</summary><pre>${esc(t.body)}</pre></details>`:''}<details class="ntd" data-nid="${t.id}" ${ui.openNotes===t.id?'open':''}><summary>${n?'Notes ('+n+')':'Add a note'}</summary>${notesHtml(t.notes)}${noteForm('my',t.id)}</details>${t.done&&t.doneAt?`<p class="small muted">Done ${esc(when(t.doneAt))}</p>`:''}`})};
  const quick=[['Today','0'],['Tomorrow','1'],['Next week','7'],['','pick']],dueLbl=d=>d!=='pick'?'':ui.myDue==='pick'&&ui.myDueDate?esc(shortDate(ui.myDueDate)):`Pick a date${ui.myDueLast?`<small>Last: ${esc(shortDate(ui.myDueLast))}</small>`:''}`;
- return `<div class="panel"><div class="flex"><h3>My tasks</h3>${pill(open.length?open.length+' to do':'All done','good')}</div><p class="muted small">Only you can see these. Tap the circle when a task is done.</p>
+ const asg=db.tasks.filter(t=>t.assign&&t.assign.to===uid&&t.stage<4&&['Accepted','Pending'].includes(t.assign.status)&&!(t.assign.from===uid&&t.assign.status==='Accepted'));
+ const asgHtml=asg.length?`<div class="grp"><p class="grph">Assigned to me <span>${asg.length}</span></p>${asg.map(t=>card({id:t.id,title:t.title,done:false,due:t.due,act:'bDone',canTick:canWork(t),meta:esc(t.building)+' · From '+esc(nameOf(t.assign.from))+' '+asgPill(t),extra:`${t.assign.note?`<p class="small"><b>Note:</b> ${esc(t.assign.note)}</p>`:''}${t.assign.status==='Pending'?`<div class="acts"><button class="btn yes sm" data-act="popAccept" data-id="${t.id}">Accept</button><button class="btn no sm" data-act="popDecline" data-id="${t.id}">Decline</button></div>`:''}`})).join('')}</div>`:'';
+ return asgHtml+`<div class="panel"><div class="flex"><h3>My tasks</h3>${pill(open.length?open.length+' to do':'All done','good')}</div><p class="muted small">Only you can see these. Tap the circle when a task is done. Tasks colleagues send you are listed above.</p>
  <div class="addrow"><input id="myTitle" placeholder="Add a task, e.g. Call the lift engineer" aria-label="New task"><button class="btn" data-act="myAdd">Add</button></div>
  <div class="quick" role="radiogroup" aria-label="Due">${quick.map(([l,d])=>`<button role="radio" aria-checked="${String(ui.myDue??7)===d}" data-act="myDueSet" data-id="${d}">${d==='pick'?dueLbl(d):l}</button>`).join('')}</div></div>
  ${open.length?groups.map(([g,f])=>{const l=open.filter(f);return l.length?`<div class="grp"><p class="grph ${g==='Overdue'?'late':''}">${g} <span>${l.length}</span></p>${l.map(row).join('')}</div>`:''}).join(''):'<div class="panel"><p class="muted">Nothing to do. Add a task above, or turn an email into one from your Inbox.</p></div>'}
@@ -1028,9 +1069,9 @@ function taskRow(t,sel){
  const done=t.stage===4,n=(t.notes||[]).length;
  const meta=[esc(STAGES[t.stage]),t.priority==='Critical'||t.priority==='High'?`<b class="${t.priority==='Critical'?'crit':'hi'}">${t.priority} priority</b>`:'',n?n+' note'+(n===1?'':'s'):''].filter(Boolean).join(' · ');
  const extra=`<div class="bar slim"><span style="width:${PCT[t.stage]}%"></span></div>${t.updatedAt?`<p class="small stamp">${stamp(t)}</p>`:''}<div class="tkfoot"><span class="small muted">${t.id} · ${esc(t.category)} · ${esc(VISL[t.visibility]||t.visibility)}</span><button class="btn light sm" data-act="pickTask" data-id="${t.id}">${sel?'Showing details':'Details'}</button></div>`;
- return card({id:t.id,title:t.title,done,due:t.due,act:'bDone',meta,extra,sel,flag:t.priority==='Critical'&&!done?'crit':'',canTick:staff()&&canSee(t.building)});
+ return card({id:t.id,title:t.title,done,due:t.due,act:'bDone',meta:meta+(t.assign?' '+asgPill(t):''),extra,sel,flag:t.priority==='Critical'&&!done?'crit':'',canTick:staff()&&canWork(t)});
 }
-const ROLE={ceo:'CEO',admin:'Master Admin',pm:'Property Manager',leaseholder:'Leaseholder',tenant:'Tenant'};
+const ROLE={ceo:'CEO',senior:'Senior Manager',kcm:'Key Client Manager',admin:'Master Admin',leaseholder:'Leaseholder',tenant:'Tenant'};
 const posOf=id=>{const u=users.find(x=>x.id===id);return u?ROLE[u.role]:''};
 /* Name with position, e.g. Dana (CEO) */
 const nameOf=id=>{const u=users.find(x=>x.id===id);return u?`${u.short} (${ROLE[u.role]})`:'someone'};
@@ -1038,7 +1079,7 @@ const NOTE_MAX=140;
 function notesHtml(list){return (list||[]).map(n=>`<div class="nt"><b>${esc(n.by)}</b> ${esc(n.text)}<span class="muted small"> · ${esc(when(n.at))}${n.tag?' · '+esc(n.tag):''}</span></div>`).join('')}
 function noteInput(id,label,ph){return `<label for="${id}">${label}</label><input id="${id}" maxlength="${NOTE_MAX}" data-count="${id}_c" placeholder="${ph||'Short note'}" autocomplete="off"><p class="small muted ntcount"><span id="${id}_c">0/${NOTE_MAX}</span> characters</p>`}
 function noteForm(kind,id){const f='nf_'+id;return `<div class="ntform">${noteInput(f,'Add a note','Short note for anyone who can see this')}<div class="flex"><span class="small muted">${kind==='my'?'Only you can see this task and its notes.':'Everyone who can see this '+(kind==='task'?'task':'approval')+' can read its notes.'}</span><button class="btn light" data-act="addNote" data-id="${id}" data-x="${kind}">Add note</button></div></div>`}
-const approvers=()=>users.filter(u=>u.role==='ceo'||u.role==='admin');
+const approvers=()=>users.filter(u=>u.role==='ceo'||u.role==='senior');
 const canDecide=v=>v.amount>LIMIT&&((v.status==='Awaiting decision'&&v.approver===uid)||(v.status==='Awaiting approval'&&isTop()));
 function histBlock(x){return histCount(x)?`<details class="ntd"><summary>History (${histCount(x)})</summary>${histHtml(x.history)}</details>`:''}
 function notesBlock(x,kind){const n=(x.notes||[]).length;return `<details class="ntd" data-nid="${x.id}" ${ui.openNotes===x.id?'open':''}><summary>${n?'Notes ('+n+')':'Add a note'}</summary>${notesHtml(x.notes)}${staff()&&canSee(x.building)?noteForm(kind,x.id):''}</details>`}
@@ -1048,7 +1089,7 @@ function invRow(v){
  if(canDecide(v))act=`<button class="btn" data-act="decide" data-id="${v.id}">Decide</button>`;
  else if(v.status==='Awaiting approval')act=big?`<button class="btn" data-act="askApproval" data-id="${v.id}">Send for approval</button>`:`<button class="btn" data-act="approveInv" data-id="${v.id}">Approve</button>`;
  const who=v.decidedBy?`${v.status} by ${esc(v.decidedBy)} ${when(v.decidedAt)}`:v.requestedBy?`Requested by ${esc(nameOf(v.requestedBy))} ${when(v.requestedAt)}`:'';
- return `<div class="row flex"><span><b>${esc(v.supplier)}</b> · ${money(v.amount)}<br><span class="muted small">${v.id} · ${esc(v.building)} · ${esc(v.desc)} · ${esc(v.head)}</span>${who?`<br><span class="small stamp">${who}</span>`:''}${notesBlock(v,'inv')}${histBlock(v)}</span><span class="tags">${pill(label,v.status==='Approved'?'good':v.status==='Rejected'?'crit':'warn')}${act}</span></div>`;
+ return `<div class="row flex"><span><b>${esc(v.supplier)}</b> · ${money(v.amount)}<br><span class="muted small">${v.id}${v.po?' · '+esc(v.po):''} · ${invDate(v)?fmtDate(invDate(v))+' · ':''}${esc(v.building)} · ${esc(v.desc)} · ${esc(v.head)}</span>${who?`<br><span class="small stamp">${who}</span>`:''}${notesBlock(v,'inv')}${histBlock(v)}</span><span class="tags">${pill(label,v.status==='Approved'||v.status==='Paid'?'good':v.status==='Rejected'?'crit':'warn')}${act}</span></div>`;
 }
 /* ---------- site inspection ---------- */
 const SOP_NAME='Standard site inspection SOP, version 1';
@@ -1115,7 +1156,7 @@ const TAB={
  const act=db.sync.filter(s=>s.building===b.name).slice(0,5);
  return `<div class="grid four">${tile('Units',b.units)}${tile('Open works',openT(b).length)}${tile('Arrears',money(arrears(b)))}${tile('Reserve fund',money(b.reserve))}</div>
  <div class="grid"><div class="panel"><h3>Needs attention</h3>${attentionList([b],10)}</div>
- <div class="panel"><h3>Building facts</h3><p><b>Manager:</b> ${esc(b.manager)}</p><p><b>Service charge year end:</b> ${esc(b.yearEnd)}</p><p><b>Annual budget:</b> ${money(sum(b.budget,x=>x.budget))}</p><p><b>Last site inspection:</b> ${(()=>{const l=inspDone(b)[0];return l?esc(when(l.completedAt))+' by '+esc(l.completedBy):'None recorded'})()}${inspOpen(b)?' · '+pill('One in progress','warn'):''}</p><p><b>Open legal matters:</b> ${db.legal.filter(l=>l.building===b.name&&LSTAGEOF(l)[l.stage]!=='Closed').length}</p>
+ <div class="panel"><h3>Building facts</h3>${(()=>{const c=clientOf(b.name);return c?`<p><b>Client:</b> ${isTop()?`<button class="btn link" data-act="openClient" data-id="${c.id}">${esc(c.name)}</button>`:esc(c.name)}</p>`:''})()}<p><b>Key client manager:</b> ${isTop()?`<select data-kcm="${esc(b.name)}" aria-label="Key client manager" style="width:auto;display:inline-block;margin:0 0 0 6px"><option value="">Not assigned</option>${users.filter(u=>u.role==='kcm').map(u=>`<option ${b.manager===u.short?'selected':''} value="${esc(u.short)}">${esc(u.short)}</option>`).join('')}</select>`:esc(b.manager||'Not assigned')}</p><p><b>Service charge year end:</b> ${esc(b.yearEnd)}</p><p><b>Annual budget:</b> ${money(sum(b.budget,x=>x.budget))}</p><p><b>Last site inspection:</b> ${(()=>{const l=inspDone(b)[0];return l?esc(when(l.completedAt))+' by '+esc(l.completedBy):'None recorded'})()}${inspOpen(b)?' · '+pill('One in progress','warn'):''}</p><p><b>Open legal matters:</b> ${db.legal.filter(l=>l.building===b.name&&LSTAGEOF(l)[l.stage]!=='Closed').length}</p>
  <h3 style="margin-top:14px">Latest activity</h3>${act.map(s=>`<p class="small">${pill(s.system)} ${esc(s.text)}</p>`).join('')||'<p class="muted small">No activity yet</p>'}</div></div>`;
 },
 'Works'(b){
@@ -1126,6 +1167,8 @@ const TAB={
   <div class="note"><b>Internal:</b> ${esc(t.internal)}</div>
   <h3 style="margin-top:14px">History (${histCount(t)})</h3><div class="histbox">${histHtml(t.history)}</div>
   <h3 style="margin-top:14px">Notes${(t.notes||[]).length?' ('+t.notes.length+')':''}</h3>${notesHtml(t.notes)||'<p class="muted small">No notes yet</p>'}${noteForm('task',t.id)}
+  ${asgBlock(t)}
+  ${poBlock(t)}
   <h3 style="margin-top:14px">Update once</h3>
   <label for="uStage">Stage</label><select id="uStage">${STAGES.map((s,i)=>`<option value="${i}" ${i===t.stage?'selected':''}>${s}</option>`).join('')}</select>
   <label for="uMsg">Message residents will read</label><textarea id="uMsg">${esc(t.description)}</textarea>
@@ -1135,21 +1178,22 @@ const TAB={
   <label class="check"><input type="checkbox" id="uMail"> Email all leaseholders through Outlook</label>
   <p><button class="btn" data-act="updateAll" data-id="${t.id}">Update everywhere</button></p>`;}
  return `${reqs.length?`<div class="panel"><h3>Reported by residents</h3>${reqs.map(r=>`<div class="row"><b>${esc(r.category)} · ${esc(r.location)}</b><p>${esc(r.body)}</p><div class="acts"><button class="btn" data-act="convertReq" data-id="${r.id}">Convert to task</button><button class="btn light" data-act="closeReq" data-id="${r.id}">Close</button></div></div>`).join('')}</div>`:''}
- <div class="grid"><div class="panel"><div class="flex"><h3>Works and tasks</h3><button class="btn light" data-act="form" data-id="task">${ui.form==='task'?'Cancel':'New task'}</button></div>
+ <div class="grid"><div class="panel"><div class="flex"><h3>Works and tasks</h3><span class="tags">${dlBtn('xTasks',null,'Excel')}<button class="btn light" data-act="form" data-id="task">${ui.form==='task'?'Cancel':'New task'}</button></span></div>
  ${ui.form==='task'?ntFormHtml(b):''}
- ${list.filter(x=>x.stage<4).map(x=>taskRow(x,t&&x.id===t.id)).join('')||'<p class="muted">No open works. Nice work.</p>'}${(c=>c.length?`<details class="donegrp"><summary>Completed (${c.length})</summary>${c.map(x=>taskRow(x,t&&x.id===t.id)).join('')}</details>`:'')(list.filter(x=>x.stage===4))}</div><div class="panel">${d}</div></div>`;
+ ${list.filter(x=>x.stage<4).map(x=>taskRow(x,t&&x.id===t.id)).join('')||'<p class="muted">No open works. Nice work.</p>'}${(c=>c.length?`<details class="donegrp"><summary>Completed (${c.length})</summary>${c.map(x=>taskRow(x,t&&x.id===t.id)).join('')}</details>`:'')(list.filter(x=>x.stage===4&&inPer(x.updatedAt||((x.history||[]).slice(-1)[0]||{}).at||x.due)))}</div><div class="panel">${d}</div></div>`;
 },
 'Accounts'(b){
- const bud=sum(b.budget,x=>x.budget),act=sum(b.budget,x=>x.actual),inv=db.invoices.filter(v=>v.building===b.name),ar=b.unitsList.filter(x=>x.balance>0);
- return `<div class="acclay"><div class="accmain"><div class="grid four">${tile('Annual budget',money(bud))}${tile('Spent to date',money(act))}${tile('Reserve fund',money(b.reserve))}${tile('Arrears',money(arrears(b)))}</div>
+ const bud=sum(b.budget,x=>x.budget),act=sum(b.budget,x=>x.actual),inv=db.invoices.filter(v=>v.building===b.name&&inPer(invDate(v))),ar=b.unitsList.filter(x=>x.balance>0);
+ return `<div class="acclay"><div class="accmain"><div class="grid four">${tile('Annual budget',money(bud))}${tile('Spent to date',money(act))}${tile('Committed on orders',money(committed([b])))}${tile('Arrears',money(arrears(b)))}</div>
  <div class="panel"><div class="flex"><h3>Service charge budget</h3><span class="tags">${pill(accVers(b.name).length?'Version '+accLatestN(b.name):'Source: Blockman')}${dlBtn('xAcc',null,'Download accounts, Excel')}${ok(b.name)?`<label class="btn light dlup">${ico('up')} Upload Excel<input type="file" accept=".xlsx,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" data-accfile="1"></label>`:''}</span></div><div class="tablewrap"><table><thead><tr><th>Heading</th><th class="num">Budget</th><th class="num">Actual</th><th>Used</th></tr></thead><tbody>
  ${b.budget.map(x=>{const p=Math.round(x.actual/x.budget*100);return `<tr><td>${esc(x.head)}</td><td class="num">${money(x.budget)}</td><td class="num">${money(x.actual)}</td><td><div class="bar"><span class="${p>100?'over':''}" style="width:${Math.min(100,p)}%"></span></div><span class="small ${p>100?'':'muted'}">${p}%${p>100?' over budget':''}</span></td></tr>`}).join('')}</tbody></table></div></div>
- <div class="grid"><div class="panel"><h3>Supplier invoices</h3><p class="muted small">Managers approve up to ${money(LIMIT)}. Anything above is sent to a named approver.</p>${inv.map(invRow).join('')||'<p class="muted">No invoices</p>'}</div>
+ <div class="grid"><div class="panel"><h3>Supplier invoices</h3><p class="small"><b>${inv.length} invoice${inv.length===1?'':'s'}, ${money(sum(inv,v=>v.amount))}</b> in the ${perName().toLowerCase()}</p><p class="muted small">Managers approve up to ${money(LIMIT)}. Anything above is sent to a named approver.</p>${inv.map(invRow).join('')||perEmpty('invoices')}</div>
+ <div class="panel"><div class="flex"><h3>Purchase orders</h3>${pill(money(committed([b]))+' committed')}</div><p class="muted small">Raise orders from a task in Works. Orders in the chosen period.</p>${(db.pos||[]).filter(p=>p.building===b.name&&inPer(p.raisedAt)).slice().reverse().map(poRow).join('')||perEmpty('purchase orders')}</div>
  <div class="panel"><h3>Arrears</h3>${ar.map(x=>`<div class="row flex"><span><b>Flat ${esc(x.unit)}, ${esc(x.leaseholder)}</b><br><span class="muted small">${money(x.balance)} outstanding</span></span><button class="btn light" data-act="remind" data-id="${esc(x.unit)}">Draft reminder</button></div>`).join('')||'<p class="muted">No arrears</p>'}</div></div></div>${accHistHtml(b)}</div>`;
 },
 'Compliance'(b){
  return `<div class="panel"><div class="flex"><h3>Compliance register</h3>${dlBtn('pComp',null,'Download PDF')}</div><div class="tablewrap"><table><thead><tr><th>Item</th><th>Next due</th><th>Status</th><th></th></tr></thead><tbody>
- ${b.compliance.map((c,i)=>{const s=compStatus(c);return `<tr><td>${esc(c.item)}${histBlock(c)}</td><td>${fmtDate(c.due)}</td><td>${pill(s,s==='Valid'?'good':s==='Due soon'?'warn':'crit')}</td><td><div class="acts" style="margin:0">${s!=='Valid'?`<button class="btn light" data-act="compTask" data-id="${i}">Create task</button>`:''}<button class="btn light" data-act="compRenew" data-id="${i}">Record renewal</button></div></td></tr>`}).join('')}</tbody></table></div></div>`;
+ ${b.compliance.map((c,i)=>{const s=compStatus(c);if(!compIn(c))return '';return `<tr><td>${esc(c.item)}${histBlock(c)}</td><td>${fmtDate(c.due)}</td><td>${pill(s,s==='Valid'?'good':s==='Due soon'?'warn':'crit')}</td><td><div class="acts" style="margin:0">${s!=='Valid'?`<button class="btn light" data-act="compTask" data-id="${i}">Create task</button>`:''}<button class="btn light" data-act="compRenew" data-id="${i}">Record renewal</button></div></td></tr>`}).join('')}</tbody></table></div></div>`;
 },
 'Legal'(b){
  const list=db.legal.filter(l=>l.building===b.name);
@@ -1164,13 +1208,13 @@ const TAB={
  ${b.unitsList.map(x=>`<tr data-s="${esc(('flat '+x.unit+' '+x.leaseholder+' '+x.tenant).toLowerCase())}"><td>Flat ${esc(x.unit)}</td><td>${esc(x.leaseholder)}</td><td>${esc(x.tenant)||'<span class="muted">Owner occupied</span>'}</td><td class="num">${x.balance?pill(money(x.balance),'warn'):money(0)}</td></tr>`).join('')}</tbody></table></div></div>`;
 },
 'Documents'(b){
- const list=db.docs.filter(d=>d.building===b.name);
+ const list=db.docs.filter(d=>d.building===b.name&&inPer(d.date));
  return `<div class="panel"><div class="flex"><h3>Documents</h3><span class="tags">${dlBtn('pDocs',null,'Download PDF')}<button class="btn light" data-act="form" data-id="doc">${ui.form==='doc'?'Cancel':'Add record'}</button></span></div>
  ${ui.form==='doc'?`<div class="note"><label for="dcName">Name</label><input id="dcName"><div class="form2"><div><label for="dcCat">Category</label><select id="dcCat">${opts(['Leases','Insurance','Certificates','Budgets','Minutes','Legal','General'])}</select></div><div><label for="dcVis">Who can see it</label><select id="dcVis">${opts(['Staff','Leaseholders','All residents'])}</select></div></div><button class="btn" data-act="addDoc">Save record</button> <span class="small muted">File upload needs the live build.</span></div>`:''}
- ${list.map(d=>`<div class="row flex"><span><b>${esc(d.name)}</b><br><span class="muted small">${esc(d.cat)} · ${fmtDate(d.date)}</span></span>${pill(d.vis,d.vis==='Staff'?'warn':'')}</div>`).join('')}</div>`;
+ ${list.map(d=>`<div class="row flex"><span><b>${esc(d.name)}</b><br><span class="muted small">${esc(d.cat)} · ${fmtDate(d.date)}</span></span>${pill(d.vis,d.vis==='Staff'?'warn':'')}</div>`).join('')||perEmpty('documents')}</div>`;
 },
 'Site inspection'(b){
- const cur=inspOpen(b),past=inspDone(b);
+ const cur=inspOpen(b),past=inspDone(b).filter(i=>inPer(i.completedAt));
  let main;
  if(!cur){
   main=`<div class="panel"><div class="flex"><h3>Site inspection</h3>${pill(SOP_NAME)}</div>
@@ -1196,10 +1240,10 @@ const TAB={
   <p class="small stamp">Completed by ${esc(i.completedBy)} ${esc(when(i.completedAt))}${i.startedBy!==i.completedBy?' · started by '+esc(i.startedBy):''}</p>
   <p class="muted small">Works updated: ${(r.raised||[]).length} raised, ${(r.updated||[]).length} updated, ${(r.closed||[]).length} closed</p>
   <div class="recrow"><details><summary>Full record</summary>${SOP_ITEMS.map(x=>{const it=i.items[x.key]||{};return `<div class="ins ${it.st||''}"><div class="flex"><b>${esc(x.label)}</b>${pill(it.st==='ok'?'OK':it.st==='issue'?'Issue':'N/A',it.st==='ok'?'good':it.st==='issue'?'crit':'')}</div>${it.note?`<p class="small">${esc(it.note)}</p>`:''}${it.by?`<p class="small muted">${esc(it.by)} · ${esc(when(it.at))}</p>`:''}${mediaHtml(it.media,false)}</div>`}).join('')}</details>${dlBtn('xInsp',i.id,'Download Excel')}</div></div>`}).join('');
- return main+`<div class="panel"><div class="flex"><h3>Inspection records</h3>${past.length?dlBtn('xInspAll',null,'All inspections, Excel'):''}</div>${hist||'<p class="muted">No inspections recorded yet.</p>'}</div>`;
+ return main+`<div class="panel"><div class="flex"><h3>Inspection records</h3>${past.length?dlBtn('xInspAll',null,'All inspections, Excel'):''}</div>${hist||(inspDone(b).length?perEmpty('inspections'):'<p class="muted">No inspections recorded yet.</p>')}</div>`;
 },
 'History'(b){
- const all=db.sync.filter(x=>x.building===b.name),areas=['All',...new Set(all.map(x=>x.system))],f=areas.includes(ui.hArea)?ui.hArea:'All',list=all.filter(x=>f==='All'||x.system===f);
+ const all=db.sync.filter(x=>x.building===b.name),areas=['All',...new Set(all.map(x=>x.system))],f=areas.includes(ui.hArea)?ui.hArea:'All',list=all.filter(x=>(f==='All'||x.system===f)&&inPer(x.at));
  return `<div class="panel"><div class="flex"><h3>Building history</h3>${pill(all.length+' entries')}</div><p class="muted small">Every change made at ${esc(b.name)}, newest first, with who made it and when.</p>
  <label for="hArea">Show</label><select id="hArea">${opts(areas,f)}</select>
  ${list.length?`<ol class="hist big">${list.map(x=>`<li><span>${pill(x.system)} ${esc(x.text)}</span><span class="muted small">${esc(x.by)} · ${esc(when(x.at))}</span></li>`).join('')}</ol>`:'<p class="muted">Nothing recorded yet. Changes appear here as people work.</p>'}</div>`;
@@ -1213,12 +1257,15 @@ const TAB={
  <div class="acts"><button class="btn" data-act="sendMail">Send</button><button class="btn light" data-act="saveDraft">Save as draft</button></div>`;
  return inboxLayout('b:'+b.name,b.name+' building inbox',bAddr(b.name),'This inbox belongs to the building, not to you. Turning an email into a task adds it to this building\'s Works only.',comp);
 }};
+const PER_NOTE={Works:'Open works always show. Completed works are filtered by when they were finished.',Inbox:'New emails always show.','Site inspection':'Inspection records completed in this period.',Accounts:'Invoices dated in this period. Budget is for the full year and arrears are today\'s balances.',Compliance:'Anything overdue or missing always shows, plus items due within this period.',Documents:'Documents dated in this period.',History:'Changes made in this period.','My account':'Statement entries dated in this period. Your balance is today\'s.'};
+const perFor=t=>PER_NOTE[t]?perBar(PER_NOTE[t]+' Downloads use the same period.'):'';
 const LSTAGEOF=l=>LSTAGE[l.type]||LSTAGE.other;
 const fill=(s,b)=>s.replaceAll('{b}',b).replaceAll('{me}',me().short||me().name);
 
 const canVibrate=()=>'vibrate' in navigator;
 const sw=(k,ic,title,desc,off)=>`<div class="setrow"><span class="sico ic-${ic}">${ico(ic)}</span><span class="grow"><b id="lb_${k}">${title}</b><span class="muted">${desc}</span></span><button class="switch" role="switch" aria-checked="${!off&&prefOn(k)}" aria-labelledby="lb_${k}" data-act="pref" data-id="${k}" ${off?'disabled':''}></button></div>`;
 const ICON={
+ away:'<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>',
  bell:'<path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.9 1.9 0 0 0 3.4 0"/>',
  sound:'<path d="M11 5 6 9H2v6h4l5 4V5z"/><path d="M15.5 8.5a5 5 0 0 1 0 7"/><path d="M19 5a10 10 0 0 1 0 14"/>',
  sun:'<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/>',
@@ -1236,6 +1283,7 @@ const ICON={
  hist:'<path d="M3.5 12a8.5 8.5 0 1 0 2.5-6"/><path d="M3 4v4h4"/><path d="M12 8v4.5l3 2"/>'};
 const ico=(n,c)=>`<svg ${c?`class="${c}" `:''}viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${ICON[n]}</svg>`;
 const SETTINGS={
+ away:{title:'Away and cover',icon:'away',color:'#4f7312',sum:()=>awayOf(uid)?awayTxt(uid):'Not set',body:()=>awayBody()},
  notifications:{title:'Notifications',icon:'bell',color:'#e5484d',sum:()=>'Pop-ups '+(fxOn()?'on':'off'),
   body:()=>`<p class="setgroup">IN-APP</p>${sw('fx','popi','Pop-ups','Show a quick tick when an email is sent or a task is created or completed.')}`},
  sound:{title:'Sound & haptics',icon:'sound',color:'#d6409f',sum:()=>'Sound '+pref('sound')+' · Vibration '+(canVibrate()?pref('haptics'):'not supported'),
@@ -1253,6 +1301,7 @@ function pageSettings(){
 }
 
 /* ---------- resident pages ---------- */
+const stmtLines=(b,x)=>{const half=Math.round(Math.round(sum(b.budget,h=>h.budget)/b.units)/2);return [['2026-04-01','Service charge demand, first half',half,0],['2026-04-14','Payment received, thank you',0,half],['2026-10-01','Service charge demand, second half',half,0],['2026-10-20','Payment received, thank you',0,half-x.balance]]};
 const myUnit=()=>B().unitsList.find(x=>x.unit===me().unit);
 const RES={
 'Home'(b){
@@ -1262,14 +1311,14 @@ const RES={
 },
 'My account'(b){
  const x=myUnit(),annual=Math.round(sum(b.budget,h=>h.budget)/b.units),half=Math.round(annual/2);
- const lines=[['1 Apr 2026','Service charge demand, first half',half,0],['14 Apr 2026','Payment received, thank you',0,half],['1 Oct 2026','Service charge demand, second half',half,0],['20 Oct 2026','Payment received, thank you',0,half-x.balance]];
+ const lines=stmtLines(b,x).filter(l=>inPer(l[0]));
  return `<div class="grid four">${tile('Balance due',money(x.balance))}${tile('Annual charge',money(annual))}${tile('Year end',esc(b.yearEnd))}${tile('Reserve fund',money(b.reserve))}</div>
- <div class="panel"><div class="flex"><h3>Statement, Flat ${esc(x.unit)}</h3>${dlBtn('xMyAcc',null,'Download Excel')}</div><div class="tablewrap"><table><thead><tr><th>Date</th><th>Detail</th><th class="num">Charge</th><th class="num">Paid</th></tr></thead><tbody>${lines.map(l=>`<tr><td>${l[0]}</td><td>${l[1]}</td><td class="num">${l[2]?money(l[2]):''}</td><td class="num">${l[3]?money(l[3]):''}</td></tr>`).join('')}</tbody></table></div></div>
+ <div class="panel"><div class="flex"><h3>Statement, Flat ${esc(x.unit)}</h3>${dlBtn('xMyAcc',null,'Download Excel')}</div><div class="tablewrap"><table><thead><tr><th>Date</th><th>Detail</th><th class="num">Charge</th><th class="num">Paid</th></tr></thead><tbody>${lines.map(l=>`<tr><td>${fmtDate(l[0])}</td><td>${l[1]}</td><td class="num">${l[2]?money(l[2]):''}</td><td class="num">${l[3]?money(l[3]):''}</td></tr>`).join('')||`<tr><td colspan="4" class="muted">No entries in the ${perName().toLowerCase()}. Choose a longer period to see more.</td></tr>`}</tbody></table></div></div>
  <div class="panel"><h3>Where your service charge goes</h3><div class="tablewrap"><table><thead><tr><th>Heading</th><th class="num">Building budget</th><th class="num">Your share</th></tr></thead><tbody>${b.budget.map(h=>`<tr><td>${esc(h.head)}</td><td class="num">${money(h.budget)}</td><td class="num">${money(Math.round(h.budget/b.units))}</td></tr>`).join('')}</tbody></table></div></div>`;
 },
 'Documents'(b){
  const ok=me().role==='leaseholder'?['All residents','Leaseholders']:['All residents'];
- return `<div class="panel"><div class="flex"><h3>Building documents</h3>${dlBtn('pDocs',null,'Download PDF')}</div>${db.docs.filter(d=>d.building===b.name&&ok.includes(d.vis)).map(d=>`<div class="row flex"><span><b>${esc(d.name)}</b><br><span class="muted small">${esc(d.cat)} · ${fmtDate(d.date)}</span></span>${pill('Demo record')}</div>`).join('')}</div>`;
+ return `<div class="panel"><div class="flex"><h3>Building documents</h3>${dlBtn('pDocs',null,'Download PDF')}</div>${(l=>l.length?l:null)(db.docs.filter(d=>d.building===b.name&&ok.includes(d.vis)&&inPer(d.date)))?.map(d=>`<div class="row flex"><span><b>${esc(d.name)}</b><br><span class="muted small">${esc(d.cat)} · ${fmtDate(d.date)}</span></span>${pill('Demo record')}</div>`).join('')??perEmpty('documents')}</div>`;
 },
 'Report issue'(b){
  const mine=db.requests.filter(r=>r.by===uid);
@@ -1304,7 +1353,7 @@ function finishInsp(bn,iid){
   });
   Object.assign(i,{status:'Completed',completedBy:nameOf(uid),completedById:uid,completedAt:now,result:r});
   sync('Site inspection',`Inspection completed by ${nameOf(uid)}: ${r.raised.length} tasks raised, ${r.updated.length} updated, ${r.closed.length} closed`,b.name);
-  users.filter(u=>u.role==='pm'&&u.id!==uid&&(u.buildings||[]).includes(b.name)).forEach(u=>notify(u.id,`${nameOf(uid)} completed a site inspection at ${b.name}: ${r.raised.length} new task${r.raised.length===1?'':'s'}, ${r.closed.length} closed.`));
+  users.filter(u=>u.role==='kcm'&&u.id!==uid&&b.manager===u.short).forEach(u=>notify(u.id,`${nameOf(uid)} completed a site inspection at ${b.name}: ${r.raised.length} new task${r.raised.length===1?'':'s'}, ${r.closed.length} closed.`));
   save();render();window.scrollTo(0,0);toast(`Inspection saved. ${r.raised.length} raised, ${r.updated.length} updated, ${r.closed.length} closed in ${b.name} works.`);confirmFx('done','Inspection saved');
  }
 function doUpdate(id,v){
@@ -1321,14 +1370,14 @@ function doUpdate(id,v){
   sync('Outlook','Email to '+to+': '+subject,t.building);n++}
  save();render();toast(n?'Saved and pushed to '+n+' place'+(n===1?'':'s'):'Saved in this app only');confirmFx('done',stage===4?'Task done':'Task updated');
 }
-function notify(to,text,inv,read){db.notes.unshift({id:newId('N'),to,from:uid,text,at:new Date().toISOString(),read:!!read,inv:inv||null});db.notes.length=Math.min(db.notes.length,500)}
+function notify(to,text,inv,read,extra){if(!to)return;db.notes.unshift(Object.assign({id:newId('N'),to,from:uid,text,at:new Date().toISOString(),read:!!read,inv:inv||null},extra||{}));db.notes.length=Math.min(db.notes.length,500)}
 function applyDecision(v,yes,note){
  Object.assign(v,{status:yes?'Approved':'Rejected',decidedBy:nameOf(uid),decidedAt:new Date().toISOString(),note:note||''});addHist(v,(yes?'Approved':'Rejected')+(note?': '+note:''));
  if(yes){const h=db.buildings.find(b=>b.name===v.building).budget.find(x=>x.head===v.head);if(h)h.actual+=v.amount;
   sync('Blockman','Invoice '+v.id+' from '+v.supplier+' approved for payment by '+nameOf(uid)+', '+money(v.amount),v.building)}
  else sync('Approvals','Invoice '+v.id+' from '+v.supplier+' rejected by '+nameOf(uid),v.building);
 }
-const myNotes=()=>me()?db.notes.filter(n=>n.to===uid).sort((a,b)=>b.at.localeCompare(a.at)):[];
+const myNotes=()=>me()?db.notes.filter(n=>n.to===uid).sort((a,b)=>((b.urgent&&!b.read)?1:0)-((a.urgent&&!a.read)?1:0)||b.at.localeCompare(a.at)):[];
 function paintBell(){
  const b=$('bell'),p=$('bPanel');if(!me()){b.hidden=true;p.hidden=true;ui.bell=false;return}
  const list=myNotes(),n=list.filter(x=>!x.read).length;
@@ -1336,20 +1385,22 @@ function paintBell(){
  b.setAttribute('aria-label',n?`Notifications, ${n} unread`:'Notifications');b.setAttribute('aria-expanded',!!ui.bell);
  p.hidden=!ui.bell;if(!ui.bell)return;
  p.innerHTML=`<div class="bhead"><b>Notifications</b>${n?'<button class="btn link small" data-act="markAll">Mark all as read</button>':''}</div>`+
-  (list.slice(0,40).map(x=>{const v=x.inv&&db.invoices.find(i=>i.id===x.inv),dec=v&&canDecide(v);
-   return `<button class="ni ${x.read?'':'unread'}" data-act="noteOpen" data-id="${x.id}">${esc(x.text)}<span class="muted">${esc(when(x.at))}</span>${dec?'<span class="go">Decide now ›</span>':''}${x.task?'<span class="go">Open task ›</span>':''}</button>`}).join('')||'<p class="bempty">You have no notifications yet.</p>');
+  (list.slice(0,40).map(x=>{const v=x.inv&&db.invoices.find(i=>i.id===x.inv),dec=v&&canDecide(v),tk=x.task&&db.tasks.find(t=>t.id===x.task),m=tk&&asgNeedsMe(tk);
+   return `<button class="ni ${x.read?'':'unread'} ${x.urgent&&(m||!x.read)?'urgent':''}" data-act="noteOpen" data-id="${x.id}">${x.urgent&&(m||!x.read)?'<span class="urg">Urgent</span>':''}${esc(x.text)}<span class="muted">${esc(when(x.at))}</span>${dec?'<span class="go">Decide now ›</span>':x.po&&(db.pos||[]).some(p=>p.id===x.po&&p.status==='Awaiting approval'&&p.approver===uid)?'<span class="go">Approve or reject ›</span>':m?`<span class="go">${m==='respond'?'Accept or decline':m==='declined'?'Decide what next':m==='date'?'Agree the date':'Reassign now'} ›</span>`:x.task?'<span class="go">Open task ›</span>':''}</button>`}).join('')||'<p class="bempty">You have no notifications yet.</p>');
 }
 function closeBell(){ui.bell=false;paintBell()}
 let cfRun=null,cfCancel=null;
 /* "Check your work" step before anything important happens */
 function askSure(o,run,cancel){cfRun=run;cfCancel=cancel||null;ui.cf=o;paintDlg()}
-function closeDlg(){const c=cfCancel,d=ui.dlg;ui.dlg=null;ui.cf=null;cfRun=null;cfCancel=null;paintDlg();if(c)c();
+function closeDlg(){const c=cfCancel,d=ui.dlg;ui.dlg=null;ui.adlg=null;ui.pdlg=null;ui.cf=null;cfRun=null;cfCancel=null;paintDlg();if(c)c();
  if(d&&d.kind==='cal'&&d.mode==='due'&&!d.picked&&ui.myDue==='pick'){ui.myDue=ui.myDuePrev??7;ui.myDueDate=null;if(view.page==='mytasks')render()}if(!(d&&d.kind)){const b=$('bell');if(b&&!b.hidden)b.focus()}}
 function paintDlg(){
  const box=$('dlg');
  if(ui.cf){const o=ui.cf;
   box.innerHTML=`<div class="dlgback"><div class="dlgbox" role="alertdialog" aria-modal="true" aria-labelledby="dlgT" aria-describedby="dlgD"><p class="cfeye">${o.eyebrow||'Check your work'}</p><h3 id="dlgT">${o.title}</h3><p class="muted" id="dlgD">${o.desc||'Are you sure? Read the details below before you confirm.'}</p>${(o.warn||[]).map(w=>`<div class="pwarn crit">${w}</div>`).join('')}<dl class="cflist">${o.lines.map(([k,v])=>`<dt>${k}</dt><dd>${v}</dd>`).join('')}</dl><div class="choice"><button class="btn light big" data-act="cfNo">Go back</button><button class="btn ${o.tone||''} big" data-act="cfYes">${o.ok}</button></div></div></div>`;
   setTimeout(()=>{const f=box.querySelector('[data-act=cfYes]');if(f)f.focus()},30);return}
+ if(ui.pdlg){const h=poDlgHtml();if(!h){ui.pdlg=null;box.innerHTML='';return}const kv={};['poCon','poScope','poAmt','poHead','poBy','poNote','piRef','piAmt'].forEach(k=>{const e=$(k);if(e)kv[k]=e.value});box.innerHTML=`<div class="dlgback" data-act="dlgOut"><div class="dlgbox wide" role="dialog" aria-modal="true" aria-labelledby="dlgT">${h}</div></div>`;Object.entries(kv).forEach(([k,v])=>{const e=$(k);if(e&&v!=null)e.value=v});return}
+ if(ui.adlg){const h=asgDlgHtml();if(!h){ui.adlg=null;box.innerHTML='';return}const keep=$('asgNote')&&$('asgNote').value;box.innerHTML=`<div class="dlgback" data-act="dlgOut"><div class="dlgbox" role="dialog" aria-modal="true" aria-labelledby="dlgT">${h}</div></div>`;if(keep&&$('asgNote'))$('asgNote').value=keep;setTimeout(()=>{const f=box.querySelector('.choice .btn:last-child, .stack .btn');if(f&&!box.contains(document.activeElement))f.focus()},30);return}
  const d=ui.dlg;if(!d){box.innerHTML='';return}
  if(d.kind&&SHEETS[d.kind]){box.innerHTML=`<div class="dlgback"><div class="dlgbox" role="dialog" aria-modal="true" aria-labelledby="dlgT">${SHEETS[d.kind](d)}</div></div>`;return}
  const v=db.invoices.find(x=>x.id===d.id);if(!v){ui.dlg=null;box.innerHTML='';return}
@@ -1362,7 +1413,7 @@ function paintDlg(){
  setTimeout(()=>{const f=box.querySelector('.choice .btn:last-child, .choice .btn');if(f)f.focus()},30);
 }
 const ACT={
- nav(p){view.page=p;ui.form=null;render()},
+ nav(p){view.page=p;ui.form=null;if(p==='clients')ui.client=null;render()},
  openB(n,x){if(!canSee(n))return;view={page:'building',b:n,tab:x&&TABS.includes(x)?x:'Overview'};ui.form=null;ui.task=null;render();window.scrollTo(0,0)},
  tab(t){if(view.page==='settings'&&!staff())view.page='res';view.tab=t;ui.form=null;render()},
  settings(){view.page='settings';ui.set=null;ui.form=null;render();window.scrollTo(0,0)},
@@ -1372,7 +1423,8 @@ const ACT={
   if(b){b.setAttribute('aria-checked',on);const r=b.closest('.setrow');if(r){r.classList.remove('play');void r.offsetWidth;if(on)r.classList.add('play');setTimeout(()=>r.classList.remove('play'),1000)}}else render();
   if(on&&k==='fx')setTimeout(()=>confirmFx('done','Pop-ups on'),250);else if(on&&k==='sound')chime();else if(on&&k==='haptics')buzz()},
  theme(v){setPref('theme',v);applyPrefs();const g=document.querySelector('.tseg');if(!g)return render();g.dataset.pos=Math.max(0,['system','light','dark'].indexOf(v));g.querySelectorAll('button').forEach(b=>b.setAttribute('aria-checked',b.dataset.id===v))},
- signOut(){writeSession(null);uid=null;compose=null;showLogin(true)},
+ asBack(){const r=realId();if(r)viewAs(r)},
+ signOut(){try{sessionStorage.removeItem(REAL)}catch(e){}writeSession(null);uid=null;compose=null;showLogin(true)},
  reset(){
   if(live&&!isTop())return toast('Only a master admin or the CEO can reset shared data.');
   const b=$('resetBtn');if(live&&b.dataset.arm!=='1'){b.dataset.arm='1';b.textContent='Tap again to reset for everyone';setTimeout(()=>{b.dataset.arm='';b.textContent='Reset demo'},4000);return}
@@ -1387,10 +1439,12 @@ const ACT={
   const warns=ntWarnings(bn,f);
   if(warns.length&&sure!=='yes')return askSure({eyebrow:'Are you sure?',title:'Create this anyway?',desc:'Read the warning'+(warns.length===1?'':'s')+' below before you confirm, so a second task for the same job is not created.',warn:warns,ok:'Yes, create anyway',tone:'no',lines:[
    ['Title',esc(f.title)],['Building',esc(bn)],['Category',esc(f.cat)],['Priority',esc(f.pri)],...(f.ref?[['Reference',esc(f.ref)]]:[]),['Internal note',esc(f.note||'No internal note')]]},()=>ACT.createTask('yes'));
+  const due=($('ntDue')||{}).value||iso(7),resp=($('ntResp')||{}).value||uid;if(resp!==uid&&awayOf(resp))return ntBad('ntResp',nameOf(resp)+' is away. '+awayTxt(resp));
   const id=newTask(bn,f.title,f.cat,f.pri,f.note||'No internal note','Created by '+me().name);
+  {const t=db.tasks.find(x=>x.id===id);t.due=due;t.owner=uid;if(resp!==uid){const at=new Date().toISOString();t.assign={to:resp,from:uid,status:'Pending',note:'',at,log:[]};asgLog(t,'Sent to '+nameOf(resp)+' when created');notify(resp,`${nameOf(uid)} sent you a new task at ${t.building}: ${t.title}. Due ${fmtDate(due)}.`,null,false,{task:id})}}
   if(f.ref){const t=db.tasks.find(x=>x.id===id);t.ref=f.ref}
   if(warns.length)addHist(db.tasks.find(x=>x.id===id),'Created anyway after a possible duplicate warning');
-  ui.task=id;ui.form=null;ui.nt=null;save();render();toast('Task created here and in Asana');confirmFx('created');
+  ui.task=id;ui.form=null;ui.nt=null;save();render();toast(resp!==uid?'Task created and sent to '+nameOf(resp):'Task created here and in Asana');confirmFx('created');
  },
  updateAll(id){
   const t=db.tasks.find(x=>x.id===id);if(!t||!ok(t.building))return;
@@ -1453,6 +1507,10 @@ const ACT={
   if(n.task){closeBell();return ACT.taskOpen(n.task,'reminder')}
   const v=n.inv&&db.invoices.find(x=>x.id===n.inv);
   if(v&&canDecide(v))return ACT.decide(v.id);
+  const po=n.po&&(db.pos||[]).find(x=>x.id===n.po);if(po&&po.status==='Awaiting approval'&&po.approver===uid)return ACT.poReview(po.id);
+  if(po){closeBell();const t=db.tasks.find(x=>x.id===po.task);if(t&&canSee(t.building)){ui.task=t.id;return ACT.openB(t.building,'Works')}return render()}
+  const tk=n.task&&db.tasks.find(x=>x.id===n.task);if(tk&&asgNeedsMe(tk))return ACT.asgOpen(tk.id);
+  if(tk){closeBell();if(canSee(tk.building)){ui.task=tk.id;return ACT.openB(tk.building,'Works')}view={page:'mytasks',b:view.b,tab:view.tab};return render()}
   closeBell();if(v&&staff()&&canSee(v.building))ACT.openB(v.building,'Accounts');else{render()}
  },
  markAll(){db.notes.forEach(n=>{if(n.to===uid)n.read=true});save();paintBell()},
@@ -1531,21 +1589,22 @@ const ACT={
   setTimeout(()=>{if(ui.dlg||ui.cf)return;ui.dlg={kind:'remind',id,pick:due>iso(1)?'due':'tom'};paintDlg()},350)},
  myDone(id){const t=db.mytasks.find(x=>x.id===id);if(!t||t.owner!==uid)return;t.done=!t.done;t.doneAt=t.done?new Date().toISOString():null;save();render();if(t.done)confirmFx('done');else toast('Moved back to your list')},
  bDone(id){
-  const t=db.tasks.find(x=>x.id===id);if(!t||!ok(t.building))return;const done=t.stage<4;
+  const t=db.tasks.find(x=>x.id===id);if(!t||!canWork(t))return;const done=t.stage<4;
   askSure({title:done?'Mark this task done?':'Reopen this task?',ok:done?'Yes, mark done':'Yes, reopen',tone:done?'yes':'',lines:[['Task',esc(t.title)],['Building',esc(t.building)],['Now',esc(STAGES[t.stage])],['After',done?'<b>Completed</b>, and marked complete in Asana':'<b>'+esc(STAGES[t.prevStage??3])+'</b>, and reopened in Asana']]},()=>{
-   if(t.stage<4){t.prevStage=t.stage;t.stage=4;addHist(t,'Marked done');sync('Asana','Task '+t.id+' completed: '+t.title,t.building);save();render();confirmFx('done')}
+   if(t.stage<4){t.prevStage=t.stage;t.stage=4;addHist(t,'Marked done');if(t.assign&&t.assign.from&&t.assign.from!==uid&&t.assign.to===uid)notify(t.assign.from,`${nameOf(uid)} finished ${t.title} at ${t.building}.`,null,false,{task:t.id});sync('Asana','Task '+t.id+' completed: '+t.title,t.building);save();render();confirmFx('done')}
    else{t.stage=t.prevStage??3;addHist(t,'Reopened');sync('Asana','Task '+t.id+' reopened: '+t.title,t.building);save();render();toast('Task reopened')}});
  },
 
  submitIssue(){
   if(staff())return;const body=$('rb').value.trim(),location=$('rl').value.trim();if(!body||!location)return toast('Describe the issue and its location');
-  db.requests.unshift({id:newId('R'),building:me().building,category:$('rc').value,location,body,by:uid,status:'Awaiting review'});save();render();toast('Report sent to your property manager');confirmFx('email','Report sent');
+  db.requests.unshift({id:newId('R'),building:me().building,category:$('rc').value,location,body,by:uid,status:'Awaiting review'});save();render();toast('Report sent to your key client manager');confirmFx('email','Report sent');
  }
 };
 /* ===== V10.6 Downloads: Excel and PDF ===== */
 const LIBS={xlsx:'https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js',pdf:'https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js',pdfT:'https://cdn.jsdelivr.net/npm/jspdf-autotable@3.8.2/dist/jspdf.plugin.autotable.min.js'};
 const _lib={};
 function loadLib(src){return _lib[src]||(_lib[src]=new Promise((res,rej)=>{const s=document.createElement('script');s.src=src;s.onload=res;s.onerror=()=>{delete _lib[src];rej(new Error('load'))};document.head.appendChild(s)}))}
+const perFile=()=>perNow()==='all'?'all_time':'last_'+perNow()+'_days';
 const fileSafe=s=>String(s).replace(/[^A-Za-z0-9]+/g,'_').replace(/^_|_$/g,'');
 const stampLine=()=>'Downloaded by '+nameOf(uid)+' on '+new Date().toLocaleString('en-GB',{day:'numeric',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'});
 async function saveBlob(blob,name){if(window.claude&&typeof window.claude.use==='function'){try{const d=await window.claude.use('downloads');if(d){await d.save({filename:name,data:blob});return true}}catch(e){if(e&&e.code==='declined')return false;if(e&&e.code&&e.code!=='unavailable'&&e.code!=='not_granted'){toast('Download not available here');return false}}}const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=name;document.body.appendChild(a);a.click();setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove()},1500);return true}
@@ -1580,10 +1639,11 @@ function accSheets(bs){
  const multi=bs.length>1,pre=b=>multi?[b.name]:[],ph=multi?['Building']:[];
  const sumRows=[[...ph,'Annual budget','Spent to date','Remaining','Reserve fund','Arrears','Units'],...bs.map(b=>{const bud=sum(b.budget,x=>x.budget),act=sum(b.budget,x=>x.actual);return[...pre(b),bud,act,bud-act,b.reserve,arrears(b),b.units]})];
  const budRows=[[...ph,'Heading','Budget','Actual','Remaining','Used %'],...bs.flatMap(b=>b.budget.map(x=>[...pre(b),x.head,x.budget,x.actual,x.budget-x.actual,Math.round(x.actual/x.budget*100)]))];
- const inv=db.invoices.filter(v=>bs.some(b=>b.name===v.building));
- const invRows=[[...ph,'Invoice','Supplier','Description','Budget heading','Amount','Status','Approver','Requested by','Notes'],...inv.map(v=>[...(multi?[v.building]:[]),v.id,v.supplier,v.desc,v.head||'',v.amount,v.status,v.approver?nameOf(v.approver):'',v.requestedBy?nameOf(v.requestedBy):'',(v.notes||[]).map(n=>n.by+': '+n.text).join(' | ')])];
+ const inv=db.invoices.filter(v=>bs.some(b=>b.name===v.building)&&inPer(invDate(v)));
+ const invRows=[[...ph,'Invoice','Date','Supplier','Description','Budget heading','Amount','Status','Approver','Requested by','Notes'],...inv.map(v=>[...(multi?[v.building]:[]),v.id,invDate(v)?fmtDate(invDate(v)):'',v.supplier,v.desc,v.head||'',v.amount,v.status,v.approver?nameOf(v.approver):'',v.requestedBy?nameOf(v.requestedBy):'',(v.notes||[]).map(n=>n.by+': '+n.text).join(' | ')])];
  const arRows=[[...ph,'Flat','Leaseholder','Tenant','Balance outstanding'],...bs.flatMap(b=>b.unitsList.filter(x=>x.balance>0).map(x=>[...pre(b),'Flat '+x.unit,x.leaseholder,x.tenant||'Owner occupied',x.balance]))];
- return[{name:'Summary',rows:[['JFM accounts, '+(multi?bs.length+' buildings':bs[0].name)],[stampLine()],[],...sumRows]},{name:'Budget',rows:budRows},{name:'Invoices',rows:invRows},{name:'Arrears',rows:arRows}];
+ const poRows=[[...ph,'Order','Raised','Contractor','Work','Budget heading','Amount ex VAT','Status','Raised by','Approved by','Invoice'],...(db.pos||[]).filter(p=>bs.some(b=>b.name===p.building)&&inPer(p.raisedAt)).map(p=>[...(multi?[p.building]:[]),p.id,fmtDate(p.raisedAt.slice(0,10)),(conOf(p.contractor)||{}).name||'',p.scope,p.head,p.amount,p.status,nameOf(p.raisedBy),p.approvedBy||'',p.invoice||''])];
+ return[{name:'Summary',rows:[['JFM accounts, '+(multi?bs.length+' buildings':bs[0].name)],['Invoices: '+perName()+'. Budget is the full year, arrears are today\'s balances.'],[stampLine()],[],...sumRows]},{name:'Budget',rows:budRows},{name:'Invoices',rows:invRows},{name:'Purchase orders',rows:poRows},{name:'Arrears',rows:arRows}];
 }
 /* ===== V10.9 Accounts Excel: a presentation-ready workbook in JFM colours, laid out like the Accounts page =====
    Header band, the same four figures as the page, then Service charge budget, Supplier invoices and Arrears.
@@ -1647,7 +1707,7 @@ const xEmpty=(ws,r,text)=>xRow(ws,r,[[2,9,text,{i:true,col:XC.muted}]],0);
 const xPct=p=>Math.round(p*100)+'%';
 function xBuildingSheet(wb,b){
  const ws=xSheet(wb,b.name),bud=sum(b.budget,x=>x.budget),act=sum(b.budget,x=>x.actual),ar=b.unitsList.filter(x=>x.balance>0),inv=db.invoices.filter(v=>v.building===b.name);
- let r=xHeader(ws,'Accounts  ·  '+b.name,`${b.units} units  ·  Manager ${b.manager}  ·  Service charge year end ${b.yearEnd}`);
+ let r=xHeader(ws,'Accounts  ·  '+b.name,`${b.units} units  ·  Key client manager ${b.manager||'not assigned'}  ·  Service charge year end ${b.yearEnd}`);
  r=xTiles(ws,r,[['Annual budget',bud,b.budget.length+' budget headings'],['Spent to date',act,xPct(act/bud)+' of budget used'+(act>bud?', over budget':''),act>bud],
   ['Reserve fund',b.reserve,'Held for major works'],['Arrears',arrears(b),ar.length?ar.length+' flat'+(ar.length===1?'':'s')+' owing':'No arrears',ar.length>0]]);
  /* Service charge budget: over budget headings are red */
@@ -1686,7 +1746,7 @@ function xPortfolioSheet(wb,bs){
  let r=xHeader(ws,'Accounts  ·  '+(isTop()?'All buildings':'My buildings'),`${bs.length} buildings  ·  ${sum(bs,b=>b.units)} units`);
  r=xTiles(ws,r,[['Annual budget',bud,bs.length+' buildings'],['Spent to date',act,xPct(act/bud)+' of budget used'+(nOver?`, ${nOver} over budget`:''),nOver>0],['Reserve fund',sum(bs,b=>b.reserve),'Across all buildings'],['Arrears',sum(bs,arrears),sum(bs,b=>b.unitsList.filter(x=>x.balance>0).length)+' flats owing',sum(bs,arrears)>0]]);
  r=xSection(ws,r,'Buildings','Click a building to open its sheet');
- r=xThead(ws,r,[[2,2,'Building'],[3,3,'Manager'],[4,4,'Units','right'],[5,5,'Annual budget','right'],[6,6,'Spent to date','right'],[7,7,'Used','right'],[8,8,'Reserve fund','right'],[9,9,'Arrears','right']]);
+ r=xThead(ws,r,[[2,2,'Building'],[3,3,'Key client manager'],[4,4,'Units','right'],[5,5,'Annual budget','right'],[6,6,'Spent to date','right'],[7,7,'Used','right'],[8,8,'Reserve fund','right'],[9,9,'Arrears','right']]);
  const r0=r;
  bs.forEach((b,i)=>{const bb=sum(b.budget,x=>x.budget),ba=sum(b.budget,x=>x.actual),over=ba>bb;
   r=xRow(ws,r,[[2,2,{text:(over?'▲ ':'')+b.name,hyperlink:`#'${b.name.slice(0,31)}'!A1`},{u:true,b:true,col:over?XC.crit:XC.olive}],[3,3,b.manager],[4,4,b.units,{fmt:'0'}],[5,5,bb,{fmt:GBP}],[6,6,ba,{fmt:GBP}],
@@ -1697,10 +1757,15 @@ function xPortfolioSheet(wb,bs){
  r=xNote(ws,r,nOver?`${nOver} building${nOver===1?' is':'s are'} over budget, shown in red.`:'Every building is within budget.');
  ws.pageSetup.printArea=`A1:I${r}`;return ws;
 }
+function xPoSheet(wb,bs){const l=(db.pos||[]).filter(p=>bs.some(b=>b.name===p.building));if(!l.length)return;
+ const ws=xSheet(wb,'Purchase orders');let r=xHeader(ws,'Purchase orders  ·  '+(bs.length>1?bs.length+' buildings':bs[0].name),'Committed on open orders: '+money(committed(bs)));
+ r=xThead(ws,r,[[2,2,'Order'],[3,3,'Building'],[4,4,'Contractor'],[5,5,'Work'],[6,6,'Amount ex VAT','right'],[7,7,'Status','center'],[8,8,'Raised by'],[9,9,'Invoice']]);
+ l.forEach((p,i)=>{r=xRow(ws,r,[[2,2,p.id,{b:true}],[3,3,p.building],[4,4,(conOf(p.contractor)||{}).name||''],[5,5,p.scope,{wrap:true}],[6,6,p.amount,{fmt:GBP}],[7,7,p.status,{al:'center',b:true,sz:10}],[8,8,nameOf(p.raisedBy)],[9,9,p.invoice||'']],i)});
+ ws.pageSetup.printArea=`A1:I${r}`;return ws}
 async function accExcel(name,bs,o){
  try{
   await loadLib(LIBS.exceljs);const wb=new ExcelJS.Workbook();wb.creator='JFM Property Platform';wb.created=new Date();
-  if(bs.length>1)xPortfolioSheet(wb,bs);bs.forEach(b=>xBuildingSheet(wb,b));xMeta(wb,bs,o&&o.ver);
+  if(bs.length>1)xPortfolioSheet(wb,bs);bs.forEach(b=>xBuildingSheet(wb,b));xPoSheet(wb,bs);xMeta(wb,bs,o&&o.ver);
   window.JFM_LAST_EXPORT={type:'xlsx',styled:true,name,sheets:wb.worksheets.filter(w=>w.name!=='_jfm').map(w=>w.name)};
   const buf=await wb.xlsx.writeBuffer();
   if(await saveBlob(new Blob([buf],{type:'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'}),name+'.xlsx'))toast('Excel file downloaded');
@@ -1808,7 +1873,7 @@ async function accApply(bn,figs,changes,file,from){
  const nb=accAs(b,figs);b.budget=nb.budget;b.reserve=nb.reserve;b.unitsList=nb.unitsList;
  db.accver.push(ver);
  sync('Accounts',from?`Accounts restored to version ${from.n} by ${nameOf(uid)} (now version ${ver.n}), ${changes.length} change${changes.length===1?'':'s'}`:`Accounts updated from Excel by ${nameOf(uid)} (version ${ver.n}), ${changes.length} change${changes.length===1?'':'s'}`,bn);
- users.filter(u=>u.id!==uid&&(u.role==='pm'&&(u.buildings||[]).includes(bn))).forEach(u=>notify(u.id,`${nameOf(uid)} ${from?'restored the accounts for '+bn+' to version '+from.n:'updated the accounts for '+bn+' from Excel'} (now version ${ver.n}).`));
+ users.filter(u=>u.id!==uid&&u.role==='kcm'&&(db.buildings.find(b=>b.name===bn)||{}).manager===u.short).forEach(u=>notify(u.id,`${nameOf(uid)} ${from?'restored the accounts for '+bn+' to version '+from.n:'updated the accounts for '+bn+' from Excel'} (now version ${ver.n}).`));
  save();render();toast((from?`Restored. Version ${ver.n} is now the latest.`:`Accounts updated. Version ${ver.n} is now the latest.`)+where);confirmFx('done',from?'Accounts restored':'Accounts updated');
 }
 async function accDownload(id){
@@ -1855,7 +1920,7 @@ Object.assign(ACT,{
 });
 document.addEventListener('input',e=>{if(e.target.id==='rsType'){const g=$('rsGo');if(g)g.disabled=e.target.value.trim().toUpperCase()!=='RESTORE'}});
 document.addEventListener('change',e=>{const el=e.target;if(el.dataset&&el.dataset.accfile&&el.files&&el.files[0]){const f=el.files[0];el.value='';accUpload(f)}});
-const compRows=bs=>bs.flatMap(b=>b.compliance.map(c=>[...(bs.length>1?[b.name]:[]),c.item,c.due?fmtDate(c.due):'Not recorded',compStatus(c),lastHist(c)||'']));
+const compRows=bs=>bs.flatMap(b=>b.compliance.filter(compIn).map(c=>[...(bs.length>1?[b.name]:[]),c.item,c.due?fmtDate(c.due):'Not recorded',compStatus(c),lastHist(c)||'']));
 Object.assign(ACT,{
  xInsp(id){const i=db.inspections.find(x=>x.id===id);if(!i||!staff()||!canSee(i.building))return;const r=i.result||{};
   const rows=[['Site inspection, '+i.building],['SOP: '+(i.sop||SOP_NAME)],['Started by '+(i.startedBy||'')+', '+when(i.startedAt)],['Completed by '+(i.completedBy||'')+', '+when(i.completedAt)],[stampLine()],[],
@@ -1864,49 +1929,340 @@ Object.assign(ACT,{
   const tk=id=>{const t=db.tasks.find(x=>x.id===id);return t?t.title:id};
   const wr=[['Change','Work'],...(r.raised||[]).map(x=>['Raised',tk(x)]),...(r.updated||[]).map(x=>['Updated',tk(x)]),...(r.closed||[]).map(x=>['Closed',tk(x)])];
   toExcel('Inspection_'+fileSafe(i.building)+'_'+(i.completedAt||'').slice(0,10),[{name:'Full record',rows},{name:'Works updated',rows:wr}])},
- xInspAll(){const b=B();if(!staff())return;const past=inspDone(b);const rows=[['Section','Check',...past.map(i=>fmtDate(i.completedAt.slice(0,10))+' ('+i.completedBy+')')]];
+ xInspAll(){const b=B();if(!staff())return;const past=inspDone(b).filter(i=>inPer(i.completedAt));const rows=[['Section','Check',...past.map(i=>fmtDate(i.completedAt.slice(0,10))+' ('+i.completedBy+')')]];
   SOP_ITEMS.forEach(x=>rows.push([x.sec,x.label,...past.map(i=>{const it=i.items[x.key]||{};return (it.st==='ok'?'OK':it.st==='issue'?'Issue':it.st==='na'?'N/A':'')+(it.note?': '+it.note:'')})]));
-  toExcel('Inspections_'+fileSafe(b.name),[{name:'All inspections',rows}])},
+  toExcel('Inspections_'+fileSafe(b.name)+'_'+perFile(),[{name:'All inspections',rows}])},
  xAcc(){if(!staff())return;const b=B();accExcel('Accounts_'+fileSafe(b.name)+'_'+today(),[b])},
  xAccAll(){if(!staff())return;accExcel('Accounts_'+(isTop()?'All_buildings':fileSafe(me().name)+'_buildings')+'_'+today(),myB())},
  xMyAcc(){if(me().role!=='leaseholder')return;const b=B(),x=myUnit(),annual=Math.round(sum(b.budget,h=>h.budget)/b.units),half=Math.round(annual/2);
-  toExcel('Statement_Flat_'+fileSafe(x.unit)+'_'+fileSafe(b.name),[{name:'Statement',rows:[['Statement, Flat '+x.unit+', '+b.name],[stampLine()],[],['Date','Detail','Charge','Paid'],['1 Apr 2026','Service charge demand, first half',half,''],['14 Apr 2026','Payment received','',half],['1 Oct 2026','Service charge demand, second half',half,''],['20 Oct 2026','Payment received','',half-x.balance],[],['','Balance due','',x.balance]]},
+  toExcel('Statement_Flat_'+fileSafe(x.unit)+'_'+fileSafe(b.name)+'_'+perFile(),[{name:'Statement',rows:[['Statement, Flat '+x.unit+', '+b.name],['Period: '+perName()],[stampLine()],[],['Date','Detail','Charge','Paid'],...stmtLines(b,x).filter(l=>inPer(l[0])).map(l=>[fmtDate(l[0]),l[1],l[2]||'',l[3]||'']),[],['','Balance due today','',x.balance]]},
    {name:'Your share',rows:[['Heading','Building budget','Your share'],...b.budget.map(h=>[h.head,h.budget,Math.round(h.budget/b.units)]),['Total',sum(b.budget,h=>h.budget),annual]]}])},
- pComp(){if(!staff())return;const b=B();toPdf('Compliance_'+fileSafe(b.name)+'_'+today(),'Compliance register, '+b.name,b.name+' · '+b.units+' units · Manager '+b.manager,[{head:['Item','Next due','Status','Last change'],body:compRows([b])}])},
- pCompAll(){if(!staff())return;const bs=myB();toPdf('Compliance_'+(isTop()?'All_buildings':'My_buildings')+'_'+today(),'Compliance register, '+(isTop()?'all buildings':'my buildings'),bs.length+' buildings',bs.map(b=>({title:b.name,head:['Item','Next due','Status','Last change'],body:compRows([b])})))},
+ pComp(){if(!staff())return;const b=B();toPdf('Compliance_'+fileSafe(b.name)+'_'+today(),'Compliance register, '+b.name,b.name+' · '+b.units+' units · Key client manager '+(b.manager||'not assigned')+' · '+(perNow()==='all'?'All items':'Overdue, missing and due within '+perName().replace('Last ','the next ').toLowerCase()),[{head:['Item','Next due','Status','Last change'],body:compRows([b])}])},
+ pCompAll(){if(!staff())return;const bs=myB();toPdf('Compliance_'+(isTop()?'All_buildings':'My_buildings')+'_'+today(),'Compliance register, '+(isTop()?'all buildings':'my buildings'),bs.length+' buildings · '+(perNow()==='all'?'All items':'Overdue, missing and due within '+perName().replace('Last ','the next ').toLowerCase()),bs.map(b=>({title:b.name,head:['Item','Next due','Status','Last change'],body:compRows([b])})))},
  pDocs(){const b=B();if(!canSee(b.name))return;const okV=staff()?null:me().role==='leaseholder'?['All residents','Leaseholders']:['All residents'];
-  const list=db.docs.filter(d=>d.building===b.name&&(!okV||okV.includes(d.vis)));
-  toPdf('Documents_'+fileSafe(b.name)+'_'+today(),'Documents, '+b.name,list.length+' documents'+(staff()?'':' you can see'),[{head:staff()?['Document','Category','Date','Who can see it']:['Document','Category','Date'],body:list.map(d=>staff()?[d.name,d.cat,fmtDate(d.date),d.vis]:[d.name,d.cat,fmtDate(d.date)])}])}
+  const list=db.docs.filter(d=>d.building===b.name&&(!okV||okV.includes(d.vis))&&inPer(d.date));
+  toPdf('Documents_'+fileSafe(b.name)+'_'+today(),'Documents, '+b.name,list.length+' documents'+(staff()?'':' you can see')+' · '+perName(),[{head:staff()?['Document','Category','Date','Who can see it']:['Document','Category','Date'],body:list.map(d=>staff()?[d.name,d.cat,fmtDate(d.date),d.vis]:[d.name,d.cat,fmtDate(d.date)])}])}
 });
+/* ===== V10.9 Task assignment: send, accept or decline, escalate, reassign, pop ups ===== */
+const MANAGER_OF={kcm:'p2',senior:'c1'};
+const lineMgr=id=>{const u=users.find(x=>x.id===id);return u&&MANAGER_OF[u.role]&&MANAGER_OF[u.role]!==id?MANAGER_OF[u.role]:null};
+const colleagues=()=>users.filter(u=>TEAM[u.role]&&u.id!==uid);
+const openCount=id=>db.tasks.filter(t=>t.stage<4&&t.assign&&t.assign.to===id&&t.assign.status==='Accepted').length;
+const ASTXT={Pending:'Waiting for an answer',Accepted:'Accepted',Declined:'Declined',Escalated:'With manager to reassign'};
+const asgMine=t=>t.assign&&t.assign.to===uid&&t.assign.status==='Accepted';
+const canWork=t=>ok(t.building)||asgMine(t);
+function asgLog(t,text){(t.assign.log=t.assign.log||[]).push({by:nameOf(uid),text,at:new Date().toISOString()});addHist(t,text)}
+function asgNeedsMe(t){const a=t.assign;if(!a)return null;
+ if(a.status==='Pending'&&a.to===uid)return'respond';
+ if(a.status==='Accepted'&&a.dateStatus==='Proposed'&&a.from===uid)return'date';
+ if(a.status==='Declined'&&a.from===uid)return'declined';
+ if(a.status==='Escalated'&&a.mgr===uid)return'manager';
+ return null}
+const asgPill=t=>{const a=t.assign;if(!a||t.stage===4&&a.status==='Accepted')return a?`<span class="small muted">Done by ${esc(nameOf(a.to))}</span>`:'';
+ return pill((a.status==='Escalated'?'Urgent: ':'')+ASTXT[a.status]+(a.status==='Escalated'?'':' · '+(nameOf(a.to)||'').split(' (')[0]),a.status==='Accepted'?'good':a.status==='Pending'?'warn':'crit')};
+function asgBlock(t){const a=t.assign,mine=asgNeedsMe(t);
+ const head=a?`<div class="asg ${a.status}"><div class="flex"><b>${a.status==='Escalated'?'Sent to '+esc(nameOf(a.mgr))+' to reassign':'Assigned to '+esc(nameOf(a.to))}</b>${pill((a.status==='Escalated'?'Urgent · ':'')+ASTXT[a.status],a.status==='Accepted'?'good':a.status==='Pending'?'warn':'crit')}</div>
+  ${(a.log||[]).length?`<ol class="hist">${a.log.slice().reverse().map(h=>`<li><span>${esc(h.text)}</span><span class="muted small">${esc(h.by)} · ${esc(when(h.at))}</span></li>`).join('')}</ol>`:''}
+  ${a.status==='Pending'?`<p class="small muted">${a.seenAt?'Seen '+esc(when(a.seenAt)):'Not seen yet'}</p>`:''}${a.dateStatus==='Proposed'?`<p class="small warnt">New due date asked: ${fmtDate(a.proposedDue)}</p>`:''}
+  ${mine?`<button class="btn" data-act="asgOpen" data-id="${t.id}">${mine==='respond'?'Accept or decline':mine==='declined'?'Decide what next':mine==='date'?'Agree the new date':'Choose who takes it'}</button>`:''}${asgMine(t)&&a.from!==uid&&t.stage<4?` <button class="btn light" data-act="asgHandOpen" data-id="${t.id}">Hand it back</button>`:''}</div>`:'';
+ const send=t.stage<4&&ok(t.building)&&(!a||a.status==='Accepted'&&a.to!==uid||a.from===uid&&a.status!=='Escalated')&&!mine?`<button class="btn light" data-act="asgSendOpen" data-id="${t.id}">${a?'Assign to someone else':'Assign to a colleague'}</button>`:'';
+ return `<h3 style="margin-top:14px">Assigned to</h3>${head||'<p class="muted small">Not assigned. You are looking after it.</p>'}${send?`<p>${send}</p>`:''}`}
+function asgDlgHtml(){const d=ui.adlg,t=db.tasks.find(x=>x.id===d.id);if(!t)return'';const a=t.assign||{};
+ const sum=`<p class="cfeye">${esc(t.building)}</p><h3 id="dlgT">${esc(t.title)}</h3><p class="muted small">${esc(t.priority)} priority · Due ${fmtDate(t.due)} · ${esc(t.category)}</p>${t.internal?`<div class="note small">${esc(t.internal)}</div>`:''}`;
+ const people=(sel,skip)=>peoplePick('asg',sel,skip);
+ const trail=(a.log||[]).length?`<ol class="hist">${a.log.slice(-3).reverse().map(h=>`<li><span>${esc(h.text)}</span><span class="muted small">${esc(h.by)} · ${esc(when(h.at))}</span></li>`).join('')}</ol>`:'';
+ const err=d.err?`<p class="small" style="color:var(--crit);font-weight:700">${esc(d.err)}</p>`:'';
+ if(d.mode==='send')return sum+`<p><b>Who should take this task?</b></p>${people(d.pick,[a.to,a.declinedBy].filter(Boolean))}<div style="margin-top:12px">${noteInput('asgNote','Note for them (optional)','What they need to know')}</div>${err}<div class="choice"><button class="btn light big" data-act="dlgClose">Cancel</button><button class="btn big" data-act="asgSend">Send task</button></div>`;
+ if(d.mode==='respond')return sum+`<p><b>${esc(nameOf(a.from))}</b> has sent you this task.</p>${a.note?`<div class="dlgnotes"><div class="nt"><b>Note</b> ${esc(a.note)}</div></div>`:''}${d.date?`<div style="margin-top:12px"><label for="asgDue">Date you can do it by</label><input id="asgDue" type="date" min="${today()}" value="${t.due>today()?t.due:iso(3)}"><p class="small muted">Due now: ${fmtDate(t.due)}. ${esc(nameOf(a.from).split(' (')[0])} will be asked to agree.</p></div>${err}<div class="choice"><button class="btn light big" data-act="asgBackR">Go back</button><button class="btn yes big" data-act="asgAcceptDate">Accept with this date</button></div>`:d.decline?`<div class="chips">${QUICK_NO.map((q,i)=>`<button class="chip" data-act="asgReason" data-id="${i}">${esc(q)}</button>`).join('')}</div><div style="margin-top:8px">${noteInput('asgNote','Why are you declining? (required)','Tap a reason above or write your own')}</div>${err}<div class="choice"><button class="btn light big" data-act="asgBackR">Go back</button><button class="btn no big" data-act="asgDecline">Decline task</button></div>`:`<div class="choice"><button class="btn yes big" data-act="asgAccept">Accept</button><button class="btn no big" data-act="asgDeclineAsk">Decline</button></div><div class="dlgfoot"><button class="btn link small" data-act="asgDateAsk">Accept, but change the date</button> · <button class="btn link small" data-act="dlgClose">Not now</button></div>`}`;
+ if(d.mode==='declined'){const mgr=lineMgr(uid);return sum+`<p><b>${esc(nameOf(a.to))}</b> declined this task.</p><div class="dlgnotes"><div class="nt"><b>Reason</b> ${esc(a.declineNote)}</div></div>
+  ${d.esc?`<p style="margin-top:12px">This goes to <b>${esc(nameOf(mgr))}</b> as <b>urgent</b>, so they can choose who takes it.</p>${noteInput('asgNote','Note for '+esc(nameOf(mgr).split(' (')[0])+' (optional)','Anything they should know')}<div class="choice"><button class="btn light big" data-act="asgBackR">Go back</button><button class="btn no big" data-act="asgEscalate">Send to manager, urgent</button></div>`
+  :`<div class="stack"><button class="btn big" data-act="asgResend">Send to someone else</button>${mgr?`<button class="btn no big" data-act="asgEscAsk">Not my job, send to ${esc(nameOf(mgr).split(' (')[0])}</button>`:''}<button class="btn light big" data-act="asgTakeBack">I will do it myself</button></div><div class="dlgfoot"><button class="btn link small" data-act="dlgClose">Not now</button></div>`}`}
+ if(d.mode==='date')return sum+`<p><b>${esc(nameOf(a.to))}</b> accepted, but asks to move the due date.</p><dl class="cflist"><dt>Due now</dt><dd>${fmtDate(t.due)}</dd><dt>Asked for</dt><dd><b>${fmtDate(a.proposedDue)}</b></dd></dl><div class="choice"><button class="btn light big" data-act="asgDateNo">Keep ${fmtDate(t.due)}</button><button class="btn yes big" data-act="asgDateYes">Agree new date</button></div>`;
+ if(d.mode==='handback')return sum+`<p>Hand this task back to <b>${esc(nameOf(a.from))}</b>?</p><div class="chips">${QUICK_NO.map((q,i)=>`<button class="chip" data-act="asgReason" data-id="${i}">${esc(q)}</button>`).join('')}</div>${noteInput('asgNote','Why? (required)','What changed')}${err}<div class="choice"><button class="btn light big" data-act="dlgClose">Cancel</button><button class="btn no big" data-act="asgHandBack">Hand it back</button></div>`;
+ if(d.mode==='manager')return `<p class="cfeye" style="color:var(--crit)">Urgent · needs reassigning</p>`+sum.replace('<p class="cfeye">','<p class="muted small">')+trail+`<p><b>Who should take it?</b></p>${people(d.pick,[a.declinedBy])}<div style="margin-top:12px">${noteInput('asgNote','Note (required)','Why them, and anything they need to know')}</div>${err}<div class="choice"><button class="btn light big" data-act="dlgClose">Not now</button><button class="btn big" data-act="asgMgrAssign">Assign</button></div>`;
+ return''}
+function asgNote(){return((($('asgNote')||{}).value)||'').trim().slice(0,NOTE_MAX)}
+function asgErr(m){ui.adlg.err=m;paintDlg();setTimeout(()=>{const n=$('asgNote');if(n)n.focus()},40)}
+/* Pop up messages, bottom right, like a chat app */
+const popSeen={};
+function paintPop(){let box=$('pops');if(!box){box=document.createElement('div');box.id='pops';box.className='pops';box.setAttribute('aria-live','polite');document.body.appendChild(box)}
+ if(!me()||!staff()){box.innerHTML='';return}
+ const list=db.tasks.filter(t=>{const m=asgNeedsMe(t);return m&&!popSeen[t.id+':'+t.assign.status+':'+(t.assign.at||'')]}).slice(0,3);
+ let seenCh=false;list.forEach(t=>{if(asgNeedsMe(t)==='respond'&&!t.assign.seenAt){t.assign.seenAt=new Date().toISOString();seenCh=true}});if(seenCh)setTimeout(save,0);
+ const poList=(db.pos||[]).filter(p=>(p.status==='Awaiting approval'&&p.approver===uid||p.status==='Approved'&&p.raisedBy===uid&&p.approvedBy&&p.approvedBy!==nameOf(uid))&&!popSeen['po:'+p.id+':'+p.status]).slice(0,2);
+ const fresh=list.some(t=>!box.querySelector(`[data-pop="${t.id}"]`))||poList.some(p=>!box.querySelector(`[data-pop="${p.id}"]`));
+ box.innerHTML=list.map(t=>{const a=t.assign,m=asgNeedsMe(t),urgent=a.status==='Escalated';
+  const head=m==='respond'?`${esc(nameOf(a.from).split(' (')[0])} sent you a task`:m==='declined'?`${esc(nameOf(a.to).split(' (')[0])} ${a.handedBack?'handed back':'declined'} your task`:m==='date'?`${esc(nameOf(a.to).split(' (')[0])} asks for a new date`:`Urgent: reassign a task`;
+  const body=m==='respond'?(a.note||''):m==='declined'?'Reason: '+a.declineNote:m==='date'?'Accepted, but can do it by '+fmtDate(a.proposedDue)+' instead of '+fmtDate(t.due):(a.escNote||'Declined: '+a.declineNote);
+  return `<div class="pop ${urgent?'urgent':''}" data-pop="${t.id}" role="dialog" aria-label="${head}"><div class="pophead"><span class="popdot"></span><b>${head}</b><button class="popx" data-act="popHide" data-id="${t.id}" aria-label="Hide">×</button></div>
+   <p class="poptitle">${esc(t.title)}</p><p class="small muted">${esc(t.building)} · ${esc(t.priority)} · Due ${fmtDate(t.due)}</p>${body?`<p class="small popnote">${esc(body)}</p>`:''}
+   <div class="popacts">${m==='respond'?`<button class="btn yes sm" data-act="popAccept" data-id="${t.id}">Accept</button><button class="btn no sm" data-act="popDecline" data-id="${t.id}">Decline</button>`:`<button class="btn sm" data-act="asgOpen" data-id="${t.id}">${m==='declined'?'Decide what next':m==='date'?'Agree or keep date':'Choose who takes it'}</button>`}<button class="btn light sm" data-act="popHide" data-id="${t.id}">Later</button></div></div>`}).join('')+poList.map(p=>{const c=conOf(p.contractor),ap=p.status==='Awaiting approval';return `<div class="pop" data-pop="${p.id}" role="dialog" aria-label="Purchase order"><div class="pophead"><span class="popdot"></span><b>${ap?esc(nameOf(p.raisedBy).split(' (')[0])+' needs a PO approved':'Your PO was approved'}</b><button class="popx" data-act="popPoHide" data-id="${p.id}" aria-label="Hide">×</button></div><p class="poptitle">${esc(p.id)} · ${money(p.amount)}</p><p class="small muted">${esc(c?c.name:'')} · ${esc(p.building)}</p><p class="small popnote">${esc(p.scope)}</p><div class="popacts">${ap?`<button class="btn sm" data-act="poReview" data-id="${p.id}">Approve or reject</button>`:`<button class="btn sm" data-act="poIssue" data-id="${p.id}">Issue now</button>`}<button class="btn light sm" data-act="popPoHide" data-id="${p.id}">Later</button></div></div>`}).join('');
+ if(fresh&&(list.length||poList.length)&&prefOn('sound'))try{chime()}catch(e){}
+}
+Object.assign(ACT,{
+ asgSendOpen(id){const t=db.tasks.find(x=>x.id===id);if(!t||!ok(t.building))return;ui.adlg={id,mode:'send',pick:null};paintDlg()},
+ asgPick(id){ui.adlg.pick=id;ui.adlg.err=''},
+ asgOpen(id){const t=db.tasks.find(x=>x.id===id),m=t&&asgNeedsMe(t);closeBell();if(!m){toast('This task has already been answered.');return render()}if(m==='respond'&&!t.assign.seenAt){t.assign.seenAt=new Date().toISOString();save()}ui.adlg={id,mode:m,pick:null};paintDlg()},
+ asgSend(){const d=ui.adlg,t=db.tasks.find(x=>x.id===d.id);if(!t||!ok(t.building))return closeDlg();if(!d.pick||!TEAM[(users.find(u=>u.id===d.pick)||{}).role])return asgErr('Choose who should take it.');if(awayOf(d.pick))return asgErr(nameOf(d.pick)+' is away. '+awayTxt(d.pick));
+  const note=asgNote(),prev=t.assign;t.assign={to:d.pick,from:uid,status:'Pending',note,at:new Date().toISOString(),log:(prev&&prev.log)||[]};
+  asgLog(t,'Sent to '+nameOf(d.pick)+(note?': '+note:''));
+  notify(d.pick,`${nameOf(uid)} sent you a task at ${t.building}: ${t.title}.${note?' Note: '+note:''}`,null,false,{task:t.id});
+  sync('Tasks',`Task ${t.id} sent to ${nameOf(d.pick)}: ${t.title}`,t.building);closeDlg();save();render();toast(`Sent to ${nameOf(d.pick)}. They will see it straight away.`);confirmFx('email','Task sent')},
+ asgAccept(){const t=db.tasks.find(x=>x.id===ui.adlg.id);if(!t||asgNeedsMe(t)!=='respond')return closeDlg();asgAcceptT(t);closeDlg()},
+ asgDeclineAsk(){ui.adlg.decline=true;ui.adlg.err='';paintDlg();setTimeout(()=>{const n=$('asgNote');if(n)n.focus()},40)},
+ asgBackR(){ui.adlg.decline=false;ui.adlg.esc=false;ui.adlg.date=false;ui.adlg.err='';paintDlg()},
+ asgDecline(){const t=db.tasks.find(x=>x.id===ui.adlg.id);if(!t||asgNeedsMe(t)!=='respond')return closeDlg();const note=asgNote();if(!note)return asgErr('Write a short reason. A note is required to decline.');
+  const a=t.assign;Object.assign(a,{status:'Declined',declineNote:note,declinedBy:uid,at:new Date().toISOString()});asgLog(t,'Declined by '+nameOf(uid)+': '+note);
+  notify(a.from,`${nameOf(uid)} declined ${t.title} at ${t.building}. Reason: ${note}`,null,false,{task:t.id});
+  sync('Tasks',`Task ${t.id} declined by ${nameOf(uid)}`,t.building);closeDlg();save();render();toast(`Declined. ${nameOf(a.from)} has been told why.`)},
+ asgResend(){ui.adlg.mode='send';ui.adlg.pick=null;ui.adlg.err='';paintDlg()},
+ asgEscAsk(){ui.adlg.esc=true;paintDlg()},
+ asgEscalate(){const t=db.tasks.find(x=>x.id===ui.adlg.id);if(!t||asgNeedsMe(t)!=='declined')return closeDlg();const mgr=lineMgr(uid);if(!mgr)return closeDlg();const note=asgNote(),a=t.assign;
+  Object.assign(a,{status:'Escalated',mgr,escBy:uid,escNote:note,at:new Date().toISOString()});asgLog(t,'Sent to '+nameOf(mgr)+' to reassign, urgent. '+nameOf(uid).split(' (')[0]+' says it is not their job'+(note?': '+note:''));
+  notify(mgr,`${nameOf(uid)} needs ${t.title} at ${t.building} reassigned. ${nameOf(a.to)} declined: ${a.declineNote}${note?'. Note: '+note:''}`,null,false,{task:t.id,urgent:true});
+  sync('Tasks',`Task ${t.id} sent to ${nameOf(mgr)} to reassign (urgent)`,t.building);closeDlg();save();render();toast(`Sent to ${nameOf(mgr)} as urgent.`);confirmFx('email','Sent to manager')},
+ asgTakeBack(){const t=db.tasks.find(x=>x.id===ui.adlg.id);if(!t)return closeDlg();asgLog(t,nameOf(uid)+' took the task back');t.assign.status='Accepted';t.assign.to=uid;t.assign.at=new Date().toISOString();closeDlg();save();render();toast('It is back with you.')},
+ asgMgrAssign(){const d=ui.adlg,t=db.tasks.find(x=>x.id===d.id);if(!t||asgNeedsMe(t)!=='manager')return closeDlg();if(!d.pick||!TEAM[(users.find(u=>u.id===d.pick)||{}).role])return asgErr('Choose who should take it.');if(awayOf(d.pick))return asgErr(nameOf(d.pick)+' is away. '+awayTxt(d.pick));const note=asgNote();if(!note)return asgErr('A note is required when you reassign.');
+  const a=t.assign,old=[a.from,a.to].filter(x=>x&&x!==d.pick&&x!==uid);Object.assign(a,{to:d.pick,from:uid,status:'Pending',note,mgr:null,at:new Date().toISOString()});
+  asgLog(t,nameOf(uid)+' assigned it to '+nameOf(d.pick)+': '+note);
+  notify(d.pick,`${nameOf(uid)} assigned you ${t.title} at ${t.building}. Note: ${note}`,null,false,{task:t.id});
+  old.forEach(p=>notify(p,`${nameOf(uid)} gave ${t.title} at ${t.building} to ${nameOf(d.pick)}.`,null,false,{task:t.id}));
+  db.notes.forEach(n=>{if(n.task===t.id&&n.to===uid)n.read=true});
+  sync('Tasks',`Task ${t.id} reassigned by ${nameOf(uid)} to ${nameOf(d.pick)}`,t.building);closeDlg();save();render();toast(`Assigned to ${nameOf(d.pick)}. Everyone involved has been told.`);confirmFx('done','Reassigned')},
+ popAccept(id){const t=db.tasks.find(x=>x.id===id);if(!t||asgNeedsMe(t)!=='respond')return paintPop();asgAcceptT(t)},
+ popDecline(id){ACT.asgOpen(id);ACT.asgDeclineAsk()},
+ popPoHide(id){const p=(db.pos||[]).find(x=>x.id===id);if(p)popSeen['po:'+p.id+':'+p.status]=1;paintPop()},
+ popHide(id){const t=db.tasks.find(x=>x.id===id);if(t&&t.assign)popSeen[t.id+':'+t.assign.status+':'+(t.assign.at||'')]=1;paintPop()},
+ asgDone(id){ACT.bDone(id)}
+});
+function asgAcceptT(t){const a=t.assign;Object.assign(a,{status:'Accepted',at:new Date().toISOString()});asgLog(t,'Accepted by '+nameOf(uid));
+ notify(a.from,`${nameOf(uid)} accepted ${t.title} at ${t.building}.`,null,false,{task:t.id});db.notes.forEach(n=>{if(n.task===t.id&&n.to===uid)n.read=true});
+ sync('Tasks',`Task ${t.id} accepted by ${nameOf(uid)}`,t.building);save();render();toast('Accepted. It is now in My tasks.');confirmFx('done','Accepted')}
+/* ===== V11: teams, purchase orders, task exports and assignment logic ===== */
+const TEAM={kcm:'Key client managers',senior:'Senior management',ceo:'Leadership'};
+const HRS=36e5,REMIND_H=24,FLAG_H=48,URGENT_H=4,BUSY=5;
+const awayOf=id=>{const p=(db.people||[]).find(x=>x.id===id);return p&&p.away&&p.away.until>=today()?p.away:null};
+const awayTxt=id=>{const a=awayOf(id);return a?`Away until ${fmtDate(a.until)}${a.cover?', cover '+nameOf(a.cover).split(' (')[0]:''}`:''};
+const QUICK_NO=['Not my building','On leave','Too busy this week','Not my area of work'];
+/* Pick a person, grouped by team */
+function peoplePick(name,sel,skip,incMe){const grp={};users.filter(u=>TEAM[u.role]&&(incMe||u.id!==uid)&&!(skip||[]).includes(u.id)).forEach(u=>(grp[TEAM[u.role]]=grp[TEAM[u.role]]||[]).push(u));
+ return `<div class="pick team" role="radiogroup" aria-label="Choose a person">${Object.entries(grp).map(([g,l])=>`<p class="pgrp">${esc(g)}</p>${l.map(u=>{const aw=awayOf(u.id),n=openCount(u.id),busy=n>=BUSY;
+  return `<label class="${aw?'off':''}"><input type="radio" name="${name}" value="${u.id}" data-act="${name}Pick" data-id="${u.id}" ${sel===u.id?'checked':''} ${aw?'disabled':''}> <span><b>${esc(u.short)}${u.id===uid?' (me)':''}</b><br><span class="muted small">${esc(ROLE[u.role])} · ${n} assigned open</span>${busy?`<br><span class="small warnt">Busy: ${n} open tasks already</span>`:''}${aw?`<br><span class="small warnt">${esc(awayTxt(u.id))}</span>`:''}</span></label>`}).join('')}`).join('')}</div>`}
+/* ---------- purchase orders ---------- */
+const POST={'Awaiting approval':'warn',Approved:'good',Issued:'good',Invoiced:'good',Rejected:'crit',Cancelled:''};
+const conOf=id=>(db.contractors||[]).find(c=>c.id===id);
+const insState=c=>!c||!c.insurance?'Missing':c.insurance<today()?'Expired':c.insurance<=iso(30)?'Expiring':'Valid';
+const poOfTask=t=>(db.pos||[]).filter(p=>p.task===t.id);
+const poNo=()=>'PO-'+(Math.max(1000,...(db.pos||[]).map(p=>parseInt(String(p.id).slice(3))||0))+1);
+const vat=n=>Math.round(n*0.2*100)/100;
+const committed=bs=>sum((db.pos||[]).filter(p=>bs.some(b=>b.name===p.building)&&['Approved','Issued'].includes(p.status)),p=>p.amount);
+function poRow(p){const c=conOf(p.contractor),me_=p.raisedBy===uid,canApp=p.status==='Awaiting approval'&&p.approver===uid,ins=insState(c);
+ const acts=[canApp?`<button class="btn sm" data-act="poReview" data-id="${p.id}">Approve or reject</button>`:'',
+  p.status==='Approved'&&ok(p.building)?`<button class="btn sm" data-act="poIssue" data-id="${p.id}">Issue to contractor</button>`:'',
+  p.status==='Issued'&&ok(p.building)?`<button class="btn light sm" data-act="poInvOpen" data-id="${p.id}">Record their invoice</button>`:'',
+  ['Issued','Invoiced','Approved'].includes(p.status)?`<button class="btn light sm dl" data-act="poPdf" data-id="${p.id}">PDF</button>`:'',
+  ['Awaiting approval','Approved'].includes(p.status)&&(me_||isTop())?`<button class="btn light sm" data-act="poCancel" data-id="${p.id}">Cancel</button>`:''].join('');
+ return `<div class="row po"><div class="flex"><span><b>${esc(p.id)}</b> · ${esc(c?c.name:'Contractor')} · ${money(p.amount)} <span class="muted small">+ VAT</span></span>${pill(p.status,POST[p.status])}</div>
+ <p class="small">${esc(p.scope)}</p><p class="muted small">${esc(p.building)} · ${esc(p.head)} · Needed by ${fmtDate(p.needBy)} · Raised by ${esc(nameOf(p.raisedBy))} ${esc(when(p.raisedAt))}${p.approver&&p.status==='Awaiting approval'?' · Waiting for '+esc(nameOf(p.approver)):''}${p.invoice?' · Invoice '+esc(p.invoice):''}</p>
+ ${ins!=='Valid'&&['Approved','Awaiting approval'].includes(p.status)?`<p class="small warnt">Contractor insurance ${ins==='Expired'?'expired '+fmtDate(c.insurance)+'. It cannot be issued until new insurance is recorded.':ins==='Expiring'?'expires '+fmtDate(c.insurance)+'.':'is not on file.'}</p>`:''}
+ ${histBlock(p)}${acts?`<div class="acts">${acts}</div>`:''}</div>`}
+function poBlock(t){const l=poOfTask(t);return `<h3 style="margin-top:14px">Purchase orders${l.length?' ('+l.length+')':''}</h3>${l.map(poRow).join('')||'<p class="muted small">No purchase order yet.</p>'}${t.stage<4&&ok(t.building)?`<p><button class="btn light" data-act="poNew" data-id="${t.id}">Raise purchase order</button></p>`:''}`}
+function poDlgHtml(){const d=ui.pdlg,err=d.err?`<p class="small" style="color:var(--crit);font-weight:700">${esc(d.err)}</p>`:'';
+ if(d.mode==='new'){const t=db.tasks.find(x=>x.id===d.task);if(!t)return'';const b=db.buildings.find(x=>x.name===t.building);
+  if(d.step==='tag')return `<p class="cfeye">Over ${money(LIMIT)}</p><h3 id="dlgT">Who should approve ${money(d.f.amount)}?</h3><p class="muted small">${esc(conOf(d.f.contractor).name)} · ${esc(t.building)}</p><div class="pick" role="radiogroup">${approvers().map(a=>`<label class="${awayOf(a.id)?'off':''}"><input type="radio" name="poAppr" data-act="poApprPick" data-id="${a.id}" ${d.appr===a.id?'checked':''} ${awayOf(a.id)?'disabled':''}> <span><b>${esc(a.short)}</b><br><span class="muted small">${esc(ROLE[a.role])}${awayOf(a.id)?' · '+esc(awayTxt(a.id)):''}</span></span></label>`).join('')}</div>${err}<div class="choice"><button class="btn light big" data-act="poBackNew">Go back</button><button class="btn big" data-act="poSendAppr">Send for approval</button></div>`;
+  const f=d.f||{};
+  return `<p class="cfeye">${esc(t.building)} · ${esc(t.id)}</p><h3 id="dlgT">Raise a purchase order</h3><p class="muted small">For: ${esc(t.title)}</p>
+  <label for="poCon">Contractor</label><select id="poCon"><option value="">Choose a contractor</option>${(db.contractors||[]).map(c=>{const s=insState(c);return `<option value="${c.id}" ${f.contractor===c.id?'selected':''}>${esc(c.name)} · ${esc(c.trade)}${s==='Valid'?'':' · insurance '+s.toLowerCase()}</option>`}).join('')}</select>
+  <label for="poScope">Work to be done</label><textarea id="poScope" rows="3">${esc(f.scope||t.title+'. '+(t.description&&t.description!=='New issue under review.'?t.description:''))}</textarea>
+  <div class="form2"><div><label for="poAmt">Amount, excluding VAT (£)</label><input id="poAmt" type="number" min="1" step="0.01" value="${f.amount||''}"></div><div><label for="poHead">Budget heading</label><select id="poHead">${opts(b.budget.map(x=>x.head),f.head||(b.budget.find(x=>t.category==='Cleaning'?/Clean/.test(x.head):t.category==='Safety'?/Fire/.test(x.head):/Repairs/.test(x.head))||b.budget[0]).head)}</select></div></div>
+  <label for="poBy">Needed by</label><input id="poBy" type="date" value="${f.needBy||(t.due>today()?t.due:iso(7))}" min="${today()}">
+  <p class="small muted">Up to ${money(LIMIT)} is issued straight away. Above that it goes to a named approver first.</p>${err}
+  <div class="choice"><button class="btn light big" data-act="dlgClose">Cancel</button><button class="btn big" data-act="poNext">Continue</button></div>`}
+ const p=(db.pos||[]).find(x=>x.id===d.po);if(!p)return'';const c=conOf(p.contractor);
+ const sum=`<p class="cfeye">${esc(p.building)} · ${esc(p.id)}</p><div class="amt">${money(p.amount)} <span class="muted small">+ VAT</span></div><p><b>${esc(c?c.name:'')}</b></p><p class="small">${esc(p.scope)}</p><p class="muted small">${esc(p.head)} · Needed by ${fmtDate(p.needBy)} · Raised by ${esc(nameOf(p.raisedBy))}</p>`;
+ if(d.mode==='approve')return `<h3 id="dlgT">Approve this purchase order?</h3>${sum}${(p.notes||[]).length?`<div class="dlgnotes">${notesHtml(p.notes)}</div>`:''}${d.no?`${noteInput('poNote','Reason (required)','Tell them why')}${err}<div class="choice"><button class="btn light big" data-act="poBackR">Go back</button><button class="btn no big" data-act="poReject">Reject</button></div>`:`<div class="choice"><button class="btn yes big" data-act="poApprove">Approve</button><button class="btn no big" data-act="poNoAsk">Reject</button></div><div class="dlgfoot"><button class="btn link small" data-act="dlgClose">Not now</button></div>`}`;
+ if(d.mode==='invoice')return `<h3 id="dlgT">Record the contractor's invoice</h3>${sum}<div class="form2"><div><label for="piRef">Their invoice number</label><input id="piRef" value="${esc(d.ref||'')}"></div><div><label for="piAmt">Invoice amount, excluding VAT (£)</label><input id="piAmt" type="number" step="0.01" value="${d.amt||p.amount}"></div></div>${err}<p class="small muted">It goes to Accounts for approval, linked to ${esc(p.id)}. If it is more than 10% over the order, it is flagged.</p><div class="choice"><button class="btn light big" data-act="dlgClose">Cancel</button><button class="btn big" data-act="poInvSave">Save invoice</button></div>`;
+ return''}
+function poErr(m){ui.pdlg.err=m;paintDlg()}
+async function poPdf(p){const c=conOf(p.contractor)||{},b=db.buildings.find(x=>x.name===p.building)||{},t=db.tasks.find(x=>x.id===p.task)||{};
+ window.JFM_LAST_EXPORT={type:'pdf',name:p.id,po:p.id};
+ try{await loadLib(LIBS.pdf);await loadLib(LIBS.pdfT);const doc=new window.jspdf.jsPDF({unit:'pt',format:'a4'});
+  doc.setFillColor(58,62,66);doc.rect(0,0,595,78,'F');doc.setFillColor(157,195,60);doc.rect(0,78,595,5,'F');
+  doc.setTextColor(255);doc.setFontSize(20);doc.text('PURCHASE ORDER',40,38);doc.setFontSize(10);doc.text('JFM Block & Estate Management',40,58);
+  doc.setFontSize(14);doc.text(p.id,555,38,{align:'right'});doc.setFontSize(9);doc.text('Issued '+fmtDate((p.issuedAt||new Date().toISOString()).slice(0,10)),555,56,{align:'right'});
+  doc.setTextColor(40);doc.setFontSize(9);
+  const col=(x,y,h,lines)=>{doc.setFont(undefined,'bold');doc.text(h,x,y);doc.setFont(undefined,'normal');lines.forEach((l,i)=>doc.text(String(l||''),x,y+14+i*12))};
+  col(40,112,'TO',[c.name,c.trade,c.email,c.phone]);col(300,112,'DELIVER WORK TO',[p.building,'London',b.manager?'Key client manager: '+b.manager:'','Task '+(t.id||'')]);
+  doc.autoTable({startY:180,head:[['Description of work','Budget heading','Needed by','Amount (ex VAT)']],body:[[p.scope,p.head,fmtDate(p.needBy),money(p.amount)]],margin:{left:40,right:40},styles:{fontSize:9,cellPadding:6},headStyles:{fillColor:[58,62,66]},columnStyles:{0:{cellWidth:240},3:{halign:'right'}}});
+  let y=doc.lastAutoTable.finalY+8;doc.autoTable({startY:y,body:[['Subtotal',money(p.amount)],['VAT 20%','£'+vat(p.amount).toLocaleString('en-GB',{minimumFractionDigits:2})],['Total','£'+(p.amount+vat(p.amount)).toLocaleString('en-GB',{minimumFractionDigits:2})]],margin:{left:355,right:40},styles:{fontSize:9},columnStyles:{1:{halign:'right'}},didParseCell:d=>{if(d.row.index===2)d.cell.styles.fontStyle='bold'}});
+  y=doc.lastAutoTable.finalY+26;doc.setFont(undefined,'bold');doc.text('Terms',40,y);doc.setFont(undefined,'normal');
+  ['Quote '+p.id+' on your invoice. Invoices without a valid order number may not be paid.','Do not exceed the amount above without written approval from JFM.','Keep your public liability insurance in date and send a copy on request.','Report any safety concern on site to the key client manager straight away.','Send your invoice and completion photos to accounts@jfm-management.co.uk.'].forEach((l,i)=>doc.text('• '+l,40,y+16+i*13));
+  y+=100;doc.setFont(undefined,'bold');doc.text('Authorised by',40,y);doc.setFont(undefined,'normal');doc.text((p.approvedBy||nameOf(p.raisedBy))+(p.approvedAt?', '+when(p.approvedAt):''),40,y+14);doc.text('Raised by '+nameOf(p.raisedBy),40,y+28);
+  doc.setFontSize(8);doc.setTextColor(120);doc.text('JFM Property Platform · '+stampLine(),40,815);
+  if(await saveBlob(doc.output('blob'),p.id+'_'+fileSafe(c.name||'contractor')+'.pdf'))toast('Purchase order PDF downloaded')}
+ catch(e){toast('Could not create the PDF here. Check the connection and try again.')}}
+/* ---------- tasks to Excel ---------- */
+function taskSheet(bs){const multi=bs.length>1,ts=db.tasks.filter(t=>bs.some(b=>b.name===t.building)&&(t.stage<4||inPer(t.updatedAt||((t.history||[]).slice(-1)[0]||{}).at||t.due)));
+ return [[...(multi?['Building']:[]),'Task','Title','Category','Priority','Stage','Due','Responsible','Assignment','Shown to','Purchase orders','Last update'],...ts.sort(byUrgency).map(t=>{const a=t.assign,h=(t.history||[]).slice(-1)[0];
+  return [...(multi?[t.building]:[]),t.id,t.title,t.category,t.priority,STAGES[t.stage],t.due?fmtDate(t.due):'',a?nameOf(a.status==='Escalated'?a.mgr:a.to):(t.owner?nameOf(t.owner):(()=>{const b=db.buildings.find(x=>x.name===t.building),u=b&&users.find(x=>x.short===b.manager);return u?nameOf(u.id):''})()),a?ASTXT[a.status]+(a.proposedDue&&a.dateStatus==='Proposed'?', new date asked '+fmtDate(a.proposedDue):''):'',VISL[t.visibility]||t.visibility,poOfTask(t).map(p=>p.id+' '+p.status).join(', '),h?(typeof h==='string'?h:h.text+' ('+h.by+', '+when(h.at)+')'):'']})]}
+/* ---------- timers: reminders, flags, urgent ---------- */
+function asgTimers(){if(!me()||!staff())return;const now=Date.now();let ch=false;
+ db.tasks.forEach(t=>{const a=t.assign;if(!a||t.stage===4)return;const age=(now-Date.parse(a.at||0))/HRS;
+  if(a.status==='Pending'&&age>=REMIND_H&&!a.remindedAt){a.remindedAt=new Date().toISOString();ch=true;notify(a.to,`Reminder: ${nameOf(a.from)} is waiting for your answer on ${t.title} at ${t.building}.`,null,false,{task:t.id});asgLog(t,'Reminder sent to '+nameOf(a.to)+' after '+REMIND_H+' hours')}
+  if(a.status==='Pending'&&age>=FLAG_H&&!a.flaggedAt){const m=lineMgr(a.to)||lineMgr(a.from)||'c1';a.flaggedAt=new Date().toISOString();ch=true;notify(m,`${nameOf(a.to)} has not answered ${t.title} at ${t.building} for ${FLAG_H} hours.`,null,false,{task:t.id,urgent:true});asgLog(t,'Flagged to '+nameOf(m)+': no answer after '+FLAG_H+' hours')}
+  if(a.status==='Escalated'&&age>=URGENT_H&&!a.chaseAt){a.chaseAt=new Date().toISOString();ch=true;notify(a.mgr,`Still waiting: ${t.title} at ${t.building} needs reassigning. It was sent to you ${URGENT_H} hours ago.`,null,false,{task:t.id,urgent:true});if(a.escBy)notify(a.escBy,`${nameOf(a.mgr)} has not reassigned ${t.title} yet. They have been reminded.`,null,false,{task:t.id});asgLog(t,nameOf(a.mgr)+' reminded: not reassigned after '+URGENT_H+' hours')}});
+ if(ch)save()}
+setInterval(()=>{try{asgTimers();paintBell();paintPop()}catch(e){}},60000);
+/* ---------- away ---------- */
+function awayBody(){const a=(db.people||[]).find(x=>x.id===uid)?.away,on=a&&a.until>=today();
+ return `<p class="setgroup">AWAY</p><p class="muted small">While you are away, colleagues cannot send you tasks and are pointed to your cover.</p>${on?`<p><b>${esc(awayTxt(uid))}</b></p><button class="btn light" data-act="awayClear">I am back</button>`:`<div class="form2"><div><label for="awUntil">Away until</label><input id="awUntil" type="date" min="${today()}" value="${iso(7)}"></div><div><label for="awCover">Cover</label><select id="awCover"><option value="">No cover</option>${users.filter(u=>TEAM[u.role]&&u.id!==uid).map(u=>`<option value="${u.id}">${esc(nameOf(u.id))}</option>`).join('')}</select></div></div><button class="btn" data-act="awaySet">Set me as away</button>`}`}
+Object.assign(ACT,{
+ /* tasks */
+ ntRespPick(){},
+ xTasks(){if(!staff())return;const b=B();toExcel('Tasks_'+fileSafe(b.name)+'_'+perFile(),[{name:'Tasks',rows:[['Tasks, '+b.name],['Open tasks, plus completed in: '+perName()],[stampLine()],[],...taskSheet([b])]}])},
+ xTasksAll(){if(!staff())return;toExcel('Tasks_'+(isTop()?'All_buildings':'My_buildings')+'_'+perFile(),[{name:'Tasks',rows:[['Tasks, '+(isTop()?'all buildings':'my buildings')],['Open tasks, plus completed in: '+perName()],[stampLine()],[],...taskSheet(myB())]}])},
+ asgReason(i){const n=$('asgNote');if(n){n.value=QUICK_NO[+i];n.dispatchEvent(new Event('input',{bubbles:true}));n.focus()}},
+ asgDateAsk(){ui.adlg.date=true;ui.adlg.decline=false;ui.adlg.err='';paintDlg()},
+ asgAcceptDate(){const t=db.tasks.find(x=>x.id===ui.adlg.id);if(!t||asgNeedsMe(t)!=='respond')return closeDlg();const nd=($('asgDue')||{}).value;if(!nd||nd<today())return asgErr('Choose a date from today onwards.');
+  const a=t.assign;Object.assign(a,{status:'Accepted',proposedDue:nd,dateStatus:'Proposed',at:new Date().toISOString()});asgLog(t,'Accepted by '+nameOf(uid)+', asking to move the due date to '+fmtDate(nd));
+  notify(a.from,`${nameOf(uid)} accepted ${t.title} but asks to move the due date to ${fmtDate(nd)}.`,null,false,{task:t.id});db.notes.forEach(n=>{if(n.task===t.id&&n.to===uid)n.read=true});
+  closeDlg();save();render();toast('Accepted. '+nameOf(a.from)+' will confirm the new date.')},
+ asgDateYes(){const t=db.tasks.find(x=>x.id===ui.adlg.id);if(!t||asgNeedsMe(t)!=='date')return closeDlg();const a=t.assign,old=t.due;t.due=a.proposedDue;a.dateStatus='Agreed';asgLog(t,'Due date moved from '+fmtDate(old)+' to '+fmtDate(t.due));notify(a.to,`${nameOf(uid)} agreed the new date for ${t.title}: ${fmtDate(t.due)}.`,null,false,{task:t.id});sync('Asana','Task '+t.id+' due date moved to '+fmtDate(t.due),t.building);closeDlg();save();render();toast('New date agreed')},
+ asgDateNo(){const t=db.tasks.find(x=>x.id===ui.adlg.id);if(!t||asgNeedsMe(t)!=='date')return closeDlg();const a=t.assign;a.dateStatus='Kept';asgLog(t,'Kept the original due date, '+fmtDate(t.due));notify(a.to,`${nameOf(uid)} kept the original date for ${t.title}: ${fmtDate(t.due)}.`,null,false,{task:t.id});closeDlg();save();render();toast('Original date kept. They have been told.')},
+ asgHandOpen(id){const t=db.tasks.find(x=>x.id===id);if(!t||!asgMine(t)||t.assign.from===uid)return;ui.adlg={id,mode:'handback'};paintDlg()},
+ asgHandBack(){const t=db.tasks.find(x=>x.id===ui.adlg.id);if(!t||!asgMine(t))return closeDlg();const note=asgNote();if(!note)return asgErr('A note is required to hand a task back.');
+  const a=t.assign;Object.assign(a,{status:'Declined',declineNote:note,declinedBy:uid,handedBack:true,at:new Date().toISOString()});asgLog(t,'Handed back by '+nameOf(uid)+': '+note);
+  notify(a.from,`${nameOf(uid)} handed back ${t.title} at ${t.building}. Reason: ${note}`,null,false,{task:t.id});closeDlg();save();render();toast('Handed back. '+nameOf(a.from)+' has been told why.')},
+ awaySet(){const until=($('awUntil')||{}).value,cover=($('awCover')||{}).value;if(!until||until<today())return toast('Choose a return date from today onwards.');db.people=db.people||[];let p=db.people.find(x=>x.id===uid);if(!p){p={id:uid};db.people.push(p)}p.away={until,cover,set:new Date().toISOString()};save();render();toast('You are set as away until '+fmtDate(until))},
+ awayClear(){const p=(db.people||[]).find(x=>x.id===uid);if(p)p.away=null;save();render();toast('Welcome back')},
+ /* purchase orders */
+ poNew(id){const t=db.tasks.find(x=>x.id===id);if(!t||!ok(t.building))return;ui.pdlg={mode:'new',task:id,f:{}};paintDlg()},
+ poNext(){const d=ui.pdlg,f={contractor:$('poCon').value,scope:$('poScope').value.trim(),amount:Math.round(parseFloat($('poAmt').value)*100)/100,head:$('poHead').value,needBy:$('poBy').value};d.f=f;d.err='';
+  if(!f.contractor)return poErr('Choose a contractor.');if(!f.scope)return poErr('Describe the work.');if(!(f.amount>0))return poErr('Enter the amount, excluding VAT.');if(!f.needBy)return poErr('Choose when it is needed by.');
+  const c=conOf(f.contractor),s=insState(c);if(s==='Expired'||s==='Missing')return poErr(c.name+' insurance '+(s==='Expired'?'expired on '+fmtDate(c.insurance):'is not on file')+'. Choose another contractor or update their insurance first.');
+  if(f.amount>LIMIT&&!isTop()){d.step='tag';d.appr=approvers().find(a=>!awayOf(a.id))?.id;return paintDlg()}
+  const t=db.tasks.find(x=>x.id===d.task);ui.pdlg=null;paintDlg();
+  askSure({title:'Raise and issue this purchase order?',ok:'Yes, issue it',lines:[['Contractor',esc(c.name)+(s==='Expiring'?' <span class="warnt">insurance expires '+fmtDate(c.insurance)+'</span>':'')],['Work',esc(f.scope)],['Amount','<b>'+money(f.amount)+'</b> + VAT '+money(vat(f.amount))],['Charged to',esc(f.head)+' at '+esc(t.building)],['Needed by',fmtDate(f.needBy)],['What happens','The PO is emailed to '+esc(c.email)+', saved on the task and counted as committed spend']]},
+   ()=>{const p=poMake(t,f,'Approved');p.approvedBy=nameOf(uid);p.approvedAt=new Date().toISOString();poDoIssue(p)})},
+ poApprPick(id){ui.pdlg.appr=id},
+ poBackNew(){ui.pdlg.step=null;paintDlg()},
+ poSendAppr(){const d=ui.pdlg,t=db.tasks.find(x=>x.id===d.task);if(!d.appr)return poErr('Choose who should approve it.');const p=poMake(t,d.f,'Awaiting approval');p.approver=d.appr;addHist(p,'Sent to '+nameOf(d.appr)+' for approval');
+  notify(d.appr,`${nameOf(uid)} asked you to approve purchase order ${p.id}: ${money(p.amount)} to ${conOf(p.contractor).name} at ${p.building}.`,null,false,{po:p.id});ui.pdlg=null;closeDlg();save();render();toast('Sent to '+nameOf(d.appr)+' for approval');confirmFx('email','Sent for approval')},
+ poReview(id){const p=(db.pos||[]).find(x=>x.id===id);closeBell();if(!p||p.status!=='Awaiting approval'||p.approver!==uid){toast('This order has already been decided.');return render()}ui.pdlg={mode:'approve',po:id};paintDlg()},
+ poNoAsk(){ui.pdlg.no=true;paintDlg()},
+ poBackR(){ui.pdlg.no=false;ui.pdlg.err='';paintDlg()},
+ poApprove(){const p=(db.pos||[]).find(x=>x.id===ui.pdlg.po);if(!p||p.approver!==uid||p.status!=='Awaiting approval')return closeDlg();Object.assign(p,{status:'Approved',approvedBy:nameOf(uid),approvedAt:new Date().toISOString()});addHist(p,'Approved');
+  notify(p.raisedBy,`${nameOf(uid)} approved purchase order ${p.id} for ${conOf(p.contractor).name}. You can issue it now.`,null,false,{po:p.id});db.notes.forEach(n=>{if(n.po===p.id&&n.to===uid)n.read=true});sync('Purchase orders',p.id+' approved by '+nameOf(uid)+', '+money(p.amount),p.building);closeDlg();save();render();toast('Approved. '+nameOf(p.raisedBy)+' has been told.');confirmFx('done','Approved')},
+ poReject(){const p=(db.pos||[]).find(x=>x.id===ui.pdlg.po);if(!p||p.approver!==uid)return closeDlg();const note=((($('poNote')||{}).value)||'').trim().slice(0,NOTE_MAX);if(!note)return poErr('A reason is required to reject.');
+  Object.assign(p,{status:'Rejected',decidedAt:new Date().toISOString()});addHist(p,'Rejected: '+note);(p.notes=p.notes||[]).push({by:nameOf(uid),text:note,at:new Date().toISOString(),tag:'With rejection'});
+  notify(p.raisedBy,`${nameOf(uid)} rejected purchase order ${p.id}. Reason: ${note}`,null,false,{po:p.id});db.notes.forEach(n=>{if(n.po===p.id&&n.to===uid)n.read=true});sync('Purchase orders',p.id+' rejected by '+nameOf(uid),p.building);closeDlg();save();render();toast('Rejected. '+nameOf(p.raisedBy)+' has been told why.')},
+ poIssue(id){const p=(db.pos||[]).find(x=>x.id===id);if(!p||p.status!=='Approved'||!ok(p.building))return;const c=conOf(p.contractor),s=insState(c);if(s==='Expired'||s==='Missing')return toast(c.name+' insurance is '+s.toLowerCase()+'. Update it before issuing.');
+  askSure({title:'Issue this purchase order?',ok:'Yes, issue it',lines:[['Order',esc(p.id)],['Contractor',esc(c.name)+' · '+esc(c.email)],['Amount','<b>'+money(p.amount)+'</b> + VAT'],['Approved by',esc(p.approvedBy||'')]]},()=>poDoIssue(p))},
+ poCancel(id){const p=(db.pos||[]).find(x=>x.id===id);if(!p)return;askSure({title:'Cancel this purchase order?',ok:'Yes, cancel it',tone:'no',lines:[['Order',esc(p.id)],['Contractor',esc(conOf(p.contractor).name)],['Amount',money(p.amount)]]},()=>{p.status='Cancelled';addHist(p,'Cancelled');sync('Purchase orders',p.id+' cancelled',p.building);save();render();toast('Purchase order cancelled')})},
+ poPdf(id){const p=(db.pos||[]).find(x=>x.id===id);if(p)poPdf(p)},
+ poInvOpen(id){ui.pdlg={mode:'invoice',po:id};paintDlg()},
+ poInvSave(){const p=(db.pos||[]).find(x=>x.id===ui.pdlg.po);if(!p||p.status!=='Issued')return closeDlg();const ref=($('piRef').value||'').trim(),amt=Math.round(parseFloat($('piAmt').value)*100)/100;ui.pdlg.ref=ref;ui.pdlg.amt=$('piAmt').value;
+  if(!ref)return poErr('Enter their invoice number.');if(!(amt>0))return poErr('Enter the invoice amount.');const over=Math.round((amt-p.amount)/p.amount*100);
+  const go=()=>{const id='INV'+ref.replace(/[^A-Za-z0-9]/g,'').slice(0,10);const v={id,building:p.building,supplier:conOf(p.contractor).name,desc:p.id+': '+p.scope,amount:amt,head:p.head,status:'Awaiting approval',date:today(),po:p.id,notes:over>10?[{by:'System',text:`${over}% over ${p.id} (${money(p.amount)})`,at:new Date().toISOString(),tag:'Check'}]:[]};
+   db.invoices.push(v);p.status='Invoiced';p.invoice=id;addHist(p,'Invoice '+ref+' recorded, '+money(amt)+(over>10?', '+over+'% over the order':''));sync('Blockman','Invoice '+id+' matched to '+p.id+', '+money(amt),p.building);ui.pdlg=null;closeDlg();save();render();toast(over>10?'Saved and flagged: '+over+'% over the order':'Invoice saved and matched to '+p.id)};
+  if(over>10){ui.pdlg=null;paintDlg();return askSure({title:'This invoice is over the order',ok:'Save and flag it',tone:'no',lines:[['Order',esc(p.id)+' · '+money(p.amount)],['Invoice','<b>'+money(amt)+'</b>, '+over+'% more'],['What happens','It goes to Accounts with a warning note so the difference is checked before payment']]},go)}
+  go()}
+});
+/* ===== V11.1 Clients: each client owns buildings; full client pack in Excel ===== */
+const clientOf=bn=>(db.clients||[]).find(c=>(c.buildings||[]).includes(bn));
+const cBs=c=>db.buildings.filter(b=>(c.buildings||[]).includes(b.name));
+const canClients=()=>me()&&isTop();
+function clientSum(c){const bs=cBs(c);return{bs,units:sum(bs,b=>b.units),open:sum(bs,b=>openT(b).length),late:sum(bs,b=>openT(b).filter(late).length),comp:sum(bs,b=>compBad(b).length),ar:sum(bs,arrears),bud:sum(bs,b=>sum(b.budget,x=>x.budget)),act:sum(bs,b=>sum(b.budget,x=>x.actual)),com:committed(bs),fee:c.fee*sum(bs,b=>b.units)}}
+function pageClients(){if(!canClients())return'<div class="panel"><p class="muted">Clients are for the CEO and senior management.</p></div>';
+ const c=(db.clients||[]).find(x=>x.id===ui.client);if(c)return pageClient(c);
+ const list=db.clients||[];
+ return `<div class="panel"><div class="flex"><h3>Clients</h3><span class="tags">${pill(list.length+' clients')}${dlBtn('xClientsAll',null,'All clients, Excel')}</span></div><p class="muted small">Each client owns or manages one or more buildings. Open a client for everything about them, or download it all to Excel.</p>
+ <div class="tablewrap"><table><thead><tr><th>Client</th><th>Type</th><th class="num">Buildings</th><th class="num">Units</th><th class="num">Open works</th><th class="num">Arrears</th><th>Compliance</th><th>Contract renewal</th></tr></thead><tbody>
+ ${list.map(c=>{const s=clientSum(c),soon=c.renewal&&c.renewal<=iso(60);return `<tr><td><button class="btn link" data-act="openClient" data-id="${c.id}">${esc(c.name)}</button><br><span class="muted small">${esc(c.contact)}, ${esc(c.contactRole)}</span></td><td class="small">${esc(c.type)}</td><td class="num">${s.bs.length}</td><td class="num">${s.units}</td><td class="num">${s.open}${s.late?' '+pill(s.late+' late','crit'):''}</td><td class="num">${money(s.ar)}</td><td>${s.comp?pill(s.comp+' to fix','crit'):pill('In date','good')}</td><td>${fmtDate(c.renewal)}${soon?' '+pill('Soon','warn'):''}</td></tr>`}).join('')}</tbody></table></div></div>
+ ${(()=>{const un=db.buildings.filter(b=>!clientOf(b.name));return un.length?`<div class="panel"><h3>Buildings without a client</h3><p class="muted small">${un.map(b=>esc(b.name)).join(', ')}</p></div>`:''})()}`}
+function pageClient(c){const s=clientSum(c),rm=users.find(u=>u.id===c.rm);
+ const info=ui.form==='client'?`<div class="note"><div class="form2">${[['clName','Client name',c.name],['clType','Type',c.type],['clContact','Main contact',c.contact],['clRole','Their role',c.contactRole],['clEmail','Email',c.email],['clPhone','Phone',c.phone],['clAddr','Address',c.address],['clNo','Company number',c.companyNo],['clFee','Management fee per unit per year (£)',c.fee],['clRenew','Contract renewal',c.renewal]].map(([id,l,v])=>`<div><label for="${id}">${l}</label><input id="${id}" ${id==='clRenew'?'type="date"':id==='clFee'?'type="number" min="0"':''} value="${esc(v||'')}"></div>`).join('')}</div>
+  <label>Buildings</label><div class="pick">${db.buildings.map(b=>{const o=clientOf(b.name);return `<label><input type="checkbox" data-clb="${esc(b.name)}" ${(c.buildings||[]).includes(b.name)?'checked':''}> <span><b>${esc(b.name)}</b>${o&&o.id!==c.id?`<br><span class="muted small">Now with ${esc(o.name)}</span>`:''}</span></label>`}).join('')}</div>
+  <label for="clNotes">Notes</label><input id="clNotes" maxlength="200" value="${esc(c.notes||'')}"><div class="acts"><button class="btn" data-act="saveClient" data-id="${c.id}">Save details</button><button class="btn light" data-act="form" data-id="client">Cancel</button></div></div>`
+ :`<dl class="cinfo"><dt>Type</dt><dd>${esc(c.type)}</dd><dt>Main contact</dt><dd>${esc(c.contact)}, ${esc(c.contactRole)}</dd><dt>Email</dt><dd>${esc(c.email)}</dd><dt>Phone</dt><dd>${esc(c.phone)}</dd><dt>Address</dt><dd>${esc(c.address)}</dd><dt>Company number</dt><dd>${esc(c.companyNo)}</dd><dt>Client since</dt><dd>${fmtDate(c.since)}</dd><dt>Contract renewal</dt><dd>${fmtDate(c.renewal)}${c.renewal&&c.renewal<=iso(60)?' '+pill('Within 60 days','warn'):''}</dd><dt>Management fee</dt><dd>${money(c.fee)} per unit a year, ${money(s.fee)} in total</dd><dt>Relationship manager</dt><dd>${rm?esc(nameOf(rm.id)):'Not set'}</dd>${c.notes?`<dt>Notes</dt><dd>${esc(c.notes)}</dd>`:''}</dl>${histBlock(c)}`;
+ const ts=db.tasks.filter(t=>s.bs.some(b=>b.name===t.building)&&t.stage<4).sort(byUrgency);
+ const pos=(db.pos||[]).filter(p=>s.bs.some(b=>b.name===p.building)&&inPer(p.raisedAt));
+ const comp=s.bs.flatMap(b=>compBad(b).map(x=>[b,x]));
+ return `<p><button class="back" data-act="clientBack"><span aria-hidden="true">‹</span> All clients</button></p>
+ <div class="panel"><div class="flex"><h3>${esc(c.name)}</h3><span class="tags">${dlBtn('xClient',c.id,'Full client pack, Excel')}${ui.form==='client'?'':`<button class="btn light" data-act="form" data-id="client">Edit details</button>`}</span></div>${info}</div>
+ ${perBar('Applies to purchase orders, invoices, completed works, inspections and documents. Open works, compliance and arrears are always current. The Excel pack uses the same period.')}
+ <div class="grid four">${tile('Buildings',s.bs.length+' · '+s.units+' units')}${tile('Open works',s.open+(s.late?' · '+s.late+' late':''))}${tile('Arrears',money(s.ar))}${tile('Committed on orders',money(s.com))}</div>
+ <div class="panel"><h3>Buildings</h3><div class="tablewrap"><table><thead><tr><th>Building</th><th>Key client manager</th><th class="num">Units</th><th class="num">Budget</th><th class="num">Spent</th><th class="num">Arrears</th><th class="num">Open works</th><th>Compliance</th><th>Last inspection</th></tr></thead><tbody>
+ ${s.bs.map(b=>{const k=compBad(b).length,l=inspDone(b)[0];return `<tr><td><button class="btn link" data-act="openB" data-id="${esc(b.name)}">${esc(b.name)}</button></td><td>${esc(b.manager)}</td><td class="num">${b.units}</td><td class="num">${money(sum(b.budget,x=>x.budget))}</td><td class="num">${money(sum(b.budget,x=>x.actual))}</td><td class="num">${money(arrears(b))}</td><td class="num">${openT(b).length}</td><td>${k?pill(k+' to fix','crit'):pill('In date','good')}</td><td class="small">${l?esc(fmtDate(l.completedAt.slice(0,10))):'None yet'}</td></tr>`}).join('')}</tbody></table></div></div>
+ <div class="grid"><div class="panel"><h3>Open works (${ts.length})</h3>${ts.slice(0,12).map(t=>`<div class="row flex"><span><b>${esc(t.title)}</b><br><span class="muted small">${esc(t.building)} · ${esc(STAGES[t.stage])} · Due ${fmtDate(t.due)}${t.assign?' · '+esc(nameOf(t.assign.to).split(' (')[0]):''}</span></span>${pill(t.priority,t.priority==='Critical'?'crit':t.priority==='High'?'warn':'')}</div>`).join('')||'<p class="muted">No open works</p>'}${ts.length>12?`<p class="small muted">${ts.length-12} more in the Excel pack.</p>`:''}</div>
+ <div class="panel"><h3>Compliance to fix (${comp.length})</h3>${comp.map(([b,x])=>`<div class="row flex"><span><b>${esc(x.item)}</b><br><span class="muted small">${esc(b.name)} · ${x.due?'Due '+fmtDate(x.due):'Not recorded'}</span></span>${pill(compStatus(x),'crit')}</div>`).join('')||'<p class="muted">All in date</p>'}
+ <h3 style="margin-top:14px">Purchase orders (${pos.length})</h3>${pos.map(p=>`<div class="row flex"><span><b>${esc(p.id)}</b> · ${money(p.amount)}<br><span class="muted small">${esc(p.building)} · ${esc((conOf(p.contractor)||{}).name||'')}</span></span>${pill(p.status,POST[p.status])}</div>`).join('')||perEmpty('purchase orders')}</div></div>`}
+function clientSheets(cs){const bs=db.buildings.filter(b=>cs.some(c=>(c.buildings||[]).includes(b.name))),cn=bn=>(clientOf(bn)||{}).name||'';
+ const withC=rows=>rows.map((r,i)=>i===0?['Client',...r]:[cn(r[0]),...r]);
+ const info=[['Client','Type','Main contact','Role','Email','Phone','Address','Company number','Client since','Contract renewal','Fee per unit (£)','Buildings','Units','Annual fee (£)','Relationship manager','Notes'],...cs.map(c=>{const s=clientSum(c);return [c.name,c.type,c.contact,c.contactRole,c.email,c.phone,c.address,c.companyNo,fmtDate(c.since),fmtDate(c.renewal),c.fee,(c.buildings||[]).join(', '),s.units,s.fee,c.rm?nameOf(c.rm):'',c.notes||'']})];
+ const sumRows=[['Client','Buildings','Units','Annual budget','Spent to date','Committed on orders','Arrears','Open works','Late works','Compliance to fix'],...cs.map(c=>{const s=clientSum(c);return [c.name,s.bs.length,s.units,s.bud,s.act,s.com,s.ar,s.open,s.late,s.comp]})];
+ const bRows=[['Building','Client','Key client manager','Units','Year end','Annual budget','Spent to date','Committed on orders','Reserve fund','Arrears','Open works','Compliance to fix','Last inspection'],...bs.map(b=>{const l=inspDone(b)[0];return [b.name,cn(b.name),b.manager,b.units,b.yearEnd,sum(b.budget,x=>x.budget),sum(b.budget,x=>x.actual),committed([b]),b.reserve,arrears(b),openT(b).length,compBad(b).length,l?fmtDate(l.completedAt.slice(0,10)):'']})];
+ const acc=accSheets(bs.length?bs:[db.buildings[0]]),multi=bs.length>1,fix=rows=>multi?withC(rows):rows;
+ const comp=[['Building','Item','Next due','Status','Last change'],...bs.flatMap(b=>b.compliance.map(x=>[b.name,x.item,x.due?fmtDate(x.due):'Not recorded',compStatus(x),lastHist(x)]))];
+ const legal=[['Building','Type','Matter','Stage','Next action by','Note'],...db.legal.filter(l=>bs.some(b=>b.name===l.building)).map(l=>[l.building,l.type,l.title,LSTAGEOF(l)[l.stage],fmtDate(l.next),l.note])];
+ const insp=[['Building','Completed','Completed by','OK','Issues','N/A','Works raised','Works closed'],...db.inspections.filter(i=>i.status!=='In progress'&&bs.some(b=>b.name===i.building)&&inPer(i.completedAt)).map(i=>{const v=Object.values(i.items),r=i.result||{};return [i.building,fmtDate(i.completedAt.slice(0,10)),i.completedBy,v.filter(x=>x.st==='ok').length,v.filter(x=>x.st==='issue').length,v.filter(x=>x.st==='na').length,(r.raised||[]).length,(r.closed||[]).length]})];
+ const docs=[['Building','Document','Category','Date','Who can see it'],...db.docs.filter(d=>bs.some(b=>b.name===d.building)&&inPer(d.date)).map(d=>[d.building,d.name,d.cat,fmtDate(d.date),d.vis])];
+ const tk=taskSheet(bs);const tasks=multi?tk:[['Building',...tk[0]],...tk.slice(1).map(r=>[bs[0].name,...r])];
+ const sh=(n)=>acc.find(x=>x.name===n).rows;
+ const addB=rows=>multi?rows:[['Building',...rows[0]],...rows.slice(1).map(r=>[bs[0].name,...r])];
+ return [{name:'Client details',rows:[['JFM client pack'],['Period for orders, invoices, completed works, inspections and documents: '+perName()],[stampLine()],[],...info]},{name:'Summary',rows:sumRows},{name:'Buildings',rows:bRows},
+  {name:'Works',rows:withC(tasks)},{name:'Purchase orders',rows:withC(addB(sh('Purchase orders')))},{name:'Budget',rows:withC(addB(sh('Budget')))},{name:'Invoices',rows:withC(addB(sh('Invoices')))},{name:'Arrears',rows:withC(addB(sh('Arrears')))},
+  {name:'Compliance',rows:withC(comp)},{name:'Legal',rows:withC(legal)},{name:'Inspections',rows:withC(insp)},{name:'Documents',rows:withC(docs)}]}
+Object.assign(ACT,{
+ openClient(id){ui.client=id;ui.form=null;view.page='clients';render();window.scrollTo(0,0)},
+ clientBack(){ui.client=null;ui.form=null;render()},
+ xClient(id){const c=(db.clients||[]).find(x=>x.id===id);if(!c||!canClients())return;toExcel('Client_'+fileSafe(c.name)+'_'+perFile(),clientSheets([c]))},
+ xClientsAll(){if(!canClients())return;toExcel('All_clients_'+perFile(),clientSheets(db.clients||[]))},
+ saveClient(id){const c=(db.clients||[]).find(x=>x.id===id);if(!c||!canClients())return;const v=k=>($(k)||{}).value.trim(),bs=[...document.querySelectorAll('[data-clb]')].filter(x=>x.checked).map(x=>x.dataset.clb);
+  const nf={name:v('clName'),type:v('clType'),contact:v('clContact'),contactRole:v('clRole'),email:v('clEmail'),phone:v('clPhone'),address:v('clAddr'),companyNo:v('clNo'),fee:Number(v('clFee'))||0,renewal:v('clRenew'),notes:v('clNotes').slice(0,200),buildings:bs};
+  if(!nf.name)return toast('The client needs a name');const moved=bs.filter(n=>{const o=clientOf(n);return o&&o.id!==c.id});
+  askSure({title:'Save client details?',ok:'Yes, save',lines:[['Client',esc(nf.name)],['Buildings',bs.map(esc).join(', ')||'None'],...(moved.length?[['Moving',moved.map(n=>esc(n)+' from '+esc(clientOf(n).name)).join('<br>')]]:[])]},()=>{
+   moved.forEach(n=>{const o=clientOf(n);o.buildings=o.buildings.filter(x=>x!==n);addHist(o,n+' moved to '+nf.name)});
+   const ch=Object.keys(nf).filter(k=>JSON.stringify(c[k])!==JSON.stringify(nf[k]));Object.assign(c,nf);addHist(c,'Details updated: '+(ch.join(', ')||'no changes'));
+   ui.form=null;sync('Clients',nf.name+' details updated',bs[0]||null);save();render();toast('Client details saved')})}
+});
+function poMake(t,f,status){db.pos=db.pos||[];const p={id:poNo(),building:t.building,task:t.id,contractor:f.contractor,scope:f.scope,amount:f.amount,head:f.head,needBy:f.needBy,status,raisedBy:uid,raisedAt:new Date().toISOString(),history:[]};addHist(p,'Raised for '+money(p.amount));db.pos.push(p);
+ addHist(t,'Purchase order '+p.id+' raised: '+conOf(p.contractor).name+', '+money(p.amount));sync('Purchase orders',p.id+' raised for '+t.title+', '+money(p.amount),t.building);return p}
+function poDoIssue(p){const c=conOf(p.contractor),t=db.tasks.find(x=>x.id===p.task);Object.assign(p,{status:'Issued',issuedAt:new Date().toISOString(),issuedBy:uid});addHist(p,'Issued to '+c.name+' by email');
+ db.emails.unshift({id:newId('E'),mailbox:'b:'+p.building,building:p.building,dir:'out',from:bAddr(p.building),to:c.name+' <'+c.email+'>',subject:'Purchase order '+p.id+', '+p.building,body:`Dear ${c.name},\n\nPlease find attached purchase order ${p.id} for: ${p.scope}\n\nAmount: ${money(p.amount)} plus VAT. Needed by ${fmtDate(p.needBy)}.\nPlease quote ${p.id} on your invoice.\n\nKind regards,\n${nameOf(uid)}\nJFM`,date:today(),status:'Sent'});
+ if(t){addHist(t,'Purchase order '+p.id+' issued to '+c.name);if(t.stage<2){t.stage=2;t.updatedAt=new Date().toISOString();t.updatedBy=nameOf(uid)}}
+ sync('Outlook','Purchase order '+p.id+' emailed to '+c.name,p.building);save();render();toast(p.id+' issued and emailed to '+c.name);confirmFx('email','Order issued');poPdf(p)}
+
 
 
 function render(){
  if(!me())return showLogin(false);
- pendingRender=false;paintLive();paintBell(); if(ui.cf||(ui.dlg&&!['cal','remind','users','hap','accrestore','accerr'].includes(ui.dlg.kind)))paintDlg();
+ pendingRender=false;paintLive();paintBell(); if(ui.cf||ui.adlg||ui.pdlg||(ui.dlg&&!['cal','remind','users','hap','accrestore','accerr'].includes(ui.dlg.kind)))paintDlg();asgTimers();paintPop();paintAs();document.querySelectorAll('.demoSw').forEach(b=>b.hidden=!isAdminReal());document.querySelectorAll('.demoSw').forEach(b=>b.hidden=!isAdminReal());
  const m=me(),st=staff();
- if(view.page==='settings'){if(!canSee(view.b))view.b=myB()[0].name}
+ if(view.page==='settings'){if(!canSee(view.b))view.b=(myB()[0]||db.buildings[0]).name}
  else if(!st){view.b=m.building;if(view.page!=='res'||!resTabs().includes(view.tab))view={page:'res',b:m.building,tab:'Home'}}
- else{if(view.page==='res')view={page:'portfolio',b:myB()[0].name,tab:'Overview'};if(!canSee(view.b)){view.b=myB()[0].name;if(view.page==='building')view.page='portfolio'}}
+ else{if(view.page==='res')view={page:'portfolio',b:(myB()[0]||db.buildings[0]).name,tab:'Overview'};if(!canSee(view.b)){view.b=(myB()[0]||db.buildings[0]).name;if(view.page==='building')view.page='portfolio'}}
  const nb=(act,id,label,on,n,cls)=>`<button class="${on?'on':''} ${cls||''}" data-act="${act}" data-id="${esc(id)}"><span>${esc(label)}</span>${n?`<span class="badge">${n}</span>`:''}</button>`;
  $('nav').innerHTML=st
-  ?nb('nav','portfolio','Portfolio',view.page==='portfolio')+nb('nav','inbox','Inbox',view.page==='inbox',myMailNew().length)+nb('nav','mytasks','My tasks',view.page==='mytasks',myOpen().length)+nb('nav','sync','Sync activity',view.page==='sync')+'<div class="navhead">BUILDINGS</div>'+myB().map(b=>nb('openB',b.name,b.name,view.page==='building'&&view.b===b.name,attention(b),'bld')).join('')
+  ?nb('nav','portfolio','Portfolio',view.page==='portfolio')+nb('nav','inbox','Inbox',view.page==='inbox',myMailNew().length)+(isTop()?nb('nav','clients','My clients',view.page==='clients',(db.clients||[]).filter(c=>c.renewal&&c.renewal<=iso(60)).length):'')+nb('nav','mytasks','My tasks',view.page==='mytasks',myOpen().length)+nb('nav','sync','Sync activity',view.page==='sync')+'<div class="navhead">BUILDINGS</div>'+myB().map(b=>nb('openB',b.name,b.name,view.page==='building'&&view.b===b.name,attention(b),'bld')).join('')
   :resTabs().map(t=>nb('tab',t,t,view.page==='res'&&view.tab===t)).join('');
  $('setBtn').hidden=false;$('setBtn').classList.toggle('on',view.page==='settings');
  $('bWrap').style.display=st?'':'none';
  $('bSel').innerHTML=`<option value="">Portfolio</option>`+myB().map(b=>`<option ${view.page==='building'&&view.b===b.name?'selected':''}>${esc(b.name)}</option>`).join('');
- const titles={portfolio:'Portfolio',inbox:'Inbox',mytasks:'My tasks',sync:'Sync activity',settings:'User settings'};
+ const titles={portfolio:'Portfolio',clients:'My clients',inbox:'Inbox',mytasks:'My tasks',sync:'Sync activity',settings:'User settings'};
  applyPrefs();
  $('heading').textContent=view.page==='building'||view.page==='res'?view.b:view.page==='settings'&&SETTINGS[ui.set]?SETTINGS[ui.set].title:titles[view.page];
  $('identity').textContent=m.name+(st?' · '+myB().length+' buildings':'');
+ if(view.page==='clients'&&ui.client){const c=(db.clients||[]).find(x=>x.id===ui.client);if(c){$('heading').textContent=c.name;$('identity').textContent=c.type+' · '+(c.buildings||[]).length+' building'+((c.buildings||[]).length===1?'':'s')}}
  if(view.page==='portfolio'){const n=sum(myB(),attention),k=myB().length;
   $('heading').textContent=hello();
   $('identity').textContent=`${timeGreet()}. ${n?n+' thing'+(n===1?' needs':'s need')+' your attention':'Nothing needs your attention'} across ${k} building${k===1?'':'s'}.`}
  else if(view.page==='res'&&view.tab==='Home'){$('heading').textContent=hello();$('identity').textContent=`${timeGreet()}. Here is the latest at ${view.b}.`}
  let h;
  if(view.page==='settings')h=pageSettings();
- else if(view.page==='res')h=RES[view.tab](B());
- else if(view.page==='building')h=`<div class="tabs" role="tablist">${TABS.map(t=>`<button class="${t===view.tab?'on':''}" data-act="tab" data-id="${t}">${t}</button>`).join('')}</div>`+TAB[view.tab](B());
- else h=view.page==='inbox'?pageInbox():view.page==='mytasks'?pageMyTasks():view.page==='sync'?pageSync():pagePortfolio();
+ else if(view.page==='res')h=(view.tab==='Home'||view.tab==='Report issue'?'':perFor(view.tab==='Documents'?'Documents':view.tab))+RES[view.tab](B());
+ else if(view.page==='building')h=`<div class="tabs" role="tablist">${TABS.map(t=>`<button class="${t===view.tab?'on':''}" data-act="tab" data-id="${t}">${t}</button>`).join('')}</div>`+perFor(view.tab)+TAB[view.tab](B());
+ else h=view.page==='clients'?pageClients():view.page==='inbox'?pageInbox():view.page==='mytasks'?pageMyTasks():view.page==='sync'?pageSync():pagePortfolio();
  $('content').innerHTML=h;if(document.querySelector('[data-mid]:not([src])'))hydrateMedia();
  afterRender();
 }
@@ -1919,6 +2275,9 @@ document.addEventListener('change',e=>{
  if(el.id==='bSel'){if(el.value)ACT.openB(el.value);else ACT.nav('portfolio')}
  else if(el.id==='sysSel'){ui.sys=el.value;render()}
  else if(el.id==='hArea'){ui.hArea=el.value;render()}
+ else if(el.dataset&&el.dataset.kcm!=null){const b=db.buildings.find(x=>x.name===el.dataset.kcm),v=el.value,old=b&&b.manager;if(!b||!isTop())return;askSure({title:'Change the key client manager?',ok:'Yes, change it',lines:[['Building',esc(b.name)],['From',esc(old||'Not assigned')],['To','<b>'+esc(v||'Not assigned')+'</b>'],['What happens',v?esc(v)+' sees this building and its works, accounts and inbox':'Only senior management will see it']]},()=>{b.manager=v;const u=users.find(x=>x.short===v&&x.role==='kcm');if(u&&u.id!==uid)notify(u.id,`${nameOf(uid)} assigned ${b.name} to you.`);const o=users.find(x=>x.short===old&&x.role==='kcm');if(o&&o.id!==uid&&old!==v)notify(o.id,`${nameOf(uid)} moved ${b.name} from you to ${v||'nobody'}.`);sync('Team',`${b.name} key client manager changed from ${old||'nobody'} to ${v||'nobody'} by ${nameOf(uid)}`,b.name);save();render();toast('Key client manager updated')},()=>render())}
+ else if(el.id==='asSel'){viewAs(el.value)}
+ else if(el.id==='perSel'){ui.per=el.value;try{sessionStorage.setItem('jfm_per',el.value)}catch(e){}render()}
  else if(el.id==='mTpl'){const t=TPL[el.value];$('mSub').value=fill(t[0],view.b);$('mBody').value=fill(t[1],view.b)}
  else if(el.dataset.legal){const l=db.legal.find(x=>x.id===el.dataset.legal);if(l&&ok(l.building)){const ns=+el.value,st=LSTAGEOF(l);askSure({title:'Change the stage of this matter?',ok:'Yes, change stage',lines:[['Matter',esc(l.title)],['Type',esc(l.type)],['Stage',`${esc(st[l.stage])} → <b>${esc(st[ns])}</b>`],['Next action','Due in 14 days']]},()=>{addHist(l,'Stage changed to '+st[ns]);l.stage=ns;l.next=iso(14);sync('Legal',l.title+': stage changed to '+st[ns],l.building);save();render();toast('Stage updated')},()=>render());return;save();render();toast('Stage updated')}}
 });
@@ -1959,15 +2318,16 @@ function ntWarnings(bn,f){
  return out;
 }
 function ntFormHtml(b){
- const f=ui.nt=ui.nt||{title:'',cat:CATS[0],pri:'Medium',ref:'',note:'',err:null},w=ntWarnings(b.name,f).map(x=>`<div class="pwarn crit">${x}</div>`).join('');
+ const f=ui.nt=ui.nt||{title:'',cat:CATS[0],pri:'Medium',ref:'',note:'',due:iso(7),resp:uid,err:null},w=ntWarnings(b.name,f).map(x=>`<div class="pwarn crit">${x}</div>`).join('');
  return `<div class="note" id="ntForm"><div id="ntWarnTop">${w}</div>
  <label for="ntTitle">Title</label><input id="ntTitle" data-nt="title" value="${esc(f.title)}" autocomplete="off" class="${f.err&&f.err.id==='ntTitle'?'perr':''}">
  <div class="form2"><div><label for="ntCat">Category</label><select id="ntCat" data-nt="cat">${opts(CATS,f.cat)}</select></div><div><label for="ntPri">Priority</label><select id="ntPri" data-nt="pri">${opts(Object.keys(PRI),f.pri)}</select></div></div>
  <div class="form2"><div><label for="ntRef">Reference (optional)</label><input id="ntRef" data-nt="ref" value="${esc(f.ref)}" placeholder="e.g. contractor job or claim number" autocomplete="off"></div><div><label for="ntNote">Internal note</label><input id="ntNote" data-nt="note" value="${esc(f.note)}" autocomplete="off"></div></div>
+ <div class="form2"><div><label for="ntDue">Due</label><input id="ntDue" data-nt="due" type="date" min="${today()}" value="${esc(f.due||iso(7))}"></div><div><label for="ntResp">Who is responsible</label><select id="ntResp" data-nt="resp">${Object.entries(TEAM).map(([r,g])=>{const l=users.filter(u=>u.role===r);return l.length?`<optgroup label="${esc(g)}">${l.map(u=>`<option value="${u.id}" ${u.id===(f.resp||uid)?'selected':''} ${awayOf(u.id)?'disabled':''}>${esc(u.short)}${u.id===uid?' (me)':''}${awayOf(u.id)?', away':''}${openCount(u.id)>=BUSY?', busy':''}</option>`).join('')}</optgroup>`:''}).join('')}${TEAM[me().role]?'':`<option value="${uid}" ${(f.resp||uid)===uid?'selected':''}>Me</option>`}</select></div></div><p class="small muted">If you choose someone else, they get a pop up to accept or decline.</p>
  <div id="ntWarnBot">${w}</div><div id="ntErr">${f.err?`<div class="pwarn crit" role="alert"><b>Not saved yet.</b> ${esc(f.err.msg)}</div>`:''}</div>
  <div class="ntacts"><button class="btn" id="ntSave" data-act="createTask">${w?'Create anyway':'Save and create in Asana'}</button></div></div>`;
 }
-const ntRead=()=>{const f=ui.nt||{};['title','cat','pri','ref','note'].forEach(k=>{const el=document.querySelector(`[data-nt="${k}"]`);if(el)f[k]=el.value});return{title:(f.title||'').trim(),cat:f.cat||CATS[0],pri:f.pri||'Medium',ref:(f.ref||'').trim(),note:(f.note||'').trim()}};
+const ntRead=()=>{const f=ui.nt||{};['title','cat','pri','ref','note','due','resp'].forEach(k=>{const el=document.querySelector(`[data-nt="${k}"]`);if(el)f[k]=el.value});return{title:(f.title||'').trim(),cat:f.cat||CATS[0],pri:f.pri||'Medium',ref:(f.ref||'').trim(),note:(f.note||'').trim()}};
 function ntPaintWarn(){
  if(!ui.nt||!$('ntForm'))return;const w=ntWarnings(view.b,ui.nt).map(x=>`<div class="pwarn crit">${x}</div>`).join('');
  $('ntWarnTop').innerHTML=w;$('ntWarnBot').innerHTML=w;$('ntSave').textContent=w?'Create anyway':'Save and create in Asana';
@@ -2161,7 +2521,7 @@ setInterval(checkReminders,15000);
 document.addEventListener('visibilitychange',()=>{if(!document.hidden)checkReminders()});
 
 /* ---------- DEMO switch-user sheet (developers only, remove before going live) ---------- */
-const scopeOf=u=>u.role==='admin'||u.role==='ceo'?'All buildings':u.role==='pm'?u.buildings.length+' buildings':'Flat '+u.unit+', '+u.building;
+const scopeOf=u=>['admin','ceo','senior'].includes(u.role)?'All buildings':u.role==='kcm'?db.buildings.filter(b=>b.manager===u.short).length+' buildings':'Flat '+u.unit+', '+u.building;
 function usersHtml(){
  return `<p class="eyebrow">Developers only · Remove before going live</p><h3 id="dlgT">Switch demo user</h3><p class="muted small">See the platform as each person sees it. Switching only changes who is signed in on this device.</p>
  <div class="ulist">${users.map(u=>`<button class="setitem" data-act="asUser" data-id="${u.id}"><span class="dot ${u.id===uid?'cur':''}"></span><span class="setitxt"><b>${esc(u.name.split(',')[0])}</b><span class="muted">${esc(ROLE[u.role])} · ${esc(scopeOf(u))} · ${esc(u.username)}</span></span>${u.id===uid?pill('Current','good'):'<span class="chev" aria-hidden="true">›</span>'}</button>`).join('')}</div>
@@ -2178,8 +2538,8 @@ const SHEETS={cal:calHtml,remind:remHtml,task:taskHtml,users:usersHtml,hap:hapHt
 const myT=()=>{const t=db.mytasks.find(x=>x.id===(ui.dlg||{}).id);return t&&t.owner===uid?t:null};
 Object.assign(ACT,{
  allAtt(max){ui.allAtt=true;render();const n=+max||8,l=[...document.querySelectorAll('#content .attlist>.row')];if(l.length>n)requestAnimationFrame(()=>staggerItems(l.slice(n),l[n-1]))},
- switchUser(){ui.dlg={kind:'users'};paintDlg()},
- asUser(id){if(!users.some(u=>u.id===id))return;if(id===uid)return closeDlg();closeDlg();let keep=false;try{keep=!!localStorage.getItem(SKEY)}catch(e){}
+ switchUser(){if(!isAdminReal())return;ui.dlg={kind:'users'};paintDlg()},
+ asUser(id){if(!isAdminReal())return;if(!users.some(u=>u.id===id))return;if(id!==uid){closeDlg();return viewAs(id)}if(id===uid)return closeDlg();closeDlg();let keep=false;try{keep=!!localStorage.getItem(SKEY)}catch(e){}
   uid=id;writeSession(id,keep);enterApp(false);toast('Now viewing as '+nameOf(id))},
  hapYes(){setPref('haptics','on');setPref('hapAsked','1');closeDlg();try{navigator.vibrate&&navigator.vibrate([30,60,30])}catch(e){}toast('Vibration on')},
  hapNo(){setPref('haptics','off');setPref('hapAsked','1');closeDlg();toast('Vibration off. You can turn it on in User settings → Sound & haptics.')},
@@ -2287,10 +2647,18 @@ function showLogin(fresh){
  if(fresh){$('lUser').value='';$('lPass').value='';lerr('')}
  resetHV();shownAt=Date.now();setTimeout(()=>{try{$('lUser').focus()}catch(e){}},60);
 }
+const REAL='jfm_real';
+const realId=()=>{try{const v=sessionStorage.getItem(REAL);return users.some(u=>u.id===v&&u.role==='admin')?v:null}catch(e){return null}};
+const isAdminReal=()=>me()&&(me().role==='admin'||!!realId());
+function paintAs(){const el=$('asBar');if(!el)return;if(!me()||!isAdminReal()){el.hidden=true;el.innerHTML='';return}const r=realId()||uid;
+ el.hidden=false;el.innerHTML=`<span class="aslab">${realId()?'Viewing as <b>'+esc(nameOf(uid))+'</b>':'Creator view'}</span><label for="asSel" class="sr">Switch account</label><select id="asSel">${users.map(u=>`<option value="${u.id}" ${u.id===uid?'selected':''}>${esc(u.short)} · ${esc(ROLE[u.role])}${u.id===r?' (you)':''}</option>`).join('')}</select>${realId()?`<button class="btn sm" data-act="asBack">Back to ${esc(users.find(u=>u.id===r).short)}</button>`:''}`}
+function viewAs(id){const r=realId()||(me()&&me().role==='admin'?uid:null);if(!r||!users.some(u=>u.id===id))return;
+ try{if(id===r)sessionStorage.removeItem(REAL);else sessionStorage.setItem(REAL,r)}catch(e){}
+ const keep=(()=>{try{return !!localStorage.getItem(SKEY)}catch(e){return false}})();uid=id;writeSession(id,keep);closeBell();ui.adlg=ui.pdlg=ui.dlg=ui.cf=null;paintDlg();enterApp(false);toast('Now viewing as '+nameOf(id))}
 function enterApp(welcome){
  $('login').hidden=true;document.querySelector('.app').hidden=false;
  compose=null;ui={task:null,form:null,sys:'All',set:null};
- view={page:staff()?'portfolio':'res',b:myB()[0].name,tab:staff()?'Overview':'Home'};
+ view={page:staff()?'portfolio':'res',b:(myB()[0]||db.buildings[0]).name,tab:staff()?'Overview':'Home'};
  animNext=true;render();window.scrollTo(0,0);setTimeout(checkReminders,1800);
  if(welcome){splash();setTimeout(()=>{if(me()&&!pref('hapAsked')&&canVibrate()&&!ui.dlg&&!ui.cf){ui.dlg={kind:'hap'};paintDlg()}},prefOn('motion')?1000:1750)}
 }
@@ -2383,8 +2751,8 @@ async function fetchAll(){
  return out;
 }
 function fromRows(rows){
- const d=mkSeed();KINDS.forEach(k=>d[k]=[]);
- rows.forEach(r=>{if(d[r.kind])d[r.kind].push(r.data)});
+ const d=mkSeed(),cs=d.contractors,cl=d.clients;KINDS.forEach(k=>d[k]=[]);
+ rows.forEach(r=>{if(d[r.kind])d[r.kind].push(r.data)});if(!d.contractors.length)d.contractors=cs;if(!d.clients.length)d.clients=cl;
  d.buildings.sort((a,b)=>NAMES.indexOf(a.name)-NAMES.indexOf(b.name));
  d.sync.sort((a,b)=>b.at.localeCompare(a.at));
  return d;
@@ -2437,7 +2805,7 @@ async function goLive(){
 goLive();
 olHandleRedirect().then(back=>{if(back&&me()&&staff()){view={page:'inbox',b:view.b,tab:view.tab};render()}});
 document.addEventListener('toggle',e=>{const d=e.target;if(d.classList&&d.classList.contains('ntd'))ui.openNotes=d.open?d.dataset.nid:(ui.openNotes===d.dataset.nid?null:ui.openNotes)},true);
-document.addEventListener('keydown',e=>{if(e.key==='Enter'&&e.target.id==='myTitle'){e.preventDefault();return ACT.myAdd()}if((e.key==='Enter'||e.key===' ')&&e.target.getAttribute&&e.target.getAttribute('role')==='button'&&e.target.dataset.act&&ACT[e.target.dataset.act]){e.preventDefault();return ACT[e.target.dataset.act](e.target.dataset.id,e.target.dataset.x)}if(e.key==='Escape'&&draft){draft=null;renderDraft();return}if(e.key==='Escape'){if(ui.dlg||ui.cf)closeDlg();else if(ui.bell)closeBell()}});
+document.addEventListener('keydown',e=>{if(e.key==='Enter'&&e.target.id==='myTitle'){e.preventDefault();return ACT.myAdd()}if((e.key==='Enter'||e.key===' ')&&e.target.getAttribute&&e.target.getAttribute('role')==='button'&&e.target.dataset.act&&ACT[e.target.dataset.act]){e.preventDefault();return ACT[e.target.dataset.act](e.target.dataset.id,e.target.dataset.x)}if(e.key==='Escape'&&draft){draft=null;renderDraft();return}if(e.key==='Escape'){if(ui.dlg||ui.cf||ui.adlg||ui.pdlg)closeDlg();else if(ui.bell)closeBell()}});
 </script>
 </body>
 </html>
