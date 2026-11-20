@@ -42,3 +42,15 @@ drop policy if exists "demo media read"   on storage.objects;
 drop policy if exists "demo media upload" on storage.objects;
 create policy "demo media read"   on storage.objects for select using (bucket_id = 'inspection-media');
 create policy "demo media upload" on storage.objects for insert with check (bucket_id = 'inspection-media');
+
+-- V10.10: storage for accounts Excel files (Accounts history on each building's Accounts tab)
+-- Safe to run more than once.
+insert into storage.buckets (id, name, public, file_size_limit)
+values ('accounts-files', 'accounts-files', true, 10485760)
+on conflict (id) do nothing;
+
+-- DEMO RULES: anyone with the site can add and download accounts files.
+drop policy if exists "demo accounts read"   on storage.objects;
+drop policy if exists "demo accounts upload" on storage.objects;
+create policy "demo accounts read"   on storage.objects for select using (bucket_id = 'accounts-files');
+create policy "demo accounts upload" on storage.objects for insert with check (bucket_id = 'accounts-files');

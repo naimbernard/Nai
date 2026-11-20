@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>JFM Property Platform V10.9</title>
+<title>JFM Property Platform V10.10</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600;700&family=Public+Sans:wght@400;600&display=swap">
 <style>
 /* Layout idea: JFM charcoal rail with lime accents (jfm-management.co.uk colours), lists the buildings; each building opens one workspace with tabs for every part of the job. */
@@ -490,6 +490,29 @@ nav>.glider::before{content:"";position:absolute;top:9px;bottom:9px;left:0;width
   .tk:hover,.grid.four>.panel:hover{transform:none}
 }
 .reduce-motion .tk:hover,.reduce-motion .grid.four>.panel:hover{transform:none}
+/* ===== V10.10 Accounts history: vertical timeline on the right of the Accounts tab ===== */
+.acclay{display:grid;grid-template-columns:minmax(0,1fr) 310px;gap:16px;align-items:start}
+.accmain>.grid:first-child{margin-top:14px}
+.acchist{position:sticky;top:14px;max-height:calc(100vh - 28px);overflow:auto;margin-top:14px}
+.acchist h3{display:flex;align-items:center;gap:8px}.acchist h3 svg{width:18px;height:18px;color:var(--accent)}
+.accup{display:flex;justify-content:center;margin:6px 0 2px}
+.accup svg,.dlup svg,.acts .btn svg{width:15px;height:15px;vertical-align:-3px}
+.dlup{position:relative;cursor:pointer;white-space:nowrap}.dlup input{position:absolute;width:1px;height:1px;opacity:0}
+.tl{list-style:none;margin:14px 0 0;padding:0 0 0 22px;position:relative}
+.tl::before{content:"";position:absolute;left:7px;top:6px;bottom:6px;width:2px;border-radius:2px;background:linear-gradient(var(--brand),var(--line) 80px)}
+.tl-item{position:relative;background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:10px 12px;margin:0 0 10px}
+.tl-item::before{content:"";position:absolute;left:-21px;top:14px;width:10px;height:10px;border-radius:50%;background:var(--surface);border:2px solid var(--muted)}
+.tl-item.now{border-color:color-mix(in srgb,var(--brand) 60%,var(--line));background:var(--accent-soft)}
+.tl-item.now::before{background:var(--brand);border-color:var(--brand);box-shadow:0 0 0 4px color-mix(in srgb,var(--brand) 30%,transparent)}
+.tl-item p{margin:3px 0}.tl-item .acts{margin-top:8px}.tl-item details summary{margin-top:4px}
+.chg{margin:6px 0 0;padding-left:18px;font-size:13px}.chg li{margin:2px 0}
+.cflist .chg{margin:0}
+.tlempty{display:flex;gap:12px;align-items:flex-start;margin-top:14px;padding:12px;border:1px dashed var(--line);border-radius:10px}
+.tldot{flex:none;width:10px;height:10px;border-radius:50%;border:2px solid var(--muted);margin-top:5px}
+@media (hover:hover){.tl-item:hover{border-color:color-mix(in srgb,var(--glow) 60%,var(--line));box-shadow:0 0 0 1px color-mix(in srgb,var(--glow) 35%,transparent),0 8px 24px color-mix(in srgb,var(--glow) 22%,transparent)}}
+.tl-item.near{border-color:color-mix(in srgb,var(--glow) 60%,var(--line));box-shadow:0 0 0 1px color-mix(in srgb,var(--glow) 35%,transparent),0 8px 24px color-mix(in srgb,var(--glow) 22%,transparent)}
+.tl-item{transition:box-shadow .45s ease,border-color .45s ease}
+@media (max-width:1150px){.acclay{grid-template-columns:1fr}.acchist{position:static;max-height:none}}
 </style>
 </head>
 <body>
@@ -501,7 +524,7 @@ nav>.glider::before{content:"";position:absolute;top:9px;bottom:9px;left:0;width
       <p>Works, accounts, compliance, legal and resident updates, all under the building name.</p>
       <ul class="lfeat"><li>Update once, and Asana, Outlook and residents all hear about it</li><li>Approvals and arrears in one view</li><li>Residents see what matters to them</li></ul>
     </div>
-    <p class="lfoot">Version 10.9 · Demo only. Fictional data and simulated sign in.</p>
+    <p class="lfoot">Version 10.10 · Demo only. Fictional data and simulated sign in.</p>
   </div>
   <div class="lmain">
     <div class="lcard">
@@ -536,7 +559,7 @@ nav>.glider::before{content:"";position:absolute;top:9px;bottom:9px;left:0;width
   <aside>
     <p class="brand">JFM <span>Platform</span></p>
     <nav id="nav" aria-label="Sections"></nav>
-    <p class="ver" id="ver">Version 10.9</p>
+    <p class="ver" id="ver">Version 10.10</p>
     <button class="settingsbtn" id="setBtn" data-act="settings" hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg><span>User settings</span></button>
   </aside>
   <main>
@@ -564,8 +587,8 @@ nav>.glider::before{content:"";position:absolute;top:9px;bottom:9px;left:0;width
 <script>
 /* Live database. config.js sets window.JFM_LIVE={url:'...',key:'...'}; without it the app runs on this device only. */
 const LIVE=window.JFM_LIVE||{url:'',key:''};
-const APP_VERSION='10.9';
-const KINDS=['buildings','tasks','docs','legal','invoices','emails','requests','sync','notes','mytasks','inspections'];
+const APP_VERSION='10.10';
+const KINDS=['buildings','tasks','docs','legal','invoices','emails','requests','sync','notes','mytasks','inspections','accver'];
 const newId=p=>p+Date.now().toString(36).slice(-4).toUpperCase()+Math.random().toString(36).slice(2,4).toUpperCase();
 let sb=null,live=false,liveState='local',snap=new Map(),pendingRender=false;
 const KEY='jfm_v10',LIMIT=5000,DEMO_PW='jfm2026';
@@ -650,7 +673,7 @@ function mkSeed(){
   mytasks:[{id:'M1',owner:'p1',title:'Prepare monthly portfolio update for Dana',due:iso(3),done:false,source:'From email: Monthly portfolio review',notes:[],createdAt:new Date(Date.now()-864e5).toISOString()}],
   inspections:[],
   notes:[{id:'N1',to:'a2',from:'p1',text:'Morgan (Property Manager) asked you to approve £8,400 from Northway Lifts at Saffron Square.',at:new Date(Date.now()-2*36e5).toISOString(),read:false,inv:'INV301'}],
-  requests:[],sync:[]};
+  requests:[],sync:[],accver:[]};
 }
 function load(){try{const s=JSON.parse(localStorage.getItem(KEY));if(s&&s.v===6){KINDS.forEach(k=>s[k]=s[k]||[]);return s}}catch(e){}return mkSeed()}
 const recKey=(k,x)=>k+':'+(k==='buildings'?x.name:x.id);
@@ -1118,11 +1141,11 @@ const TAB={
 },
 'Accounts'(b){
  const bud=sum(b.budget,x=>x.budget),act=sum(b.budget,x=>x.actual),inv=db.invoices.filter(v=>v.building===b.name),ar=b.unitsList.filter(x=>x.balance>0);
- return `<div class="grid four">${tile('Annual budget',money(bud))}${tile('Spent to date',money(act))}${tile('Reserve fund',money(b.reserve))}${tile('Arrears',money(arrears(b)))}</div>
- <div class="panel"><div class="flex"><h3>Service charge budget</h3><span class="tags">${pill('Source: Blockman')}${dlBtn('xAcc',null,'Download accounts, Excel')}</span></div><div class="tablewrap"><table><thead><tr><th>Heading</th><th class="num">Budget</th><th class="num">Actual</th><th>Used</th></tr></thead><tbody>
+ return `<div class="acclay"><div class="accmain"><div class="grid four">${tile('Annual budget',money(bud))}${tile('Spent to date',money(act))}${tile('Reserve fund',money(b.reserve))}${tile('Arrears',money(arrears(b)))}</div>
+ <div class="panel"><div class="flex"><h3>Service charge budget</h3><span class="tags">${pill(accVers(b.name).length?'Version '+accLatestN(b.name):'Source: Blockman')}${dlBtn('xAcc',null,'Download accounts, Excel')}${ok(b.name)?`<label class="btn light dlup">${ico('up')} Upload Excel<input type="file" accept=".xlsx,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" data-accfile="1"></label>`:''}</span></div><div class="tablewrap"><table><thead><tr><th>Heading</th><th class="num">Budget</th><th class="num">Actual</th><th>Used</th></tr></thead><tbody>
  ${b.budget.map(x=>{const p=Math.round(x.actual/x.budget*100);return `<tr><td>${esc(x.head)}</td><td class="num">${money(x.budget)}</td><td class="num">${money(x.actual)}</td><td><div class="bar"><span class="${p>100?'over':''}" style="width:${Math.min(100,p)}%"></span></div><span class="small ${p>100?'':'muted'}">${p}%${p>100?' over budget':''}</span></td></tr>`}).join('')}</tbody></table></div></div>
  <div class="grid"><div class="panel"><h3>Supplier invoices</h3><p class="muted small">Managers approve up to ${money(LIMIT)}. Anything above is sent to a named approver.</p>${inv.map(invRow).join('')||'<p class="muted">No invoices</p>'}</div>
- <div class="panel"><h3>Arrears</h3>${ar.map(x=>`<div class="row flex"><span><b>Flat ${esc(x.unit)}, ${esc(x.leaseholder)}</b><br><span class="muted small">${money(x.balance)} outstanding</span></span><button class="btn light" data-act="remind" data-id="${esc(x.unit)}">Draft reminder</button></div>`).join('')||'<p class="muted">No arrears</p>'}</div></div>`;
+ <div class="panel"><h3>Arrears</h3>${ar.map(x=>`<div class="row flex"><span><b>Flat ${esc(x.unit)}, ${esc(x.leaseholder)}</b><br><span class="muted small">${money(x.balance)} outstanding</span></span><button class="btn light" data-act="remind" data-id="${esc(x.unit)}">Draft reminder</button></div>`).join('')||'<p class="muted">No arrears</p>'}</div></div></div>${accHistHtml(b)}</div>`;
 },
 'Compliance'(b){
  return `<div class="panel"><div class="flex"><h3>Compliance register</h3>${dlBtn('pComp',null,'Download PDF')}</div><div class="tablewrap"><table><thead><tr><th>Item</th><th>Next due</th><th>Status</th><th></th></tr></thead><tbody>
@@ -1207,7 +1230,10 @@ const ICON={
  sunf:'<circle cx="12" cy="12" r="4.2"/><path d="M12 1.8v2.4M12 19.8v2.4M4.8 4.8l1.7 1.7M17.5 17.5l1.7 1.7M1.8 12h2.4M19.8 12h2.4M4.8 19.2l1.7-1.7M17.5 6.5l1.7-1.7"/>',
  moon:'<path d="M20.5 14.2A8.6 8.6 0 0 1 9.8 3.5a8.6 8.6 0 1 0 10.7 10.7z"/>',
  gear:'<circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/>',
- cal:'<rect x="3.5" y="5" width="17" height="15.5" rx="2.5"/><path d="M3.5 10h17M8 3v4M16 3v4"/>'};
+ cal:'<rect x="3.5" y="5" width="17" height="15.5" rx="2.5"/><path d="M3.5 10h17M8 3v4M16 3v4"/>',
+ up:'<path d="M12 15V4M7.5 8.5 12 4l4.5 4.5"/><path d="M4 15v4a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-4"/>',
+ down:'<path d="M12 4v11M7.5 10.5 12 15l4.5-4.5"/><path d="M4 15v4a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-4"/>',
+ hist:'<path d="M3.5 12a8.5 8.5 0 1 0 2.5-6"/><path d="M3 4v4h4"/><path d="M12 8v4.5l3 2"/>'};
 const ico=(n,c)=>`<svg ${c?`class="${c}" `:''}viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${ICON[n]}</svg>`;
 const SETTINGS={
  notifications:{title:'Notifications',icon:'bell',color:'#e5484d',sum:()=>'Pop-ups '+(fxOn()?'on':'off'),
@@ -1671,15 +1697,164 @@ function xPortfolioSheet(wb,bs){
  r=xNote(ws,r,nOver?`${nOver} building${nOver===1?' is':'s are'} over budget, shown in red.`:'Every building is within budget.');
  ws.pageSetup.printArea=`A1:I${r}`;return ws;
 }
-async function accExcel(name,bs){
+async function accExcel(name,bs,o){
  try{
   await loadLib(LIBS.exceljs);const wb=new ExcelJS.Workbook();wb.creator='JFM Property Platform';wb.created=new Date();
-  if(bs.length>1)xPortfolioSheet(wb,bs);bs.forEach(b=>xBuildingSheet(wb,b));
-  window.JFM_LAST_EXPORT={type:'xlsx',styled:true,name,sheets:wb.worksheets.map(w=>w.name)};
+  if(bs.length>1)xPortfolioSheet(wb,bs);bs.forEach(b=>xBuildingSheet(wb,b));xMeta(wb,bs,o&&o.ver);
+  window.JFM_LAST_EXPORT={type:'xlsx',styled:true,name,sheets:wb.worksheets.filter(w=>w.name!=='_jfm').map(w=>w.name)};
   const buf=await wb.xlsx.writeBuffer();
   if(await saveBlob(new Blob([buf],{type:'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'}),name+'.xlsx'))toast('Excel file downloaded');
  }catch(e){try{console.warn(e)}catch(x){}toExcel(name,accSheets(bs))}
 }
+/* ===== V10.10 Accounts upload and Accounts history =====
+   Download the accounts Excel, edit it, upload it back on the building's Accounts tab. The file is read in the browser,
+   checked, shown on a "Check your work" screen, then the building's figures are updated through the normal save, so every
+   page that uses them (Accounts, Portfolio, Needs attention, leaseholder accounts, downloads) updates for everyone.
+   Each upload becomes a version in Accounts history; the uploaded file is kept in the accounts-files storage bucket. */
+const ACC_BUCKET='accounts-files',ACC_LAYOUT='jfm-accounts-1';
+const accVers=bn=>db.accver.filter(v=>v.building===bn).sort((a,z)=>z.n-a.n);
+const accLatestN=bn=>{const l=accVers(bn)[0];return l?l.n:1};
+const accFigs=b=>({budget:b.budget.map(x=>({head:x.head,budget:x.budget,actual:x.actual})),reserve:b.reserve,bal:Object.fromEntries(b.unitsList.filter(u=>u.balance>0).map(u=>[u.unit,u.balance]))});
+const accAs=(b,f)=>Object.assign({},b,{budget:f.budget.map(x=>({...x})),reserve:f.reserve,unitsList:b.unitsList.map(u=>({...u,balance:f.bal[u.unit]||0}))});
+function accDiff(b,f){
+ const out=[];
+ f.budget.forEach(x=>{const o=b.budget.find(h=>h.head===x.head);if(!o)return;
+  if(o.budget!==x.budget)out.push(`${x.head} budget ${money(o.budget)} → ${money(x.budget)}`);
+  if(o.actual!==x.actual||(o.actual>o.budget)!==(x.actual>x.budget))out.push(`${x.head} actual ${money(o.actual)} → ${money(x.actual)}${x.actual>x.budget&&!(o.actual>o.budget)?', now over budget':x.actual<=x.budget&&o.actual>o.budget?', back within budget':''}`)});
+ if(b.reserve!==f.reserve)out.push(`Reserve fund ${money(b.reserve)} → ${money(f.reserve)}`);
+ b.unitsList.forEach(u=>{const nb=f.bal[u.unit]||0;if(u.balance!==nb)out.push(`Flat ${u.unit} arrears ${money(u.balance)} → ${money(nb)}${nb===0?' (paid)':''}`)});
+ return out;
+}
+const chgList=l=>`<ul class="chg">${l.map(c=>`<li>${esc(c)}</li>`).join('')}</ul>`;
+/* Hidden sheet in every accounts download: which building and which version it was made from */
+function xMeta(wb,bs,ver){
+ const ws=wb.addWorksheet('_jfm');ws.state='veryHidden';
+ ws.addRow(['layout',ACC_LAYOUT]);ws.addRow(['exported',new Date().toISOString()]);ws.addRow(['exportedBy',nameOf(uid)]);
+ bs.forEach(b=>ws.addRow(['v:'+b.name,ver||accLatestN(b.name)]));
+}
+/* ---------- Reading an uploaded accounts file ---------- */
+const xVal=v=>v&&typeof v==='object'?(v.richText?v.richText.map(t=>t.text).join(''):'result' in v?v.result:'text' in v?v.text:v):v;
+const xTxt=v=>String(xVal(v)??'').trim();
+const xNum=v=>{v=xVal(v);if(typeof v==='number')return v;if(v==null||String(v).trim()==='')return null;const s=String(v).replace(/[£,\s]/g,'');return /^-?\d+(\.\d+)?$/.test(s)?+s:NaN};
+async function accRead(file,b){
+ await loadLib(LIBS.exceljs);const wb=new ExcelJS.Workbook();await wb.xlsx.load(await file.arrayBuffer());
+ const meta={},mws=wb.getWorksheet('_jfm');if(mws)mws.eachRow(r=>{const k=xTxt(r.getCell(1).value);if(k)meta[k]=r.getCell(2).value});
+ const sheets=wb.worksheets.filter(w=>w.name!=='_jfm');
+ const ws=wb.getWorksheet(b.name.slice(0,31))||(sheets.length===1?sheets[0]:null);
+ if(!ws)return{errs:[`This file has no sheet for ${b.name}. Download the accounts for ${b.name}, edit that file, then upload it here.`]};
+ const title=xTxt(ws.getCell(3,2).value);
+ if(/^Accounts/.test(title)&&!title.includes(b.name))return{errs:[`This file is for ${title.replace(/^Accounts\s*·\s*/,'')}, not ${b.name}. Open ${title.replace(/^Accounts\s*·\s*/,'')} to upload it there.`]};
+ const B_=r=>xTxt(ws.getCell(r,2).value),last=ws.rowCount,find=(re,from)=>{for(let r=from||1;r<=last;r++)if(re.test(B_(r)))return r;return 0};
+ const errs=[],figs={budget:[],reserve:b.reserve,bal:{}};
+ /* Reserve fund: the figure under the RESERVE FUND tile */
+ let rv=null;for(let r=1;r<=Math.min(last,30)&&rv===null;r++)for(let c=2;c<=9;c++)if(/^reserve fund$/i.test(xTxt(ws.getCell(r,c).value))){rv=xNum(ws.getCell(r+1,c).value);break}
+ if(rv===null)errs.push('The Reserve fund figure is missing. It sits under RESERVE FUND at the top of the sheet.');else if(isNaN(rv)||rv<0)errs.push('Reserve fund must be a number of pounds, 0 or more.');else figs.reserve=Math.round(rv);
+ /* Service charge budget */
+ const rS=find(/^service charge budget$/i),rH=rS&&find(/^heading$/i,rS);
+ if(!rH)return{errs:['The Service charge budget table is missing. Upload an accounts file downloaded from this page, keeping its layout.']};
+ const seen=new Set();
+ for(let r=rH+1;r<=last;r++){const h=B_(r).replace(/^▲\s*/,'');if(/^(total|supplier invoices|arrears)$/i.test(h))break;if(!h){if([3,4].some(c=>xTxt(ws.getCell(r,c).value)))errs.push(`Row ${r}: add the heading name in column B.`);continue}
+  const o=b.budget.find(x=>x.head.toLowerCase()===h.toLowerCase());
+  if(!o){errs.push(`Row ${r}: "${h}" is not a budget heading for ${b.name}. Keep the heading names as they are.`);continue}
+  if(seen.has(o.head)){errs.push(`Row ${r}: ${o.head} appears twice.`);continue}seen.add(o.head);
+  const bu=xNum(ws.getCell(r,3).value),ac=xNum(ws.getCell(r,4).value);
+  if(bu===null||isNaN(bu)||bu<0)errs.push(`Row ${r}: the budget for ${o.head} must be a number of pounds, 0 or more.`);
+  if(ac===null||isNaN(ac)||ac<0)errs.push(`Row ${r}: the actual for ${o.head} must be a number of pounds, 0 or more.`);
+  figs.budget.push({head:o.head,budget:Math.round(bu)||0,actual:Math.round(ac)||0})}
+ b.budget.filter(x=>!seen.has(x.head)).forEach(x=>errs.push(`${x.head} is missing from the budget table. Keep every heading, even if it hasn't changed.`));
+ figs.budget.sort((x,y)=>b.budget.findIndex(h=>h.head===x.head)-b.budget.findIndex(h=>h.head===y.head));
+ /* Arrears: flats listed are the ones owing; a flat taken off the list has paid */
+ const rA=find(/^arrears$/i,rH),rF=rA&&find(/^flat$/i,rA);
+ if(!rF)errs.push('The Arrears table is missing. Keep it in the file, even if nobody owes anything.');
+ else for(let r=rF+1;r<=last;r++){const t=B_(r);if(!t){if(xTxt(ws.getCell(r,5).value))errs.push(`Row ${r}: add the flat number in column B.`);continue}
+  if(/^total/i.test(t))break;if(/^no arrears$/i.test(t))continue;
+  const m=t.match(/^(?:flat\s*)?(\S+)$/i),u=m&&b.unitsList.find(x=>x.unit===m[1]);
+  if(!u){errs.push(`Row ${r}: "${t}" is not a flat at ${b.name}. Write it as Flat and the number, for example Flat 12.`);continue}
+  const v=xNum(ws.getCell(r,5).value);if(v===null||isNaN(v)||v<0){errs.push(`Row ${r}: the balance for Flat ${u.unit} must be a number of pounds, 0 or more.`);continue}
+  if(figs.bal[u.unit]!=null){errs.push(`Row ${r}: Flat ${u.unit} appears twice.`);continue}
+  if(v>0)figs.bal[u.unit]=Math.round(v)}
+ const bv=xNum(meta['v:'+b.name]);
+ return{errs,figs,base:bv&&!isNaN(bv)?bv:null};
+}
+async function accUpload(file){
+ const b=B();if(!b||!ok(b.name))return;
+ if(!/\.xlsx$/i.test(file.name))return accErr(['Choose an Excel file (.xlsx). Download the accounts from this page, edit them in Excel, save, then upload that file.'],file.name);
+ if(file.size>10*1024*1024)return accErr(['That file is over 10 MB, which is too big for an accounts file.'],file.name);
+ toast('Reading '+file.name+'…');let res;
+ try{res=await accRead(file,b)}catch(e){try{console.warn(e)}catch(x){}return accErr([/load/.test(e&&e.message)?'The Excel reader could not load. Check your internet connection and try again.':'This file could not be read. Make sure it is an Excel (.xlsx) file, saved after editing.'],file.name)}
+ if(res.errs.length)return accErr(res.errs,file.name);
+ const changes=accDiff(b,res.figs);if(!changes.length)return toast('No changes found. The file matches the current accounts.');
+ const latest=accLatestN(b.name),lv=accVers(b.name)[0],stale=res.base!=null&&res.base<latest,warn=[];
+ if(stale)warn.push(`<b>Newer accounts exist.</b> This file was made from version ${res.base}, but version ${latest} is now the latest${lv?` (${esc(lv.by)}, ${esc(when(lv.at))})`:''}. Uploading it replaces those changes.`);
+ if(res.base==null)warn.push('<b>Version not recorded.</b> This file was not downloaded from version 10.10 or later, so it is not clear which version it was made from.');
+ const over=res.figs.budget.filter(x=>x.actual>x.budget).map(x=>x.head);
+ askSure({title:'Update the accounts for '+esc(b.name)+'?',desc:'These figures change across the platform for everyone who can see '+esc(b.name)+'. Read them before you confirm.',warn,ok:stale?'Yes, replace with this file':'Yes, update accounts',tone:stale?'no':'',lines:[
+  ['File',esc(file.name)],['Made from',res.base!=null?'Version '+res.base+(stale?'':' (the latest)'):'Not known'],['Becomes','<b>Version '+(latest+1)+'</b>'],
+  ['Changes',chgList(changes)],...(over.length?[['Over budget',`<b style="color:var(--crit)">${over.map(esc).join(', ')}</b>`]]:[])]},()=>accApply(b.name,res.figs,changes,file));
+}
+function accErr(errs,name){ui.dlg={kind:'accerr',errs,name};paintDlg()}
+async function accApply(bn,figs,changes,file,from){
+ const b=db.buildings.find(x=>x.name===bn);if(!b||!ok(bn))return;
+ const now=new Date().toISOString();
+ /* The figures as they were before the first upload become Version 1 */
+ if(!accVers(bn).length)db.accver.push({id:newId('AV'),building:bn,n:1,at:now,by:'Saved automatically',figs:accFigs(b),changes:[],start:true});
+ const id=newId('AV'),ver={id,building:bn,n:accLatestN(bn)+1,at:now,by:nameOf(uid),byId:uid,figs,changes,file:null};
+ let where='';
+ if(from){ver.restoredFrom=from.n;ver.file=from.file||null}
+ else if(file){ver.file={name:file.name,size:file.size,local:id};try{await mediaPut(id,file)}catch(e){}
+  if(live&&sb){try{const path=`${bn.replace(/[^A-Za-z0-9]+/g,'-')}/${id}.xlsx`,up=await sb.storage.from(ACC_BUCKET).upload(path,file,{contentType:'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'});
+   if(!up.error)ver.file.url=sb.storage.from(ACC_BUCKET).getPublicUrl(path).data.publicUrl}catch(e){}}
+  if(!ver.file.url)where=live?' The file itself is saved on this device only, because the accounts-files storage is not set up yet (see SETUP.md).':''}
+ const nb=accAs(b,figs);b.budget=nb.budget;b.reserve=nb.reserve;b.unitsList=nb.unitsList;
+ db.accver.push(ver);
+ sync('Accounts',from?`Accounts restored to version ${from.n} by ${nameOf(uid)} (now version ${ver.n}), ${changes.length} change${changes.length===1?'':'s'}`:`Accounts updated from Excel by ${nameOf(uid)} (version ${ver.n}), ${changes.length} change${changes.length===1?'':'s'}`,bn);
+ users.filter(u=>u.id!==uid&&(u.role==='pm'&&(u.buildings||[]).includes(bn))).forEach(u=>notify(u.id,`${nameOf(uid)} ${from?'restored the accounts for '+bn+' to version '+from.n:'updated the accounts for '+bn+' from Excel'} (now version ${ver.n}).`));
+ save();render();toast((from?`Restored. Version ${ver.n} is now the latest.`:`Accounts updated. Version ${ver.n} is now the latest.`)+where);confirmFx('done',from?'Accounts restored':'Accounts updated');
+}
+async function accDownload(id){
+ const v=db.accver.find(x=>x.id===id);if(!v||!staff()||!canSee(v.building))return;
+ const nm=`Accounts_${fileSafe(v.building)}_version_${v.n}`;
+ if(v.file){let blob=null;try{blob=await mediaGet(v.file.local)}catch(e){}
+  if(!blob&&v.file.url){try{const r=await fetch(v.file.url);if(r.ok)blob=await r.blob()}catch(e){}}
+  if(blob){if(await saveBlob(blob,nm+'.xlsx'))toast(`Version ${v.n} downloaded`);return}}
+ /* No stored file (the starting figures, or a file kept on another device): rebuild it from the saved figures */
+ const b=db.buildings.find(x=>x.name===v.building);await accExcel(nm,[accAs(b,v.figs)],{ver:v.n});
+ if(v.file)toast('The original file is not reachable from this device, so it was rebuilt from the saved figures of version '+v.n+'.');
+}
+/* ---------- Accounts history: a vertical timeline on the right of the Accounts tab ---------- */
+function accHistHtml(b){
+ const vs=accVers(b.name),edit=ok(b.name);
+ return `<div class="panel acchist"><div class="flex"><h3>${ico('hist')} Accounts history</h3>${vs.length?pill(vs.length+' version'+(vs.length===1?'':'s')):''}</div>
+ <p class="muted small">Every accounts upload for ${esc(b.name)}, newest first. Download any version, or restore one if something went wrong.</p>
+ ${edit?`<label class="upl accup">${ico('up')} Upload updated accounts<input type="file" accept=".xlsx,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" data-accfile="1"></label><p class="muted small">Download the Excel, edit it, save it, then upload it here.</p>`:''}
+ ${vs.length?`<ol class="tl">${vs.map((v,i)=>`<li class="tl-item ${i===0?'now':''}"><div class="flex"><b>Version ${v.n}</b>${i===0?pill('Latest','good'):v.start?pill('Starting figures'):''}</div>
+  <p class="small">${v.start?'Figures before the first upload, saved automatically':v.restoredFrom?`Restored from version ${v.restoredFrom}`:'Uploaded '+esc(v.file?v.file.name:'file')}</p>
+  <p class="small muted">${esc(v.by)} · ${esc(when(v.at))}</p>
+  ${v.changes.length?`<details><summary>${v.changes.length} change${v.changes.length===1?'':'s'}</summary>${chgList(v.changes)}</details>`:''}
+  <div class="acts"><button class="btn light sm" data-act="accDl" data-id="${v.id}">${ico('down')} Download</button>${i>0&&edit?`<button class="btn light sm" data-act="accRestore" data-id="${v.id}">Restore</button>`:''}</div></li>`).join('')}</ol>`
+  :`<div class="tlempty"><span class="tldot"></span><p class="small"><b>No uploads yet.</b><br><span class="muted">On the first upload, today's figures are saved as Version 1, so you can always go back to them.</span></p></div>`}</div>`;
+}
+function accErrHtml(d){return `<p class="eyebrow">Not uploaded</p><h3 id="dlgT">This file needs fixing first</h3><p class="muted">${esc(d.name||'')} · nothing has been changed.</p>
+ <div class="pwarn crit"><ul class="chg">${d.errs.slice(0,12).map(e=>`<li>${esc(e)}</li>`).join('')}${d.errs.length>12?`<li>and ${d.errs.length-12} more</li>`:''}</ul></div>
+ <p class="small muted">Fix these in Excel, save the file, then upload it again.</p><div class="dlgfoot"><button class="btn big" data-act="dlgClose">OK</button></div>`}
+function accRestoreHtml(d){const v=db.accver.find(x=>x.id===d.id);if(!v)return gone;
+ return `<p class="eyebrow">Step 2 of 2 · Final check</p><h3 id="dlgT">Restore version ${v.n} for ${esc(v.building)}?</h3>
+ <p class="muted">The accounts go back to the figures in version ${v.n} for everyone. Nothing is deleted: this becomes version ${accLatestN(v.building)+1}.</p>
+ <label for="rsType">Type RESTORE to confirm</label><input id="rsType" autocomplete="off" autocapitalize="characters" spellcheck="false" placeholder="RESTORE">
+ <div class="choice"><button class="btn light big" data-act="dlgClose">Cancel</button><button class="btn no big" id="rsGo" data-act="accRestoreGo" disabled>Yes, restore version ${v.n}</button></div>`}
+Object.assign(ACT,{
+ accDl(id){accDownload(id)},
+ accRestore(id){const v=db.accver.find(x=>x.id===id),b=v&&db.buildings.find(x=>x.name===v.building);if(!v||!b||!ok(b.name))return;
+  const ch=accDiff(b,v.figs);if(!ch.length)return toast('The current accounts already match version '+v.n+'.');
+  askSure({eyebrow:'Step 1 of 2',title:`Restore version ${v.n}?`,desc:'Check what changes. Nothing is deleted from the history: a new version is added.',ok:'Continue',lines:[
+   ['Building',esc(b.name)],['Version',`${v.n} · ${esc(v.by)} · ${esc(when(v.at))}`],['Becomes','<b>Version '+(accLatestN(b.name)+1)+'</b>'],['Changes',chgList(ch)]]},
+   ()=>{ui.dlg={kind:'accrestore',id};paintDlg();setTimeout(()=>{const i=$('rsType');if(i)i.focus()},40)})},
+ accRestoreGo(){const d=ui.dlg,v=d&&db.accver.find(x=>x.id===d.id),b=v&&db.buildings.find(x=>x.name===v.building);
+  if(!v||!b||!ok(b.name)||(($('rsType')||{}).value||'').trim().toUpperCase()!=='RESTORE')return;
+  const ch=accDiff(b,v.figs);closeDlg();if(!ch.length)return toast('The current accounts already match version '+v.n+'.');accApply(b.name,v.figs,ch,null,v)}
+});
+document.addEventListener('input',e=>{if(e.target.id==='rsType'){const g=$('rsGo');if(g)g.disabled=e.target.value.trim().toUpperCase()!=='RESTORE'}});
+document.addEventListener('change',e=>{const el=e.target;if(el.dataset&&el.dataset.accfile&&el.files&&el.files[0]){const f=el.files[0];el.value='';accUpload(f)}});
 const compRows=bs=>bs.flatMap(b=>b.compliance.map(c=>[...(bs.length>1?[b.name]:[]),c.item,c.due?fmtDate(c.due):'Not recorded',compStatus(c),lastHist(c)||'']));
 Object.assign(ACT,{
  xInsp(id){const i=db.inspections.find(x=>x.id===id);if(!i||!staff()||!canSee(i.building))return;const r=i.result||{};
@@ -1707,7 +1882,7 @@ Object.assign(ACT,{
 
 function render(){
  if(!me())return showLogin(false);
- pendingRender=false;paintLive();paintBell(); if(ui.cf||(ui.dlg&&!['cal','remind','users','hap'].includes(ui.dlg.kind)))paintDlg();
+ pendingRender=false;paintLive();paintBell(); if(ui.cf||(ui.dlg&&!['cal','remind','users','hap','accrestore','accerr'].includes(ui.dlg.kind)))paintDlg();
  const m=me(),st=staff();
  if(view.page==='settings'){if(!canSee(view.b))view.b=myB()[0].name}
  else if(!st){view.b=m.building;if(view.page!=='res'||!resTabs().includes(view.tab))view={page:'res',b:m.building,tab:'Home'}}
@@ -1830,7 +2005,7 @@ if(document.fonts&&document.fonts.ready)document.fonts.ready.then(()=>syncGlider
 /* ---------- Phones have no mouse: while scrolling, the card nearest a highlight line glows, then fades ----------
    Content items only. Rows holding choices (Device/Light/Dark, Today/Tomorrow, OK/Issue/N/A) are skipped:
    lighting a choice while the user is only scrolling makes it look selected or about to change. */
-const NEAR_SEL='#content .tk,#content .grid.four>.panel,#content .row,#content .setitem,#content .setrow,#content .ins';
+const NEAR_SEL='#content .tk,#content .grid.four>.panel,#content .row,#content .setitem,#content .setrow,#content .ins,#content .tl-item';
 let nearRaf=0,nearEl=null,nearT=0;
 function updateNear(){
  nearRaf=0;document.querySelectorAll('.shead .gear svg').forEach(x=>x.style.transform=motionOff()?'':`rotate(${Math.round(scrollY*.6)}deg)`);
@@ -1850,7 +2025,7 @@ addEventListener('scroll',()=>{if(!nearRaf)nearRaf=requestAnimationFrame(updateN
    In each list the first item fades in; every other item starts tucked under it and slides out into place,
    one after another (later items under earlier ones). Only on-screen items move; all settle within 2 seconds. */
 let animNext=false;
-const LIST_SEL='#content .tk,#content .row,#content .grid.four>.panel,#content .setitem,#content .setrow,#content .ins';
+const LIST_SEL='#content .tk,#content .row,#content .grid.four>.panel,#content .setitem,#content .setrow,#content .ins,#content .tl-item';
 function staggerItems(els,anchor){
  if(!els.length||!Element.prototype.animate||motionOff())return;
  const vh=innerHeight,list=els.map(el=>[el,el.getBoundingClientRect()]).filter(([el,r])=>r.height&&r.bottom>0&&r.top<vh+40);if(!list.length)return;
@@ -1999,7 +2174,7 @@ function hapHtml(){
  <div class="choice"><button class="btn light big" data-act="hapNo">Not now</button><button class="btn big" data-act="hapYes">Allow</button></div>
  <p class="muted small" style="text-align:center;margin-top:12px">You can turn vibration on or off any time in User settings → Sound &amp; haptics.</p>`;
 }
-const SHEETS={cal:calHtml,remind:remHtml,task:taskHtml,users:usersHtml,hap:hapHtml};
+const SHEETS={cal:calHtml,remind:remHtml,task:taskHtml,users:usersHtml,hap:hapHtml,accerr:accErrHtml,accrestore:accRestoreHtml};
 const myT=()=>{const t=db.mytasks.find(x=>x.id===(ui.dlg||{}).id);return t&&t.owner===uid?t:null};
 Object.assign(ACT,{
  allAtt(max){ui.allAtt=true;render();const n=+max||8,l=[...document.querySelectorAll('#content .attlist>.row')];if(l.length>n)requestAnimationFrame(()=>staggerItems(l.slice(n),l[n-1]))},
